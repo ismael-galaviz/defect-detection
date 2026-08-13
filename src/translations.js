@@ -48,9 +48,6 @@ export const translations = {
       liveFeed: 'Live detection feed',
       feedDetail: '2 defects flagged · 12 ft roll',
     },
-    logos: {
-      label: 'Built for modern textile & apparel manufacturers',
-    },
     visionA: {
       eyebrow: 'Meet the Product',
       title: 'Vision A: inspection that plugs into your line',
@@ -156,8 +153,20 @@ export const translations = {
       emailLabel: 'Email us',
       email: 'hello@veritxvision.com',
       locationLabel: 'Based in',
-      location: 'Mexico — serving textile manufacturers worldwide',
+      location: 'Tlaxcala, Mexico — serving textile manufacturers across Mexico, Latin America, and the world',
       success: "Thanks for reaching out! We'll get back to you within one business day to schedule your demo.",
+      privacy: {
+        title: 'How we use your information',
+        summary: 'VeritX Vision collects the information you submit here only to respond to your request and schedule a demo.',
+        points: [
+          'We use your data solely to contact you about VeritX Vision and follow up on your request.',
+          'We never sell or share your information with third parties for marketing purposes.',
+          'Your data is stored securely and kept only as long as needed to support your inquiry.',
+          'You can request access, correction, or deletion of your data at any time by emailing hello@veritxvision.com.',
+        ],
+        consentLabel: 'I have read and agree to the processing of my personal data as described in this Privacy Policy.',
+        consentRequired: 'Please accept the Privacy Policy to continue.',
+      },
       form: {
         name: 'Full name',
         namePlaceholder: 'Jane Smith',
@@ -183,6 +192,30 @@ export const translations = {
           {
             label: 'Multiple stages',
             hint: 'Correlates defects across stages to trace recurring issues back to their source on the line.',
+          },
+        ],
+        country: 'Country',
+        countryPlaceholder: 'Select a country',
+        countries: [
+          { group: null, options: ['Mexico'] },
+          {
+            group: 'Latin America',
+            options: [
+              'Argentina', 'Bolivia', 'Brazil', 'Chile', 'Colombia', 'Costa Rica', 'Cuba',
+              'Dominican Republic', 'Ecuador', 'El Salvador', 'Guatemala', 'Honduras',
+              'Nicaragua', 'Panama', 'Paraguay', 'Peru', 'Puerto Rico', 'Uruguay', 'Venezuela',
+            ],
+          },
+          {
+            group: 'Other countries',
+            options: [
+              'Australia', 'Bangladesh', 'Belgium', 'Canada', 'China', 'Denmark', 'Egypt',
+              'France', 'Germany', 'India', 'Indonesia', 'Israel', 'Italy', 'Japan', 'Kenya',
+              'Morocco', 'Netherlands', 'New Zealand', 'Nigeria', 'Norway', 'Pakistan',
+              'Philippines', 'Poland', 'Portugal', 'Russia', 'Saudi Arabia', 'South Africa',
+              'South Korea', 'Spain', 'Sweden', 'Switzerland', 'Thailand', 'Turkey',
+              'United Arab Emirates', 'United Kingdom', 'United States', 'Vietnam', 'Other',
+            ],
           },
         ],
         message: 'Tell us about your line',
@@ -259,9 +292,6 @@ export const translations = {
       ],
       liveFeed: 'Detección en vivo',
       feedDetail: '2 defectos marcados · rollo de 12 ft',
-    },
-    logos: {
-      label: 'Diseñado para fabricantes textiles y de confección modernos',
     },
     visionA: {
       eyebrow: 'Conoce el producto',
@@ -368,8 +398,20 @@ export const translations = {
       emailLabel: 'Escríbenos',
       email: 'hello@veritxvision.com',
       locationLabel: 'Ubicados en',
-      location: 'México — atendiendo a fabricantes textiles en todo el mundo',
+      location: 'Tlaxcala, México — atendiendo a fabricantes textiles de México, Latinoamérica y el mundo',
       success: '¡Gracias por contactarnos! Te responderemos en un día hábil para agendar tu demo.',
+      privacy: {
+        title: 'Cómo usamos tu información',
+        summary: 'VeritX Vision recopila la información que nos envíes en este formulario únicamente para responder tu solicitud y agendar una demo.',
+        points: [
+          'Usamos tus datos únicamente para contactarte sobre VeritX Vision y dar seguimiento a tu solicitud.',
+          'Nunca vendemos ni compartimos tu información con terceros con fines de marketing.',
+          'Tus datos se almacenan de forma segura y se conservan solo el tiempo necesario para atender tu solicitud.',
+          'Puedes solicitar acceso, corrección o eliminación de tus datos en cualquier momento escribiendo a hello@veritxvision.com.',
+        ],
+        consentLabel: 'He leído y acepto el tratamiento de mis datos personales conforme a este aviso de privacidad.',
+        consentRequired: 'Debes aceptar el aviso de privacidad para continuar.',
+      },
       form: {
         name: 'Nombre completo',
         namePlaceholder: 'Juana Pérez',
@@ -395,6 +437,31 @@ export const translations = {
           {
             label: 'Varias etapas',
             hint: 'Cruza los defectos entre etapas para rastrear problemas recurrentes hasta su origen en la línea.',
+          },
+        ],
+        country: 'País',
+        countryPlaceholder: 'Selecciona un país',
+        countries: [
+          { group: null, options: ['México'] },
+          {
+            group: 'Latinoamérica',
+            options: [
+              'Argentina', 'Bolivia', 'Brasil', 'Chile', 'Colombia', 'Costa Rica', 'Cuba',
+              'Ecuador', 'El Salvador', 'Guatemala', 'Honduras', 'Nicaragua', 'Panamá',
+              'Paraguay', 'Perú', 'Puerto Rico', 'República Dominicana', 'Uruguay', 'Venezuela',
+            ],
+          },
+          {
+            group: 'Otros países',
+            options: [
+              'Alemania', 'Arabia Saudita', 'Australia', 'Bangladés', 'Bélgica', 'Canadá',
+              'China', 'Corea del Sur', 'Dinamarca', 'Egipto', 'Emiratos Árabes Unidos',
+              'España', 'Estados Unidos', 'Filipinas', 'Francia', 'India', 'Indonesia',
+              'Israel', 'Italia', 'Japón', 'Kenia', 'Marruecos', 'Nigeria', 'Noruega',
+              'Nueva Zelanda', 'Países Bajos', 'Pakistán', 'Polonia', 'Portugal',
+              'Reino Unido', 'Rusia', 'Sudáfrica', 'Suecia', 'Suiza', 'Tailandia',
+              'Turquía', 'Vietnam', 'Otro país',
+            ],
           },
         ],
         message: 'Cuéntanos sobre tu línea',

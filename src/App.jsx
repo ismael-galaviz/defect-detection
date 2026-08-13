@@ -15,24 +15,15 @@ function useRoute() {
 function LangSwitch() {
   const { lang, setLang } = useLanguage()
   return (
-    <div className="lang-switch" role="group" aria-label="Language / Idioma">
-      <button
-        type="button"
-        className={lang === 'en' ? 'active' : ''}
-        onClick={() => setLang('en')}
-        aria-pressed={lang === 'en'}
-      >
-        EN
-      </button>
-      <button
-        type="button"
-        className={lang === 'es' ? 'active' : ''}
-        onClick={() => setLang('es')}
-        aria-pressed={lang === 'es'}
-      >
-        ES
-      </button>
-    </div>
+    <select
+      className="lang-switch"
+      value={lang}
+      onChange={(e) => setLang(e.target.value)}
+      aria-label="Language / Idioma"
+    >
+      <option value="es">🇲🇽 ES</option>
+      <option value="en">🇺🇸 EN</option>
+    </select>
   )
 }
 
@@ -53,7 +44,6 @@ function Header() {
         </nav>
         <div className="nav-cta">
           <LangSwitch />
-          <a href="#contact" className="btn btn-primary">{t.nav.cta}</a>
           <button
             type="button"
             className="mobile-toggle"
@@ -70,9 +60,6 @@ function Header() {
           {t.nav.links.map((l) => (
             <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
           ))}
-          <a href="#contact" className="btn btn-primary" onClick={() => setMenuOpen(false)}>
-            {t.nav.cta}
-          </a>
         </nav>
       )}
     </header>
@@ -117,24 +104,6 @@ function Hero() {
         </div>
       </div>
     </section>
-  )
-}
-
-function LogosStrip() {
-  const { t } = useLanguage()
-  return (
-    <div className="logos-strip">
-      <div className="container">
-        <p className="label">{t.logos.label}</p>
-        <div className="logos-row">
-          <span>WEAVEMARK</span>
-          <span>NORTHFIBER</span>
-          <span>TEXALON</span>
-          <span>LOOMWORKS</span>
-          <span>CLOTHRA</span>
-        </div>
-      </div>
-    </div>
   )
 }
 
@@ -327,9 +296,26 @@ function Contact() {
                 <input id="company" type="text" placeholder={f.companyPlaceholder} required />
               </div>
             </div>
-            <div className="form-row">
-              <label htmlFor="email">{f.email}</label>
-              <input id="email" type="email" placeholder={f.emailPlaceholder} required />
+            <div className="form-two">
+              <div className="form-row">
+                <label htmlFor="email">{f.email}</label>
+                <input id="email" type="email" placeholder={f.emailPlaceholder} required />
+              </div>
+              <div className="form-row">
+                <label htmlFor="country">{f.country}</label>
+                <select id="country" defaultValue="">
+                  <option value="" disabled>{f.countryPlaceholder}</option>
+                  {f.countries.map((g) => (
+                    g.group ? (
+                      <optgroup key={g.group} label={g.group}>
+                        {g.options.map((o) => <option key={o}>{o}</option>)}
+                      </optgroup>
+                    ) : (
+                      g.options.map((o) => <option key={o}>{o}</option>)
+                    )
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="form-row">
               <label htmlFor="stage">{f.stage}</label>
@@ -345,6 +331,25 @@ function Contact() {
               <label htmlFor="message">{f.message}</label>
               <textarea id="message" rows="4" placeholder={f.messagePlaceholder} />
             </div>
+
+            <details className="privacy-details">
+              <summary>{t.contact.privacy.title}</summary>
+              <p>{t.contact.privacy.summary}</p>
+              <ul>
+                {t.contact.privacy.points.map((p) => <li key={p}>{p}</li>)}
+              </ul>
+            </details>
+
+            <label className="consent-row">
+              <input
+                type="checkbox"
+                required
+                onInvalid={(e) => e.target.setCustomValidity(t.contact.privacy.consentRequired)}
+                onChange={(e) => e.target.setCustomValidity('')}
+              />
+              <span>{t.contact.privacy.consentLabel}</span>
+            </label>
+
             <button type="submit" className="btn btn-dark" style={{ width: '100%' }}>
               {f.submit}
             </button>
@@ -430,7 +435,6 @@ function Site() {
       ) : (
         <>
           <Hero />
-          <LogosStrip />
           <VisionA />
           <HowItWorks />
           <UseCases />
