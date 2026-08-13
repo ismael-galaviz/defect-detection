@@ -97,6 +97,14 @@ export const translations = {
           body: 'Quality data feeds into a dashboard for trend analysis, helping you optimize cut positions, reduce waste, and make data-driven production decisions.',
         },
       ],
+      integration: {
+        title: 'Client-defined actions on severe defects',
+        body: "Vision A can talk directly to your line's control system to react automatically when a defect crosses a severity threshold you set. You define the rules and the actions — VeritX Vision executes them in real time.",
+        examples: [
+          { icon: '⏸', rule: 'Severe defect detected 5+ times within 100 m', action: 'stop the line' },
+          { icon: '🏷️', rule: 'Severe defect detected', action: 'trigger the labeling unit to mark the defect' },
+        ],
+      },
     },
     useCases: {
       eyebrow: 'Where VeritX Fits',
@@ -342,6 +350,14 @@ export const translations = {
           body: 'Los datos de calidad alimentan un panel de análisis de tendencias, ayudándote a optimizar posiciones de corte, reducir desperdicio y tomar decisiones de producción basadas en datos.',
         },
       ],
+      integration: {
+        title: 'Acciones definidas por el cliente ante defectos severos',
+        body: 'Vision A puede comunicarse directamente con el sistema de control de tu línea para reaccionar automáticamente cuando un defecto supera un umbral de severidad que tú definas. Tú defines las reglas y las acciones — VeritX Vision las ejecuta en tiempo real.',
+        examples: [
+          { icon: '⏸', rule: 'Defecto severo detectado 5+ veces en 100 m', action: 'detener la línea' },
+          { icon: '🏷️', rule: 'Defecto severo detectado', action: 'activar la etiquetadora para marcar el defecto' },
+        ],
+      },
     },
     useCases: {
       eyebrow: 'Dónde encaja VeritX',

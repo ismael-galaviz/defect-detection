@@ -165,6 +165,26 @@ function HowItWorks() {
             </div>
           ))}
         </div>
+
+        <div className="integration-card">
+          <div className="integration-icon" aria-hidden="true">⚙️</div>
+          <div className="integration-body">
+            <h4>{t.howItWorks.integration.title}</h4>
+            <p>{t.howItWorks.integration.body}</p>
+            <div className="integration-examples">
+              {t.howItWorks.integration.examples.map((ex) => (
+                <div className="integration-example" key={ex.action}>
+                  <span className="ex-icon" aria-hidden="true">{ex.icon}</span>
+                  <p className="ex-text">
+                    <strong>{ex.rule}</strong>
+                    <span className="ex-arrow">→</span>
+                    {ex.action}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )
