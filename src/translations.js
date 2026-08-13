@@ -471,7 +471,7 @@ export const translations = {
         { val: '99.2%', label: 'Precisión de detección de defectos' },
         { val: '≤5mm', label: 'Tamaño mínimo de defecto detectable' },
         { val: 'Hasta 120m/min', label: 'Velocidad de línea de inspección' },
-        { val: '15+', label: 'Clases de defectos identificadas' },
+        { val: 'Sin límites', label: 'El modelo aprende tus defectos específicos por material y tipo' },
       ],
     },
     about: {
