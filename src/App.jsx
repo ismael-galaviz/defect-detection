@@ -241,6 +241,16 @@ function VisionA() {
           </div>
         </div>
       </div>
+      <div className="container">
+        <div className="video-embed">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/djK5l04jRoM"
+            title={t.visionA.videoTitle}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+      </div>
     </section>
   )
 }

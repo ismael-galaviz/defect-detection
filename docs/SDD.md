@@ -98,6 +98,7 @@ veritx-web/
 ├── index.html                 # HTML shell; <html lang="es"> static default, overwritten at runtime
 ├── package.json / package-lock.json
 ├── vite.config.js
+├── TODO.md                     # running task/annotation scratchpad — see §13
 ├── .github/workflows/deploy.yml
 ├── public/
 │   └── favicon.svg
@@ -315,7 +316,11 @@ In file order:
 - **`VisionA()`** (`id="vision-a"`) — product intro section, right after Hero. Left: eyebrow/title/sub +
   3 feature rows (icon + title + body, from `t.visionA.features`). Right: a decorative CSS-only "device"
   illustration (`.device-frame`, no real image asset) plus a row of small pill tags
-  (`t.visionA.tags`).
+  (`t.visionA.tags`). Below the two-column grid, full width: a responsive 16:9 YouTube embed
+  (`.video-embed`, privacy-enhanced `youtube-nocookie.com` domain, video id `djK5l04jRoM`, accessible
+  `title` from `t.visionA.videoTitle`). **The product video lives here (product description section),
+  not on the About page** — it was initially added to About and explicitly moved to Vision A; if a
+  second video is ever needed for About, that'd be a new addition, not "restoring" anything.
 - **`HowItWorks()`** (`id="how-it-works"`) — 4-step numbered pipeline grid (`t.howItWorks.steps`,
   `.step-card`), plus one extra full-width dark **"integration card"** below the grid
   (`t.howItWorks.integration`) explaining that Vision A can trigger **client-defined actions** on
@@ -441,6 +446,7 @@ export const translations = {
         },
       ],
       tags: ['Pre-calibrated', 'Flexible installation', 'Open API', 'No line modifications'],
+      videoTitle: 'VeritX Vision video',
     },
     howItWorks: {
       eyebrow: 'How It Works',
@@ -540,7 +546,7 @@ export const translations = {
     about: {
       eyebrow: 'About Us',
       title: 'Mexican engineering, built for textile manufacturers everywhere',
-      body: 'VeritX Vision started in Tlaxcala, Mexico, with a simple goal: bring AI-powered quality control within reach of textile mills of any size — not just the largest manufacturers. We combine computer vision, machine learning, and hardware designed to fit into real production lines, so quality control stops being a luxury only a few can afford.',
+      body: 'VeritX Vision started in Tlaxcala, Mexico, built by a team with years of hands-on experience in the textile industry, with a simple goal: bring AI-powered quality control within reach of textile mills of any size — not just the largest manufacturers. We combine computer vision, machine learning, and hardware designed to fit into real production lines, so quality control stops being a luxury only a few can afford.',
       facts: [
         { icon: 'pin', label: 'Headquarters', value: 'Tlaxcala, Mexico' },
         { icon: 'globe', label: 'Where we serve', value: 'Mexico, Latin America, and beyond' },
@@ -731,6 +737,7 @@ export const translations = {
         },
       ],
       tags: ['Precalibrada', 'Instalación flexible', 'API abierta', 'Sin modificar tu línea'],
+      videoTitle: 'Video de VeritX Vision',
     },
     howItWorks: {
       eyebrow: 'Cómo funciona',
@@ -830,7 +837,7 @@ export const translations = {
     about: {
       eyebrow: 'Quiénes somos',
       title: 'Ingeniería mexicana, hecha para fabricantes textiles de todo el mundo',
-      body: 'VeritX Vision nació en Tlaxcala, México, con un objetivo simple: poner el control de calidad con IA al alcance de fábricas textiles de cualquier tamaño — no solo de los fabricantes más grandes. Combinamos visión por computadora, aprendizaje automático y hardware diseñado para integrarse a líneas de producción reales, para que el control de calidad deje de ser un lujo al alcance de unos pocos.',
+      body: 'VeritX Vision nació en Tlaxcala, México, de la mano de un equipo con años de experiencia en el sector textil, con un objetivo simple: poner el control de calidad con IA al alcance de fábricas textiles de cualquier tamaño — no solo de los fabricantes más grandes. Combinamos visión por computadora, aprendizaje automático y hardware diseñado para integrarse a líneas de producción reales, para que el control de calidad deje de ser un lujo al alcance de unos pocos.',
       facts: [
         { icon: 'pin', label: 'Sede', value: 'Tlaxcala, México' },
         { icon: 'globe', label: 'A quién atendemos', value: 'México, Latinoamérica y el mundo' },
@@ -987,10 +994,16 @@ casually reverse them without the user re-confirming — re-litigating them wast
     (`#10294a`) using the project's internal data-viz accessibility method (all-pairs CVD ΔE ≥ 9.4,
     normal-vision ΔE ≥ 20.9, contrast ≥ 3:1). If defect-type colors are ever changed, re-validate rather
     than picking colors by eye.
+15. **The product video belongs on the Vision A / product-description section**, not the About page —
+    explicitly corrected after an initial placement in About. See §8's `VisionA()` entry.
 
 ---
 
 ## 11. Known gaps / intentionally unfinished
+
+> This is a point-in-time snapshot. **`TODO.md` (repo root) is the live, user-editable version of this
+> list** — check it for the current state and any notes the user has added since this was last synced,
+> and update both when you close an item out (see §13).
 
 - **The contact form does not submit anywhere.** `Contact()`'s `handleSubmit` just calls
   `e.preventDefault()` and flips local `submitted` state to show a static success message
@@ -1034,3 +1047,20 @@ casually reverse them without the user re-confirming — re-litigating them wast
 - **Add a language:** see the end of §5.
 - **Deploy:** just `git push` to `main` — the Actions workflow builds and publishes automatically.
   No manual deploy step exists or is needed.
+
+---
+
+## 13. `TODO.md` — the live task list
+
+`TODO.md` (repo root, next to `README.md`) is a plain checklist file, explicitly requested as an
+open, low-friction place for the user to jot down pending items and annotations over time — it is
+**not** meant to be as structured or as exhaustively-reasoned as this SDD. Treat it as the
+**current source of truth for "what's left to do"**; §11 above is a snapshot frozen at the time it was
+written and will drift.
+
+- When you finish something listed there, check it off (`- [x]`) rather than deleting it, so there's a
+  visible record of what shipped.
+- When you notice a new gap or the user asks for something to be tracked "for later" rather than done
+  now, add it there instead of just mentioning it in chat.
+- If closing out or adding an item there makes §11 of this SDD stale or inaccurate, update §11 to match
+  in the same change — don't let the two documents disagree about what's outstanding.

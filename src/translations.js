@@ -86,6 +86,7 @@ export const translations = {
         },
       ],
       tags: ['Pre-calibrated', 'Flexible installation', 'Open API', 'No line modifications'],
+      videoTitle: 'VeritX Vision video',
     },
     howItWorks: {
       eyebrow: 'How It Works',
@@ -185,7 +186,7 @@ export const translations = {
     about: {
       eyebrow: 'About Us',
       title: 'Mexican engineering, built for textile manufacturers everywhere',
-      body: 'VeritX Vision started in Tlaxcala, Mexico, with a simple goal: bring AI-powered quality control within reach of textile mills of any size — not just the largest manufacturers. We combine computer vision, machine learning, and hardware designed to fit into real production lines, so quality control stops being a luxury only a few can afford.',
+      body: 'VeritX Vision started in Tlaxcala, Mexico, built by a team with years of hands-on experience in the textile industry, with a simple goal: bring AI-powered quality control within reach of textile mills of any size — not just the largest manufacturers. We combine computer vision, machine learning, and hardware designed to fit into real production lines, so quality control stops being a luxury only a few can afford.',
       facts: [
         { icon: 'pin', label: 'Headquarters', value: 'Tlaxcala, Mexico' },
         { icon: 'globe', label: 'Where we serve', value: 'Mexico, Latin America, and beyond' },
@@ -376,6 +377,7 @@ export const translations = {
         },
       ],
       tags: ['Precalibrada', 'Instalación flexible', 'API abierta', 'Sin modificar tu línea'],
+      videoTitle: 'Video de VeritX Vision',
     },
     howItWorks: {
       eyebrow: 'Cómo funciona',
@@ -475,7 +477,7 @@ export const translations = {
     about: {
       eyebrow: 'Quiénes somos',
       title: 'Ingeniería mexicana, hecha para fabricantes textiles de todo el mundo',
-      body: 'VeritX Vision nació en Tlaxcala, México, con un objetivo simple: poner el control de calidad con IA al alcance de fábricas textiles de cualquier tamaño — no solo de los fabricantes más grandes. Combinamos visión por computadora, aprendizaje automático y hardware diseñado para integrarse a líneas de producción reales, para que el control de calidad deje de ser un lujo al alcance de unos pocos.',
+      body: 'VeritX Vision nació en Tlaxcala, México, de la mano de un equipo con años de experiencia en el sector textil, con un objetivo simple: poner el control de calidad con IA al alcance de fábricas textiles de cualquier tamaño — no solo de los fabricantes más grandes. Combinamos visión por computadora, aprendizaje automático y hardware diseñado para integrarse a líneas de producción reales, para que el control de calidad deje de ser un lujo al alcance de unos pocos.',
       facts: [
         { icon: 'pin', label: 'Sede', value: 'Tlaxcala, México' },
         { icon: 'globe', label: 'A quién atendemos', value: 'México, Latinoamérica y el mundo' },
