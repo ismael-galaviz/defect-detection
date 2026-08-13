@@ -1,14 +1,31 @@
 export const translations = {
   en: {
     nav: {
-      links: [
+      home: 'Home',
+      product: 'Product',
+      productItems: [
+        { href: '#vision-a', label: 'Vision A' },
         { href: '#how-it-works', label: 'How It Works' },
         { href: '#use-cases', label: 'Use Cases' },
         { href: '#comparison', label: 'Why VeritX' },
         { href: '#specs', label: 'Specifications' },
+      ],
+      toolsLabel: 'Tools',
+      toolsItems: [
         { href: '#/demo', label: 'Demo' },
+        { href: '#/calculator', label: 'Calculator' },
+      ],
+      aboutLabel: 'About Us',
+      aboutItems: [
+        { href: '#about', label: 'Who We Are' },
         { href: '#contact', label: 'Contact' },
       ],
+    },
+    calculatorPage: {
+      eyebrow: 'Coming Soon',
+      title: 'Savings calculator',
+      body: "We're building a calculator to estimate your potential savings and ROI with VeritX Vision based on your line speed, current inspection costs, and defect rate. In the meantime, request contact and we'll walk you through the numbers for your line.",
+      cta: 'Request Contact',
     },
     demo: {
       eyebrow: 'Live Demo',
@@ -165,6 +182,15 @@ export const translations = {
         { val: '15+', label: 'Defect classes identified' },
       ],
     },
+    about: {
+      eyebrow: 'About Us',
+      title: 'Mexican engineering, built for textile manufacturers everywhere',
+      body: 'VeritX Vision started in Tlaxcala, Mexico, with a simple goal: bring AI-powered quality control within reach of textile mills of any size — not just the largest manufacturers. We combine computer vision, machine learning, and hardware designed to fit into real production lines, so quality control stops being a luxury only a few can afford.',
+      facts: [
+        { icon: 'pin', label: 'Headquarters', value: 'Tlaxcala, Mexico' },
+        { icon: 'globe', label: 'Where we serve', value: 'Mexico, Latin America, and beyond' },
+      ],
+    },
     contact: {
       eyebrow: 'Get In Touch',
       title: 'Ready to see VeritX Vision on your line?',
@@ -265,14 +291,31 @@ export const translations = {
 
   es: {
     nav: {
-      links: [
+      home: 'Inicio',
+      product: 'Producto',
+      productItems: [
+        { href: '#vision-a', label: 'Vision A' },
         { href: '#how-it-works', label: 'Cómo funciona' },
         { href: '#use-cases', label: 'Casos de uso' },
         { href: '#comparison', label: 'Por qué VeritX' },
         { href: '#specs', label: 'Especificaciones' },
+      ],
+      toolsLabel: 'Herramientas',
+      toolsItems: [
         { href: '#/demo', label: 'Demo' },
+        { href: '#/calculator', label: 'Calculadora' },
+      ],
+      aboutLabel: 'Nosotros',
+      aboutItems: [
+        { href: '#about', label: 'Quiénes somos' },
         { href: '#contact', label: 'Contacto' },
       ],
+    },
+    calculatorPage: {
+      eyebrow: 'Próximamente',
+      title: 'Calculadora de ahorro',
+      body: 'Estamos construyendo una calculadora para estimar tu ahorro potencial y retorno de inversión con VeritX Vision, según la velocidad de tu línea, tus costos de inspección actuales y tu tasa de defectos. Mientras tanto, solicita contacto y te ayudamos a revisar los números para tu línea.',
+      cta: 'Solicitar contacto',
     },
     demo: {
       eyebrow: 'Demo en vivo',
@@ -427,6 +470,15 @@ export const translations = {
         { val: '≤5mm', label: 'Tamaño mínimo de defecto detectable' },
         { val: 'Hasta 120m/min', label: 'Velocidad de línea de inspección' },
         { val: '15+', label: 'Clases de defectos identificadas' },
+      ],
+    },
+    about: {
+      eyebrow: 'Quiénes somos',
+      title: 'Ingeniería mexicana, hecha para fabricantes textiles de todo el mundo',
+      body: 'VeritX Vision nació en Tlaxcala, México, con un objetivo simple: poner el control de calidad con IA al alcance de fábricas textiles de cualquier tamaño — no solo de los fabricantes más grandes. Combinamos visión por computadora, aprendizaje automático y hardware diseñado para integrarse a líneas de producción reales, para que el control de calidad deje de ser un lujo al alcance de unos pocos.',
+      facts: [
+        { icon: 'pin', label: 'Sede', value: 'Tlaxcala, México' },
+        { icon: 'globe', label: 'A quién atendemos', value: 'México, Latinoamérica y el mundo' },
       ],
     },
     contact: {

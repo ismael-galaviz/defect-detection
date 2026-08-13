@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { LanguageProvider, useLanguage } from './i18n.jsx'
 import DemoPage from './DemoPage.jsx'
+import CalculatorPage from './CalculatorPage.jsx'
 
 const ICON_PATHS = {
   bolt: <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" />,
@@ -82,6 +83,13 @@ const ICON_PATHS = {
     </>
   ),
   cloud: <path d="M6.5 17a3.8 3.8 0 0 1 0-7.6 5 5 0 0 1 9.6-1.7A3.6 3.6 0 0 1 17 17H6.5Z" />,
+  globe: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18M12 3c2.4 2.5 3.7 6 3.7 9s-1.3 6.5-3.7 9c-2.4-2.5-3.7-6-3.7-9S9.6 5.5 12 3Z" />
+    </>
+  ),
+  chevronDown: <path d="m6 9 6 6 6-6" />,
 }
 
 function Icon({ name, size = 22 }) {
@@ -109,7 +117,9 @@ function useRoute() {
     window.addEventListener('hashchange', onHash)
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
-  return hash.startsWith('#/demo') ? 'demo' : 'home'
+  if (hash.startsWith('#/demo')) return 'demo'
+  if (hash.startsWith('#/calculator')) return 'calculator'
+  return 'home'
 }
 
 function LangSwitch() {
@@ -127,9 +137,80 @@ function LangSwitch() {
   )
 }
 
+function NavDropdown({ label, items, isOpen, onToggle, onNavigate }) {
+  return (
+    <div className="nav-dropdown">
+      <button
+        type="button"
+        className="nav-dropdown-trigger"
+        aria-haspopup="true"
+        aria-expanded={isOpen}
+        onClick={onToggle}
+      >
+        {label}
+        <span className={`chev${isOpen ? ' open' : ''}`}><Icon name="chevronDown" size={14} /></span>
+      </button>
+      {isOpen && (
+        <div className="nav-dropdown-panel">
+          {items.map((i) => (
+            <a key={i.href} href={i.href} onClick={onNavigate}>{i.label}</a>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function MobileAccordion({ label, items, onNavigate }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="mobile-accordion">
+      <button
+        type="button"
+        className="mobile-accordion-trigger"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+      >
+        {label}
+        <span className={`chev${open ? ' open' : ''}`}><Icon name="chevronDown" size={16} /></span>
+      </button>
+      {open && (
+        <div className="mobile-accordion-panel">
+          {items.map((i) => (
+            <a key={i.href} href={i.href} onClick={onNavigate}>{i.label}</a>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function Header() {
   const { t } = useLanguage()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState(null)
+  const navRef = useRef(null)
+
+  useEffect(() => {
+    if (!openDropdown) return
+    function onDocClick(e) {
+      if (navRef.current && !navRef.current.contains(e.target)) setOpenDropdown(null)
+    }
+    function onKey(e) {
+      if (e.key === 'Escape') setOpenDropdown(null)
+    }
+    document.addEventListener('mousedown', onDocClick)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDocClick)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [openDropdown])
+
+  function toggleDropdown(name) {
+    setOpenDropdown((cur) => (cur === name ? null : name))
+  }
+
   return (
     <header className="site-header">
       <div className="container nav-wrap">
@@ -137,10 +218,29 @@ function Header() {
           <span className="logo-mark" aria-hidden="true" />
           VeritX Vision
         </a>
-        <nav className="nav-links">
-          {t.nav.links.map((l) => (
-            <a key={l.href} href={l.href}>{l.label}</a>
-          ))}
+        <nav className="nav-links" ref={navRef}>
+          <a href="#">{t.nav.home}</a>
+          <NavDropdown
+            label={t.nav.product}
+            items={t.nav.productItems}
+            isOpen={openDropdown === 'product'}
+            onToggle={() => toggleDropdown('product')}
+            onNavigate={() => setOpenDropdown(null)}
+          />
+          <NavDropdown
+            label={t.nav.toolsLabel}
+            items={t.nav.toolsItems}
+            isOpen={openDropdown === 'tools'}
+            onToggle={() => toggleDropdown('tools')}
+            onNavigate={() => setOpenDropdown(null)}
+          />
+          <NavDropdown
+            label={t.nav.aboutLabel}
+            items={t.nav.aboutItems}
+            isOpen={openDropdown === 'about'}
+            onToggle={() => toggleDropdown('about')}
+            onNavigate={() => setOpenDropdown(null)}
+          />
         </nav>
         <div className="nav-cta">
           <LangSwitch />
@@ -157,9 +257,10 @@ function Header() {
       </div>
       {menuOpen && (
         <nav className="mobile-menu">
-          {t.nav.links.map((l) => (
-            <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
-          ))}
+          <a href="#" onClick={() => setMenuOpen(false)}>{t.nav.home}</a>
+          <MobileAccordion label={t.nav.product} items={t.nav.productItems} onNavigate={() => setMenuOpen(false)} />
+          <MobileAccordion label={t.nav.toolsLabel} items={t.nav.toolsItems} onNavigate={() => setMenuOpen(false)} />
+          <MobileAccordion label={t.nav.aboutLabel} items={t.nav.aboutItems} onNavigate={() => setMenuOpen(false)} />
         </nav>
       )}
     </header>
@@ -355,6 +456,32 @@ function Specs() {
   )
 }
 
+function AboutUs() {
+  const { t } = useLanguage()
+  return (
+    <section id="about">
+      <div className="container about-grid">
+        <div>
+          <span className="eyebrow">{t.about.eyebrow}</span>
+          <h2 className="section-title">{t.about.title}</h2>
+          <p className="section-sub" style={{ marginBottom: 0 }}>{t.about.body}</p>
+        </div>
+        <div className="about-facts">
+          {t.about.facts.map((f) => (
+            <div className="info-row" key={f.label}>
+              <span className="ico"><Icon name={f.icon} size={18} /></span>
+              <div>
+                <div className="t">{f.label}</div>
+                <div className="d">{f.value}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function Contact() {
   const { t } = useLanguage()
   const [submitted, setSubmitted] = useState(false)
@@ -525,7 +652,7 @@ function Site() {
   const route = useRoute()
 
   useEffect(() => {
-    if (route === 'demo') {
+    if (route === 'demo' || route === 'calculator') {
       window.scrollTo(0, 0)
     } else {
       const hash = window.location.hash
@@ -538,9 +665,9 @@ function Site() {
   return (
     <>
       <Header />
-      {route === 'demo' ? (
-        <DemoPage />
-      ) : (
+      {route === 'demo' && <DemoPage />}
+      {route === 'calculator' && <CalculatorPage />}
+      {route === 'home' && (
         <>
           <Hero />
           <VisionA />
@@ -548,6 +675,7 @@ function Site() {
           <UseCases />
           <Comparison />
           <Specs />
+          <AboutUs />
           <Contact />
         </>
       )}
