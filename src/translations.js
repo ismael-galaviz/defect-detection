@@ -180,7 +180,7 @@ export const translations = {
         { val: '99.2%', label: 'Defect detection accuracy' },
         { val: '≤5mm', label: 'Minimum detectable defect size' },
         { val: 'Up to 120m/min', label: 'Inspection line speed' },
-        { val: '15+', label: 'Defect classes identified' },
+        { val: 'Custom-trained', label: 'Defect classes learned per material, not fixed' },
       ],
     },
     about: {
@@ -471,7 +471,7 @@ export const translations = {
         { val: '99.2%', label: 'Precisión de detección de defectos' },
         { val: '≤5mm', label: 'Tamaño mínimo de defecto detectable' },
         { val: 'Hasta 120m/min', label: 'Velocidad de línea de inspección' },
-        { val: '15+', label: 'Clases de defectos identificadas' },
+        { val: 'Entrenamiento a medida', label: 'Clases de defectos aprendidas por material, no fijas' },
       ],
     },
     about: {
