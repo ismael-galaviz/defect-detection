@@ -1,14 +1,32 @@
 import { useState } from 'react'
+import { LanguageProvider, useLanguage } from './i18n.jsx'
 
-const NAV_LINKS = [
-  { href: '#how-it-works', label: 'How It Works' },
-  { href: '#use-cases', label: 'Use Cases' },
-  { href: '#comparison', label: 'Why VeritX' },
-  { href: '#specs', label: 'Specifications' },
-  { href: '#contact', label: 'Contact' },
-]
+function LangSwitch() {
+  const { lang, setLang } = useLanguage()
+  return (
+    <div className="lang-switch" role="group" aria-label="Language / Idioma">
+      <button
+        type="button"
+        className={lang === 'en' ? 'active' : ''}
+        onClick={() => setLang('en')}
+        aria-pressed={lang === 'en'}
+      >
+        EN
+      </button>
+      <button
+        type="button"
+        className={lang === 'es' ? 'active' : ''}
+        onClick={() => setLang('es')}
+        aria-pressed={lang === 'es'}
+      >
+        ES
+      </button>
+    </div>
+  )
+}
 
 function Header() {
+  const { t } = useLanguage()
   return (
     <header className="site-header">
       <div className="container nav-wrap">
@@ -17,12 +35,13 @@ function Header() {
           VeritX Vision
         </a>
         <nav className="nav-links">
-          {NAV_LINKS.map((l) => (
+          {t.nav.links.map((l) => (
             <a key={l.href} href={l.href}>{l.label}</a>
           ))}
         </nav>
         <div className="nav-cta">
-          <a href="#contact" className="btn btn-primary">Request a Demo</a>
+          <LangSwitch />
+          <a href="#contact" className="btn btn-primary">{t.nav.cta}</a>
         </div>
       </div>
     </header>
@@ -30,47 +49,39 @@ function Header() {
 }
 
 function Hero() {
+  const { t } = useLanguage()
   return (
     <section className="hero">
       <div className="container hero-grid">
         <div>
-          <span className="eyebrow">AI-Powered Fabric Inspection</span>
+          <span className="eyebrow">{t.hero.eyebrow}</span>
           <h1>
-            Catch every textile defect. <span className="accent">Cut inspection costs by half.</span>
+            {t.hero.titleStart}<span className="accent">{t.hero.titleAccent}</span>
           </h1>
-          <p className="lead">
-            VeritX Vision uses real-time computer vision and machine learning to detect
-            fabric defects on the production line — delivering enterprise-grade quality
-            control at a fraction of the cost of legacy inspection systems.
-          </p>
+          <p className="lead">{t.hero.lead}</p>
           <div className="hero-actions">
-            <a href="#contact" className="btn btn-primary">Request a Demo</a>
-            <a href="#how-it-works" className="btn btn-ghost">See How It Works</a>
+            <a href="#contact" className="btn btn-primary">{t.hero.ctaPrimary}</a>
+            <a href="#how-it-works" className="btn btn-ghost">{t.hero.ctaSecondary}</a>
           </div>
           <div className="hero-stats">
-            <div className="hero-stat">
-              <div className="num">99.2%</div>
-              <div className="label">Detection accuracy</div>
-            </div>
-            <div className="hero-stat">
-              <div className="num">&lt;48h</div>
-              <div className="label">Install &amp; setup time</div>
-            </div>
-            <div className="hero-stat">
-              <div className="num">~50%</div>
-              <div className="label">Lower cost vs. legacy systems</div>
-            </div>
+            {t.hero.stats.map((s) => (
+              <div className="hero-stat" key={s.label}>
+                <div className="num">{s.num}</div>
+                <div className="label">{s.label}</div>
+              </div>
+            ))}
           </div>
         </div>
         <div className="hero-visual">
           <div className="scan-frame">
             <div className="scan-line" />
-            <div className="defect-tag" data-label="Hole 98%" style={{ top: '22%', left: '30%', width: '60px', height: '40px' }} />
-            <div className="defect-tag" data-label="Stain 94%" style={{ top: '58%', left: '62%', width: '70px', height: '46px' }} />
+            {t.hero.defectTags.map((d) => (
+              <div className="defect-tag" key={d.label} data-label={d.label} style={d.style} />
+            ))}
           </div>
           <div className="hero-visual-caption">
-            <span><span className="dot-live" />Live detection feed</span>
-            <span>2 defects flagged · 12 ft roll</span>
+            <span><span className="dot-live" />{t.hero.liveFeed}</span>
+            <span>{t.hero.feedDetail}</span>
           </div>
         </div>
       </div>
@@ -79,10 +90,11 @@ function Hero() {
 }
 
 function LogosStrip() {
+  const { t } = useLanguage()
   return (
     <div className="logos-strip">
       <div className="container">
-        <p className="label">Built for modern textile &amp; apparel manufacturers</p>
+        <p className="label">{t.logos.label}</p>
         <div className="logos-row">
           <span>WEAVEMARK</span>
           <span>NORTHFIBER</span>
@@ -95,40 +107,16 @@ function LogosStrip() {
   )
 }
 
-const STEPS = [
-  {
-    n: '01',
-    title: 'Camera & Sensor Capture',
-    body: 'High-resolution line-scan cameras mount directly onto existing looms, finishing lines, or final inspection frames — no need to replace your current equipment.',
-  },
-  {
-    n: '02',
-    title: 'Real-Time AI Analysis',
-    body: 'Our machine learning model analyzes fabric imagery frame by frame, classifying defects such as holes, stains, weaving errors, and shade variation in real time.',
-  },
-  {
-    n: '03',
-    title: 'Instant Defect Mapping',
-    body: 'Detected defects are logged with position, type, and severity, and mapped onto the roll so operators know exactly where to inspect or cut.',
-  },
-  {
-    n: '04',
-    title: 'Reporting & Yield Optimization',
-    body: 'Quality data feeds into a dashboard for trend analysis, helping you optimize cut positions, reduce waste, and make data-driven production decisions.',
-  },
-]
-
 function HowItWorks() {
+  const { t } = useLanguage()
   return (
     <section id="how-it-works">
       <div className="container">
-        <span className="eyebrow">How It Works</span>
-        <h2 className="section-title">From raw fabric to actionable quality data</h2>
-        <p className="section-sub">
-          A simple, four-step pipeline that plugs into your existing production line.
-        </p>
+        <span className="eyebrow">{t.howItWorks.eyebrow}</span>
+        <h2 className="section-title">{t.howItWorks.title}</h2>
+        <p className="section-sub">{t.howItWorks.sub}</p>
         <div className="steps-grid">
-          {STEPS.map((s) => (
+          {t.howItWorks.steps.map((s) => (
             <div className="step-card" key={s.n}>
               <div className="step-num">{s.n}</div>
               <h4>{s.title}</h4>
@@ -141,36 +129,17 @@ function HowItWorks() {
   )
 }
 
-const USE_CASES = [
-  {
-    icon: '🧵',
-    title: 'Fabric Production',
-    body: 'Inline inspection during weaving and knitting catches defects at the source — before hours of production compound a single flaw.',
-  },
-  {
-    icon: '🎨',
-    title: 'Finishing',
-    body: 'Monitor dyeing, coating, and finishing stages for shade variation, streaks, and contamination before fabric moves downstream.',
-  },
-  {
-    icon: '✅',
-    title: 'Final Inspection',
-    body: 'Full-roll automated inspection before packaging and shipment, with a complete defect map for cutting and grading decisions.',
-  },
-]
-
 function UseCases() {
+  const { t } = useLanguage()
   return (
     <section id="use-cases" className="usecases-section">
       <div className="container">
-        <span className="eyebrow">Where VeritX Fits</span>
-        <h2 className="section-title">Coverage across your entire fabric line</h2>
-        <p className="section-sub">
-          Deploy at one stage or across the full production flow — the system adapts to your setup.
-        </p>
+        <span className="eyebrow">{t.useCases.eyebrow}</span>
+        <h2 className="section-title">{t.useCases.title}</h2>
+        <p className="section-sub">{t.useCases.sub}</p>
         <div className="usecases-grid">
-          {USE_CASES.map((u) => (
-            <div className="usecase-card" key={u.title}>
+          {t.useCases.cards.map((u) => (
+            <div className="usecase-card" key={u.icon}>
               <div className="usecase-icon">{u.icon}</div>
               <h4>{u.title}</h4>
               <p>{u.body}</p>
@@ -182,37 +151,26 @@ function UseCases() {
   )
 }
 
-const COMPARE_ROWS = [
-  ['AI-based defect classification', true, true],
-  ['Real-time inline inspection', true, true],
-  ['Typical hardware + software cost', 'Premium / high capex', '~50% lower'],
-  ['Install & commissioning time', 'Weeks', '< 48 hours'],
-  ['Retrofits onto existing lines', 'Limited', 'Yes, by design'],
-  ['Cloud & on-prem deployment options', 'Enterprise-only', 'Included'],
-  ['Cut optimization & yield reporting', true, true],
-]
-
 function Comparison() {
+  const { t } = useLanguage()
+  const [capHeader, legacyHeader, veritxHeader] = t.comparison.headers
   return (
     <section id="comparison">
       <div className="container">
-        <span className="eyebrow">Why VeritX Vision</span>
-        <h2 className="section-title">Enterprise-grade detection, without the enterprise price tag</h2>
-        <p className="section-sub">
-          Built to match the reliability of established fabric inspection systems while removing
-          the cost and complexity barriers that keep AI quality control out of reach for most mills.
-        </p>
+        <span className="eyebrow">{t.comparison.eyebrow}</span>
+        <h2 className="section-title">{t.comparison.title}</h2>
+        <p className="section-sub">{t.comparison.sub}</p>
         <div className="compare-table-wrap">
           <table className="compare-table">
             <thead>
               <tr>
-                <th>Capability</th>
-                <th>Legacy Systems</th>
-                <th className="col-veritx">VeritX Vision</th>
+                <th>{capHeader}</th>
+                <th>{legacyHeader}</th>
+                <th className="col-veritx">{veritxHeader}</th>
               </tr>
             </thead>
             <tbody>
-              {COMPARE_ROWS.map(([label, legacy, veritx]) => (
+              {t.comparison.rows.map(([label, legacy, veritx]) => (
                 <tr key={label}>
                   <td>{label}</td>
                   <td>{typeof legacy === 'boolean' ? (legacy ? <span className="check">✓</span> : <span className="cross">—</span>) : legacy}</td>
@@ -227,22 +185,16 @@ function Comparison() {
   )
 }
 
-const SPECS = [
-  { val: '99.2%', label: 'Defect detection accuracy' },
-  { val: '≤5mm', label: 'Minimum detectable defect size' },
-  { val: 'Up to 120m/min', label: 'Inspection line speed' },
-  { val: '15+', label: 'Defect classes identified' },
-]
-
 function Specs() {
+  const { t } = useLanguage()
   return (
     <section id="specs" className="specs-section">
       <div className="container">
-        <span className="eyebrow" style={{ background: 'rgba(0,212,255,0.15)' }}>Technical Specifications</span>
-        <h2 className="section-title">Precision built for production floors</h2>
-        <p className="section-sub">Prototype performance based on internal testing. Full technical datasheet available on request.</p>
+        <span className="eyebrow" style={{ background: 'rgba(0,212,255,0.15)' }}>{t.specs.eyebrow}</span>
+        <h2 className="section-title">{t.specs.title}</h2>
+        <p className="section-sub">{t.specs.sub}</p>
         <div className="specs-grid">
-          {SPECS.map((s) => (
+          {t.specs.cards.map((s) => (
             <div className="spec-card" key={s.label}>
               <div className="val">{s.val}</div>
               <div className="label">{s.label}</div>
@@ -255,7 +207,9 @@ function Specs() {
 }
 
 function Contact() {
+  const { t } = useLanguage()
   const [submitted, setSubmitted] = useState(false)
+  const f = t.contact.form
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -266,64 +220,58 @@ function Contact() {
     <section id="contact" className="contact-section">
       <div className="container contact-grid">
         <div className="contact-info">
-          <span className="eyebrow">Get In Touch</span>
-          <h2>Ready to see VeritX Vision on your line?</h2>
-          <p>
-            Tell us about your production setup and we'll schedule a personalized demo —
-            in person or over video — to show how VeritX Vision fits into your process.
-          </p>
+          <span className="eyebrow">{t.contact.eyebrow}</span>
+          <h2>{t.contact.title}</h2>
+          <p>{t.contact.body}</p>
           <div className="info-row">
             <span className="ico">✉</span>
             <div>
-              <div className="t">Email us</div>
-              <div className="d">hello@veritxvision.com</div>
+              <div className="t">{t.contact.emailLabel}</div>
+              <div className="d">{t.contact.email}</div>
             </div>
           </div>
           <div className="info-row">
             <span className="ico">📍</span>
             <div>
-              <div className="t">Based in</div>
-              <div className="d">Mexico — serving textile manufacturers worldwide</div>
+              <div className="t">{t.contact.locationLabel}</div>
+              <div className="d">{t.contact.location}</div>
             </div>
           </div>
         </div>
 
         {submitted ? (
-          <div className="form-success">
-            Thanks for reaching out! We'll get back to you within one business day to schedule your demo.
-          </div>
+          <div className="form-success">{t.contact.success}</div>
         ) : (
           <form className="lead-form" onSubmit={handleSubmit}>
             <div className="form-two">
               <div className="form-row">
-                <label htmlFor="name">Full name</label>
-                <input id="name" type="text" placeholder="Jane Smith" required />
+                <label htmlFor="name">{f.name}</label>
+                <input id="name" type="text" placeholder={f.namePlaceholder} required />
               </div>
               <div className="form-row">
-                <label htmlFor="company">Company</label>
-                <input id="company" type="text" placeholder="Your mill or company" required />
+                <label htmlFor="company">{f.company}</label>
+                <input id="company" type="text" placeholder={f.companyPlaceholder} required />
               </div>
             </div>
             <div className="form-row">
-              <label htmlFor="email">Work email</label>
-              <input id="email" type="email" placeholder="jane@company.com" required />
+              <label htmlFor="email">{f.email}</label>
+              <input id="email" type="email" placeholder={f.emailPlaceholder} required />
             </div>
             <div className="form-row">
-              <label htmlFor="stage">Where would you use VeritX Vision?</label>
+              <label htmlFor="stage">{f.stage}</label>
               <select id="stage" defaultValue="">
-                <option value="" disabled>Select a stage</option>
-                <option>Fabric production</option>
-                <option>Finishing</option>
-                <option>Final inspection</option>
-                <option>Multiple stages</option>
+                <option value="" disabled>{f.stagePlaceholder}</option>
+                {f.stageOptions.map((o) => (
+                  <option key={o}>{o}</option>
+                ))}
               </select>
             </div>
             <div className="form-row">
-              <label htmlFor="message">Tell us about your line</label>
-              <textarea id="message" rows="4" placeholder="Fabric type, line speed, current inspection process..." />
+              <label htmlFor="message">{f.message}</label>
+              <textarea id="message" rows="4" placeholder={f.messagePlaceholder} />
             </div>
             <button type="submit" className="btn btn-dark" style={{ width: '100%' }}>
-              Request a Demo
+              {f.submit}
             </button>
           </form>
         )}
@@ -333,6 +281,7 @@ function Contact() {
 }
 
 function Footer() {
+  const { t } = useLanguage()
   return (
     <footer className="site-footer">
       <div className="container">
@@ -342,31 +291,31 @@ function Footer() {
               <span className="logo-mark" aria-hidden="true" />
               VeritX Vision
             </a>
-            <p>AI-powered fabric inspection for modern textile manufacturers. Enterprise-grade quality control, without the enterprise price.</p>
+            <p>{t.footer.tagline}</p>
           </div>
           <div className="footer-cols">
             <div className="footer-col">
-              <h5>Product</h5>
-              <a href="#how-it-works">How It Works</a>
-              <a href="#use-cases">Use Cases</a>
-              <a href="#specs">Specifications</a>
+              <h5>{t.footer.product}</h5>
+              {t.footer.productLinks.map((l) => (
+                <a key={l.href} href={l.href}>{l.label}</a>
+              ))}
             </div>
             <div className="footer-col">
-              <h5>Company</h5>
-              <span>About</span>
-              <span>Careers</span>
-              <a href="#contact">Contact</a>
+              <h5>{t.footer.company}</h5>
+              <span>{t.footer.about}</span>
+              <span>{t.footer.careers}</span>
+              <a href="#contact">{t.footer.contact}</a>
             </div>
             <div className="footer-col">
-              <h5>Legal</h5>
-              <span>Privacy Policy</span>
-              <span>Terms of Service</span>
+              <h5>{t.footer.legal}</h5>
+              <span>{t.footer.privacy}</span>
+              <span>{t.footer.terms}</span>
             </div>
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} VeritX Vision. All rights reserved.</span>
-          <span>Prototype product — specifications subject to change.</span>
+          <span>© {new Date().getFullYear()} VeritX Vision. {t.footer.rights}</span>
+          <span>{t.footer.prototype}</span>
         </div>
       </div>
     </footer>
@@ -375,7 +324,7 @@ function Footer() {
 
 export default function App() {
   return (
-    <>
+    <LanguageProvider>
       <Header />
       <Hero />
       <LogosStrip />
@@ -385,6 +334,6 @@ export default function App() {
       <Specs />
       <Contact />
       <Footer />
-    </>
+    </LanguageProvider>
   )
 }

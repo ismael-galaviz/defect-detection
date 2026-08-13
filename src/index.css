@@ -157,6 +157,30 @@ nav.nav-links a:hover { color: var(--cyan); }
 
 .nav-cta { display: flex; align-items: center; gap: 14px; }
 
+.lang-switch {
+  display: flex;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.lang-switch button {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.lang-switch button:hover { color: var(--white); }
+.lang-switch button.active {
+  background: var(--cyan);
+  color: var(--navy);
+}
+
 .mobile-toggle { display: none; }
 
 /* Hero */
