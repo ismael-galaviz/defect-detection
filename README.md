@@ -1,6 +1,6 @@
 # VeritX Vision — Website
 
-Landing page for VeritX Vision, an AI-powered fabric defect detection system for textile manufacturers, built to compete with solutions like Uster Fabriq Vision.
+Landing page for VeritX Vision, an AI-powered fabric defect detection system for textile manufacturers.
 
 ## Stack
 
