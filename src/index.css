@@ -181,7 +181,32 @@ nav.nav-links a:hover { color: var(--cyan); }
   color: var(--navy);
 }
 
-.mobile-toggle { display: none; }
+.mobile-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--white);
+  font-size: 22px;
+  line-height: 1;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+.mobile-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 24px 20px;
+  background: rgba(11, 31, 58, 0.98);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.mobile-menu a {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 0;
+}
+.mobile-menu a.btn { margin-top: 8px; }
 
 /* Hero */
 .hero {
@@ -512,4 +537,18 @@ footer.site-footer {
   .form-two { grid-template-columns: 1fr; }
   nav.nav-links { display: none; }
   .mobile-toggle { display: block; }
+
+  .nav-wrap { padding: 14px 20px; gap: 12px; }
+  .logo { font-size: 17px; white-space: nowrap; flex-shrink: 0; }
+  .nav-cta { gap: 10px; }
+  .lang-switch { flex-shrink: 0; }
+  .nav-cta .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 600px) {
+  .nav-cta .btn { display: none; }
 }

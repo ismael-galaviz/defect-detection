@@ -27,6 +27,7 @@ function LangSwitch() {
 
 function Header() {
   const { t } = useLanguage()
+  const [menuOpen, setMenuOpen] = useState(false)
   return (
     <header className="site-header">
       <div className="container nav-wrap">
@@ -42,8 +43,27 @@ function Header() {
         <div className="nav-cta">
           <LangSwitch />
           <a href="#contact" className="btn btn-primary">{t.nav.cta}</a>
+          <button
+            type="button"
+            className="mobile-toggle"
+            aria-label="Menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            {menuOpen ? '✕' : '☰'}
+          </button>
         </div>
       </div>
+      {menuOpen && (
+        <nav className="mobile-menu">
+          {t.nav.links.map((l) => (
+            <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)}>{l.label}</a>
+          ))}
+          <a href="#contact" className="btn btn-primary" onClick={() => setMenuOpen(false)}>
+            {t.nav.cta}
+          </a>
+        </nav>
+      )}
     </header>
   )
 }
