@@ -17,7 +17,7 @@ export const translations = {
       ],
       aboutLabel: 'About Us',
       aboutItems: [
-        { href: '#about', label: 'Who We Are' },
+        { href: '#/about', label: 'Who We Are' },
         { href: '#contact', label: 'Contact' },
       ],
     },
@@ -307,7 +307,7 @@ export const translations = {
       ],
       aboutLabel: 'Nosotros',
       aboutItems: [
-        { href: '#about', label: 'Quiénes somos' },
+        { href: '#/about', label: 'Quiénes somos' },
         { href: '#contact', label: 'Contacto' },
       ],
     },
