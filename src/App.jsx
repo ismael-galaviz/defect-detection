@@ -138,6 +138,47 @@ function LogosStrip() {
   )
 }
 
+function VisionA() {
+  const { t } = useLanguage()
+  return (
+    <section id="vision-a" className="visiona-section">
+      <div className="container visiona-grid">
+        <div>
+          <span className="eyebrow">{t.visionA.eyebrow}</span>
+          <h2 className="section-title">{t.visionA.title}</h2>
+          <p className="section-sub">{t.visionA.sub}</p>
+          <div className="visiona-features">
+            {t.visionA.features.map((f) => (
+              <div className="visiona-feature" key={f.icon}>
+                <div className="vf-icon">{f.icon}</div>
+                <div>
+                  <h4>{f.title}</h4>
+                  <p>{f.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="visiona-visual">
+          <div className="device-frame">
+            <div className="device-name">VeritX <strong>Vision A</strong></div>
+            <div className="device-bar" aria-hidden="true"><i /><i /><i /></div>
+            <div className="device-beam" aria-hidden="true" />
+            <div className="device-fabric" aria-hidden="true">
+              <div className="scan-line" />
+            </div>
+          </div>
+          <div className="visiona-tags">
+            {t.visionA.tags.map((tag) => (
+              <span key={tag}>{tag}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function HowItWorks() {
   const { t } = useLanguage()
   return (
@@ -240,7 +281,9 @@ function Specs() {
 function Contact() {
   const { t } = useLanguage()
   const [submitted, setSubmitted] = useState(false)
+  const [stage, setStage] = useState('')
   const f = t.contact.form
+  const stageHint = f.stageOptions.find((o) => o.label === stage)?.hint
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -290,12 +333,13 @@ function Contact() {
             </div>
             <div className="form-row">
               <label htmlFor="stage">{f.stage}</label>
-              <select id="stage" defaultValue="">
+              <select id="stage" value={stage} onChange={(e) => setStage(e.target.value)}>
                 <option value="" disabled>{f.stagePlaceholder}</option>
                 {f.stageOptions.map((o) => (
-                  <option key={o}>{o}</option>
+                  <option key={o.label} value={o.label}>{o.label}</option>
                 ))}
               </select>
+              {stageHint && <p className="field-hint">{stageHint}</p>}
             </div>
             <div className="form-row">
               <label htmlFor="message">{f.message}</label>
@@ -387,6 +431,7 @@ function Site() {
         <>
           <Hero />
           <LogosStrip />
+          <VisionA />
           <HowItWorks />
           <UseCases />
           <Comparison />

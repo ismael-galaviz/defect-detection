@@ -51,6 +51,29 @@ export const translations = {
     logos: {
       label: 'Built for modern textile & apparel manufacturers',
     },
+    visionA: {
+      eyebrow: 'Meet the Product',
+      title: 'Vision A: inspection that plugs into your line',
+      sub: 'Vision A is our first inspection unit — engineered to be plug and play, so any mill can go from unboxing to automated quality control without re-engineering its production line.',
+      features: [
+        {
+          icon: '⚡',
+          title: 'Plug & play by design',
+          body: 'Vision A ships pre-calibrated with mounting hardware included. Mount it over your line, connect power and network, and start detecting — no specialized technicians, no production stops.',
+        },
+        {
+          icon: '🔗',
+          title: 'Easy integration',
+          body: 'Designed to retrofit onto your existing looms, finishing lines, or inspection frames without modifying them. Open APIs and standard industrial protocols connect it to your MES, ERP, or dashboards.',
+        },
+        {
+          icon: '🧩',
+          title: 'Flexible to your process',
+          body: 'Works across fabric types, widths, and line speeds. Start with a single unit at final inspection or scale to full-line coverage — in the cloud or on-premises.',
+        },
+      ],
+      tags: ['Pre-calibrated', 'Installs in < 48 h', 'Open API', 'No line modifications'],
+    },
     howItWorks: {
       eyebrow: 'How It Works',
       title: 'From raw fabric to actionable quality data',
@@ -144,7 +167,24 @@ export const translations = {
         emailPlaceholder: 'jane@company.com',
         stage: 'Where would you use VeritX Vision?',
         stagePlaceholder: 'Select a stage',
-        stageOptions: ['Fabric production', 'Finishing', 'Final inspection', 'Multiple stages'],
+        stageOptions: [
+          {
+            label: 'Fabric production',
+            hint: 'Catches defects at the source — during weaving or knitting, before hours of production compound a single flaw.',
+          },
+          {
+            label: 'Finishing',
+            hint: 'Flags shade variation, streaks, and contamination during dyeing and coating, before fabric moves downstream.',
+          },
+          {
+            label: 'Final inspection',
+            hint: 'Gives you a complete defect map on the full roll before packaging, so cutting and grading decisions are based on real data.',
+          },
+          {
+            label: 'Multiple stages',
+            hint: 'Correlates defects across stages to trace recurring issues back to their source on the line.',
+          },
+        ],
         message: 'Tell us about your line',
         messagePlaceholder: 'Fabric type, line speed, current inspection process...',
         submit: 'Request a Demo',
@@ -154,6 +194,7 @@ export const translations = {
       tagline: 'AI-powered fabric inspection for modern textile manufacturers. Enterprise-grade quality control, without the enterprise price.',
       product: 'Product',
       productLinks: [
+        { href: '#vision-a', label: 'Vision A' },
         { href: '#how-it-works', label: 'How It Works' },
         { href: '#use-cases', label: 'Use Cases' },
         { href: '#specs', label: 'Specifications' },
@@ -221,6 +262,29 @@ export const translations = {
     },
     logos: {
       label: 'Diseñado para fabricantes textiles y de confección modernos',
+    },
+    visionA: {
+      eyebrow: 'Conoce el producto',
+      title: 'Vision A: inspección que se conecta a tu línea',
+      sub: 'Vision A es nuestra primera unidad de inspección — diseñada para ser plug and play, para que cualquier fábrica pase de abrir la caja al control de calidad automatizado sin reingeniería de su línea de producción.',
+      features: [
+        {
+          icon: '⚡',
+          title: 'Plug & play desde el diseño',
+          body: 'Vision A llega precalibrada y con el hardware de montaje incluido. Móntala sobre tu línea, conecta corriente y red, y empieza a detectar — sin técnicos especializados ni paros de producción.',
+        },
+        {
+          icon: '🔗',
+          title: 'Fácil integración',
+          body: 'Diseñada para adaptarse a tus telares, líneas de acabado o marcos de inspección existentes sin modificarlos. APIs abiertas y protocolos industriales estándar la conectan a tu MES, ERP o tableros.',
+        },
+        {
+          icon: '🧩',
+          title: 'Flexible a tu proceso',
+          body: 'Funciona con distintos tipos de tela, anchos y velocidades de línea. Empieza con una unidad en inspección final o escala a cobertura total — en la nube o en sitio.',
+        },
+      ],
+      tags: ['Precalibrada', 'Instalación en < 48 h', 'API abierta', 'Sin modificar tu línea'],
     },
     howItWorks: {
       eyebrow: 'Cómo funciona',
@@ -315,7 +379,24 @@ export const translations = {
         emailPlaceholder: 'juana@empresa.com',
         stage: '¿Dónde usarías VeritX Vision?',
         stagePlaceholder: 'Selecciona una etapa',
-        stageOptions: ['Producción de tela', 'Acabado', 'Inspección final', 'Varias etapas'],
+        stageOptions: [
+          {
+            label: 'Producción de tela',
+            hint: 'Detecta defectos en el origen — durante el tejido, antes de que horas de producción multipliquen una sola falla.',
+          },
+          {
+            label: 'Acabado',
+            hint: 'Marca variación de tono, rayas y contaminación durante el teñido y recubrimiento, antes de que la tela avance en el proceso.',
+          },
+          {
+            label: 'Inspección final',
+            hint: 'Te da un mapa completo de defectos del rollo antes de empacar, para decidir corte y clasificación con datos reales.',
+          },
+          {
+            label: 'Varias etapas',
+            hint: 'Cruza los defectos entre etapas para rastrear problemas recurrentes hasta su origen en la línea.',
+          },
+        ],
         message: 'Cuéntanos sobre tu línea',
         messagePlaceholder: 'Tipo de tela, velocidad de línea, proceso de inspección actual...',
         submit: 'Solicitar demo',
@@ -325,6 +406,7 @@ export const translations = {
       tagline: 'Inspección de telas con IA para fabricantes textiles modernos. Control de calidad de nivel empresarial, sin el precio empresarial.',
       product: 'Producto',
       productLinks: [
+        { href: '#vision-a', label: 'Vision A' },
         { href: '#how-it-works', label: 'Cómo funciona' },
         { href: '#use-cases', label: 'Casos de uso' },
         { href: '#specs', label: 'Especificaciones' },
