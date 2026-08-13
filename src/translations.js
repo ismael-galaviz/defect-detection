@@ -129,17 +129,29 @@ export const translations = {
     },
     comparison: {
       eyebrow: 'Why VeritX Vision',
-      title: 'Enterprise-grade detection, without the enterprise price tag',
-      sub: 'Built to match the reliability of established fabric inspection systems while removing the cost and complexity barriers that keep AI quality control out of reach for most mills.',
-      headers: ['Capability', 'Legacy Systems', 'VeritX Vision'],
-      rows: [
-        ['AI-based defect classification', true, true],
-        ['Real-time inline inspection', true, true],
-        ['Typical hardware + software cost', 'Premium / high capex', '~50% lower'],
-        ['Install & commissioning', 'Weeks, rigid schedule', 'Flexible, adapts to your machine'],
-        ['Retrofits onto existing lines', 'Limited', 'Yes, by design'],
-        ['Cloud & on-prem deployment options', 'Enterprise-only', 'Included'],
-        ['Cut optimization & yield reporting', true, true],
+      title: 'Precision, flexibility, and value — built into every unit',
+      sub: 'VeritX Vision combines industrial-grade AI detection with a pricing and deployment model designed to fit mills of any size.',
+      cards: [
+        {
+          icon: 'target',
+          title: 'Industrial-grade accuracy',
+          body: 'AI-based classification identifies holes, stains, weaving errors, and shade variation with industrial-grade precision, in real time.',
+        },
+        {
+          icon: 'activity',
+          title: 'Real-time inline inspection',
+          body: 'Defects are flagged the moment they happen on the line, not discovered downstream after hours of production.',
+        },
+        {
+          icon: 'percent',
+          title: 'Accessible pricing',
+          body: 'Designed from the ground up to be cost-efficient, so AI-powered quality control fits mills of any size — not just large enterprise budgets.',
+        },
+        {
+          icon: 'cloud',
+          title: 'Cloud or on-premises',
+          body: 'Deploy VeritX Vision in the cloud, on-premises, or a hybrid setup — your infrastructure, your rules.',
+        },
       ],
     },
     specs: {
@@ -381,17 +393,29 @@ export const translations = {
     },
     comparison: {
       eyebrow: 'Por qué VeritX Vision',
-      title: 'Detección de nivel empresarial, sin el precio empresarial',
-      sub: 'Diseñado para igualar la confiabilidad de los sistemas de inspección de tela establecidos, eliminando las barreras de costo y complejidad que mantienen el control de calidad con IA fuera del alcance de la mayoría de las fábricas.',
-      headers: ['Capacidad', 'Sistemas tradicionales', 'VeritX Vision'],
-      rows: [
-        ['Clasificación de defectos con IA', true, true],
-        ['Inspección en línea en tiempo real', true, true],
-        ['Costo típico de hardware + software', 'Premium / alta inversión', '~50% menor'],
-        ['Instalación y puesta en marcha', 'Semanas, agenda rígida', 'Flexible, se adapta a tu máquina'],
-        ['Se adapta a líneas existentes', 'Limitado', 'Sí, por diseño'],
-        ['Opciones de despliegue en la nube y locales', 'Solo enterprise', 'Incluidas'],
-        ['Optimización de corte y reportes de rendimiento', true, true],
+      title: 'Precisión, flexibilidad y valor — en cada unidad',
+      sub: 'VeritX Vision combina detección con IA de nivel industrial con un modelo de precio y despliegue diseñado para fábricas de cualquier tamaño.',
+      cards: [
+        {
+          icon: 'target',
+          title: 'Precisión de nivel industrial',
+          body: 'La clasificación con IA identifica agujeros, manchas, errores de tejido y variación de tono con precisión de nivel industrial, en tiempo real.',
+        },
+        {
+          icon: 'activity',
+          title: 'Inspección en línea en tiempo real',
+          body: 'Los defectos se marcan en el momento en que ocurren en la línea, no se descubren después de horas de producción.',
+        },
+        {
+          icon: 'percent',
+          title: 'Precio accesible',
+          body: 'Diseñado desde cero para ser eficiente en costo, para que el control de calidad con IA quepa en fábricas de cualquier tamaño — no solo en grandes presupuestos empresariales.',
+        },
+        {
+          icon: 'cloud',
+          title: 'En la nube o en sitio',
+          body: 'Despliega VeritX Vision en la nube, en sitio, o en un esquema híbrido — tu infraestructura, tus reglas.',
+        },
       ],
     },
     specs: {

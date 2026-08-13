@@ -66,6 +66,22 @@ const ICON_PATHS = {
       <path d="M12 2.5v3M12 18.5v3M21.5 12h-3M5.5 12h-3M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1M18.4 18.4l-2.1-2.1M7.7 7.7 5.6 5.6" />
     </>
   ),
+  target: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="5" />
+      <circle cx="12" cy="12" r="1" />
+    </>
+  ),
+  activity: <path d="M2 12h4l2-7 4 14 2-7h8" />,
+  percent: (
+    <>
+      <path d="M5 19 19 5" />
+      <circle cx="7.5" cy="7.5" r="2.3" />
+      <circle cx="16.5" cy="16.5" r="2.3" />
+    </>
+  ),
+  cloud: <path d="M6.5 17a3.8 3.8 0 0 1 0-7.6 5 5 0 0 1 9.6-1.7A3.6 3.6 0 0 1 17 17H6.5Z" />,
 }
 
 function Icon({ name, size = 22 }) {
@@ -298,32 +314,20 @@ function UseCases() {
 
 function Comparison() {
   const { t } = useLanguage()
-  const [capHeader, legacyHeader, veritxHeader] = t.comparison.headers
   return (
     <section id="comparison">
       <div className="container">
         <span className="eyebrow">{t.comparison.eyebrow}</span>
         <h2 className="section-title">{t.comparison.title}</h2>
         <p className="section-sub">{t.comparison.sub}</p>
-        <div className="compare-table-wrap">
-          <table className="compare-table">
-            <thead>
-              <tr>
-                <th>{capHeader}</th>
-                <th>{legacyHeader}</th>
-                <th className="col-veritx">{veritxHeader}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {t.comparison.rows.map(([label, legacy, veritx]) => (
-                <tr key={label}>
-                  <td>{label}</td>
-                  <td>{typeof legacy === 'boolean' ? (legacy ? <span className="check">✓</span> : <span className="cross">—</span>) : legacy}</td>
-                  <td className="col-veritx">{typeof veritx === 'boolean' ? (veritx ? <span className="check">✓</span> : <span className="cross">—</span>) : veritx}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="usecases-grid why-grid">
+          {t.comparison.cards.map((c) => (
+            <div className="usecase-card" key={c.title}>
+              <div className="usecase-icon"><Icon name={c.icon} /></div>
+              <h4>{c.title}</h4>
+              <p>{c.body}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
