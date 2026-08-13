@@ -866,11 +866,11 @@ export const translations = {
       },
       form: {
         name: 'Nombre completo',
-        namePlaceholder: 'Juana Pérez',
+        namePlaceholder: 'María López',
         company: 'Empresa',
         companyPlaceholder: 'Tu fábrica o empresa',
         email: 'Correo de trabajo',
-        emailPlaceholder: 'juana@empresa.com',
+        emailPlaceholder: 'maria@empresa.com',
         stage: '¿Dónde usarías VeritX Vision?',
         stagePlaceholder: 'Selecciona una etapa',
         stageOptions: [
