@@ -344,8 +344,9 @@ In file order:
   Spanish-language brand mark regardless of site language — this was an explicit request, not an
   oversight).
 - **`Footer()`** — brand block (logo, tagline, the Mexico badge) + 3 link columns (`Product`, `Company`,
-  `Legal`) + bottom bar (copyright, "prototype" disclaimer). **Not everything in the footer is a real
-  link** — see §10.
+  `Legal`) + bottom bar (copyright, "prototype" disclaimer). The `Company` column is `About` (→
+  `#/about`) and `Contact` (→ `#contact`) — both real links; there is no `Careers` entry. **The `Legal`
+  column is still not real links** — see §11.
 - **`Site()`** — route-to-component mapping, see §4.
 - **`App()`** — default export, wraps `<Site/>` in `<LanguageProvider>`.
 
@@ -640,7 +641,6 @@ export const translations = {
       ],
       company: 'Company',
       about: 'About',
-      careers: 'Careers',
       contact: 'Contact',
       legal: 'Legal',
       privacy: 'Privacy Policy',
@@ -932,7 +932,6 @@ export const translations = {
       ],
       company: 'Empresa',
       about: 'Nosotros',
-      careers: 'Vacantes',
       contact: 'Contacto',
       legal: 'Legal',
       privacy: 'Aviso de privacidad',
@@ -1010,11 +1009,10 @@ casually reverse them without the user re-confirming — re-litigating them wast
   (`t.contact.success`). There is no backend, no email service (e.g. Formspree), no API call. If the
   user asks "why didn't I get an email", this is why — it's cosmetic/prototype-only, flagged
   previously, not yet wired up.
-- **Footer "Company" column:** only "Contact"/"Contacto" is a real link (`href="#contact"`). "About"/
-  "Nosotros" and "Careers"/"Vacantes" are plain `<span>`s, not linked to anything (note: "About"/
-  "Nosotros" here is a **leftover placeholder label distinct from the real `/#about` page** — it was
-  never wired up to point there; consider linking it to `#/about` if revisited, but that's a live
-  decision, not something already decided).
+- **Footer "Company" column** now has exactly two real links: "About"/"Nosotros" (`href="#/about"`,
+  wired to the real About page) and "Contact"/"Contacto" (`href="#contact"`). "Careers"/"Vacantes" was
+  removed entirely (was a non-functional placeholder with no page behind it) — do not re-add a Careers
+  link without a real destination for it.
 - **Footer "Legal" column:** "Privacy Policy"/"Aviso de privacidad" and "Terms of Service"/"Términos de
   servicio" are also plain `<span>`s — no privacy-policy or terms-of-service page exists anywhere on
   the site (the contact form's own inline privacy blurb, §10.11, is the only privacy-related content

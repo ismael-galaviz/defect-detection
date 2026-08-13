@@ -9,8 +9,8 @@ the technical/design record).
 - [ ] Wire the contact form to an actual backend or email service (e.g. Formspree) — it currently only
       shows a local "success" message and doesn't send the data anywhere.
 - [ ] Build the real savings calculator at `#/calculator` — currently a "coming soon" placeholder page.
-- [ ] Link the footer's "About"/"Nosotros" label to the `#/about` page — it's currently plain text, not
-      a link (separate from the real About Us page, which does work via the header nav).
+- [x] ~~Link the footer's "About"/"Nosotros" label to the `#/about` page~~ — done; also removed the
+      unused "Careers"/"Vacantes" footer entry.
 - [ ] Write and link a real Privacy Policy page — the footer's "Privacy Policy"/"Aviso de privacidad"
       link is currently a non-functional placeholder. (There's a short inline privacy blurb in the
       contact form's consent checkbox, but no standalone policy page.)

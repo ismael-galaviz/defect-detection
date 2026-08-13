@@ -508,8 +508,7 @@ function Footer() {
             </div>
             <div className="footer-col">
               <h5>{t.footer.company}</h5>
-              <span>{t.footer.about}</span>
-              <span>{t.footer.careers}</span>
+              <a href="#/about">{t.footer.about}</a>
               <a href="#contact">{t.footer.contact}</a>
             </div>
             <div className="footer-col">
