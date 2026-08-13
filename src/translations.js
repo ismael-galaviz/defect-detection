@@ -180,7 +180,7 @@ export const translations = {
         { val: '99.2%', label: 'Defect detection accuracy' },
         { val: '≤5mm', label: 'Minimum detectable defect size' },
         { val: 'Up to 120m/min', label: 'Inspection line speed' },
-        { val: '15+', label: 'Defect classes identified' },
+        { val: 'No limits', label: 'The model learns your specific defects by material and type' },
       ],
     },
     about: {
