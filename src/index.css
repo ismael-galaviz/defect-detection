@@ -552,3 +552,198 @@ footer.site-footer {
 @media (max-width: 600px) {
   .nav-cta .btn { display: none; }
 }
+
+/* Demo page */
+.demo-hero {
+  background: linear-gradient(160deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: var(--white);
+  padding: 72px 0;
+}
+.demo-hero h1 {
+  font-size: clamp(30px, 4.5vw, 44px);
+  margin-bottom: 16px;
+}
+.demo-hero .lead {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 18px;
+  max-width: 640px;
+}
+.demo-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+.demo-meta { color: rgba(255, 255, 255, 0.72); font-size: 15px; }
+.demo-meta strong { color: var(--cyan); }
+
+.demo-section { padding: 64px 0 96px; background: var(--gray-50); }
+
+.map-card {
+  background: #10294a;
+  border-radius: var(--radius);
+  padding: 24px 24px 16px;
+  box-shadow: 0 20px 50px rgba(11, 31, 58, 0.25);
+}
+
+.map-legend {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 0 8px 16px;
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  font-weight: 500;
+}
+.legend-item i {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.legend-note {
+  margin-left: auto;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 13px;
+}
+
+.map-svg-wrap { position: relative; }
+.map-svg-wrap svg { width: 100%; height: auto; display: block; }
+
+.map-grid { stroke: rgba(255, 255, 255, 0.07); stroke-width: 1; }
+.map-axis { stroke: rgba(255, 255, 255, 0.25); stroke-width: 1; }
+.map-tick {
+  fill: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.map-axis-title {
+  fill: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+  font-weight: 600;
+}
+.map-defect { cursor: pointer; }
+.map-defect.hovered { stroke: var(--white); }
+
+.map-tooltip {
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 14px));
+  background: var(--navy);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  z-index: 5;
+}
+.map-tooltip strong { color: var(--white); }
+.map-tooltip .tip-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.map-tooltip .tip-title i {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.defect-table-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-top: 32px;
+  box-shadow: 0 8px 30px rgba(11, 31, 58, 0.08);
+}
+.defect-table-card h3 { color: var(--navy); margin-bottom: 16px; }
+.defect-table-wrap { overflow-x: auto; }
+.defect-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.defect-table th {
+  text-align: left;
+  padding: 10px 14px;
+  color: var(--gray-500);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--gray-100);
+  white-space: nowrap;
+}
+.defect-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--gray-100);
+  color: var(--gray-700);
+  font-variant-numeric: tabular-nums;
+}
+.defect-table tr.row-hovered td { background: var(--gray-50); }
+.type-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.type-cell i {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* Hecho en México badge */
+.mim-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: 20px;
+  padding: 10px 18px 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+}
+.mim-top {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.65);
+}
+.mim-mx {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--white);
+  line-height: 1.1;
+}
+.mim-flag {
+  display: flex;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.mim-flag i { flex: 1; }
+.mim-flag i:nth-child(1) { background: #006847; }
+.mim-flag i:nth-child(2) { background: #f4f4f4; }
+.mim-flag i:nth-child(3) { background: #ce1126; }
+
+@media (max-width: 600px) {
+  .map-card { padding: 16px 12px 10px; }
+  .legend-note { margin-left: 0; width: 100%; }
+}

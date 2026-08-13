@@ -1,5 +1,16 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LanguageProvider, useLanguage } from './i18n.jsx'
+import DemoPage from './DemoPage.jsx'
+
+function useRoute() {
+  const [hash, setHash] = useState(window.location.hash)
+  useEffect(() => {
+    const onHash = () => setHash(window.location.hash)
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+  return hash.startsWith('#/demo') ? 'demo' : 'home'
+}
 
 function LangSwitch() {
   const { lang, setLang } = useLanguage()
@@ -300,6 +311,16 @@ function Contact() {
   )
 }
 
+function MadeInMexicoBadge() {
+  return (
+    <div className="mim-badge" role="img" aria-label="Hecho en México">
+      <span className="mim-top">HECHO EN</span>
+      <span className="mim-mx">MÉXICO</span>
+      <span className="mim-flag" aria-hidden="true"><i /><i /><i /></span>
+    </div>
+  )
+}
+
 function Footer() {
   const { t } = useLanguage()
   return (
@@ -312,6 +333,7 @@ function Footer() {
               VeritX Vision
             </a>
             <p>{t.footer.tagline}</p>
+            <MadeInMexicoBadge />
           </div>
           <div className="footer-cols">
             <div className="footer-col">
@@ -342,18 +364,45 @@ function Footer() {
   )
 }
 
+function Site() {
+  const route = useRoute()
+
+  useEffect(() => {
+    if (route === 'demo') {
+      window.scrollTo(0, 0)
+    } else {
+      const hash = window.location.hash
+      if (hash && !hash.startsWith('#/')) {
+        document.getElementById(hash.slice(1))?.scrollIntoView()
+      }
+    }
+  }, [route])
+
+  return (
+    <>
+      <Header />
+      {route === 'demo' ? (
+        <DemoPage />
+      ) : (
+        <>
+          <Hero />
+          <LogosStrip />
+          <HowItWorks />
+          <UseCases />
+          <Comparison />
+          <Specs />
+          <Contact />
+        </>
+      )}
+      <Footer />
+    </>
+  )
+}
+
 export default function App() {
   return (
     <LanguageProvider>
-      <Header />
-      <Hero />
-      <LogosStrip />
-      <HowItWorks />
-      <UseCases />
-      <Comparison />
-      <Specs />
-      <Contact />
-      <Footer />
+      <Site />
     </LanguageProvider>
   )
 }

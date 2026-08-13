@@ -6,7 +6,7 @@ const LanguageContext = createContext(null)
 function detectLanguage() {
   const saved = localStorage.getItem('veritx-lang')
   if (saved === 'en' || saved === 'es') return saved
-  return navigator.language?.toLowerCase().startsWith('es') ? 'es' : 'en'
+  return 'es'
 }
 
 export function LanguageProvider({ children }) {
