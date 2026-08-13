@@ -9,7 +9,6 @@ export const translations = {
         { href: '#/demo', label: 'Demo' },
         { href: '#contact', label: 'Contact' },
       ],
-      cta: 'Request a Demo',
     },
     demo: {
       eyebrow: 'Live Demo',
@@ -34,11 +33,11 @@ export const translations = {
       titleStart: 'Catch every textile defect. ',
       titleAccent: 'Cut inspection costs by half.',
       lead: 'VeritX Vision uses real-time computer vision and machine learning to detect fabric defects on the production line — delivering enterprise-grade quality control at a fraction of the cost of legacy inspection systems.',
-      ctaPrimary: 'Request a Demo',
+      ctaPrimary: 'Request Contact',
       ctaSecondary: 'See How It Works',
       stats: [
         { num: '99.2%', label: 'Detection accuracy' },
-        { num: '<48h', label: 'Install & setup time' },
+        { num: 'Flexible', label: 'Install adapts to your machine' },
         { num: '~50%', label: 'Lower cost vs. legacy systems' },
       ],
       defectTags: [
@@ -54,22 +53,22 @@ export const translations = {
       sub: 'Vision A is our first inspection unit — engineered to be plug and play, so any mill can go from unboxing to automated quality control without re-engineering its production line.',
       features: [
         {
-          icon: '⚡',
+          icon: 'bolt',
           title: 'Plug & play by design',
           body: 'Vision A ships pre-calibrated with mounting hardware included. Mount it over your line, connect power and network, and start detecting — no specialized technicians, no production stops.',
         },
         {
-          icon: '🔗',
+          icon: 'link',
           title: 'Easy integration',
           body: 'Designed to retrofit onto your existing looms, finishing lines, or inspection frames without modifying them. Open APIs and standard industrial protocols connect it to your MES, ERP, or dashboards.',
         },
         {
-          icon: '🧩',
+          icon: 'sliders',
           title: 'Flexible to your process',
           body: 'Works across fabric types, widths, and line speeds. Start with a single unit at final inspection or scale to full-line coverage — in the cloud or on-premises.',
         },
       ],
-      tags: ['Pre-calibrated', 'Installs in < 48 h', 'Open API', 'No line modifications'],
+      tags: ['Pre-calibrated', 'Flexible installation', 'Open API', 'No line modifications'],
     },
     howItWorks: {
       eyebrow: 'How It Works',
@@ -94,15 +93,15 @@ export const translations = {
         {
           n: '04',
           title: 'Reporting & Yield Optimization',
-          body: 'Quality data feeds into a dashboard for trend analysis, helping you optimize cut positions, reduce waste, and make data-driven production decisions.',
+          body: 'Quality data feeds into a dashboard for trend analysis and integrates with your existing MES and production ecosystem, helping you optimize cut positions, reduce waste, and make data-driven decisions.',
         },
       ],
       integration: {
         title: 'Client-defined actions on severe defects',
         body: "Vision A can talk directly to your line's control system to react automatically when a defect crosses a severity threshold you set. You define the rules and the actions — VeritX Vision executes them in real time.",
         examples: [
-          { icon: '⏸', rule: 'Severe defect detected 5+ times within 100 m', action: 'stop the line' },
-          { icon: '🏷️', rule: 'Severe defect detected', action: 'trigger the labeling unit to mark the defect' },
+          { icon: 'pause', rule: 'Severe defect detected 5+ times within 100 m', action: 'stop the line' },
+          { icon: 'tag', rule: 'Severe defect detected', action: 'trigger the labeling unit to mark the defect' },
         ],
       },
     },
@@ -112,17 +111,17 @@ export const translations = {
       sub: 'Deploy at one stage or across the full production flow — the system adapts to your setup.',
       cards: [
         {
-          icon: '🧵',
+          icon: 'weave',
           title: 'Fabric Production',
           body: 'Inline inspection during weaving and knitting catches defects at the source — before hours of production compound a single flaw.',
         },
         {
-          icon: '🎨',
+          icon: 'droplet',
           title: 'Finishing',
           body: 'Monitor dyeing, coating, and finishing stages for shade variation, streaks, and contamination before fabric moves downstream.',
         },
         {
-          icon: '✅',
+          icon: 'eyeCheck',
           title: 'Final Inspection',
           body: 'Full-roll automated inspection before packaging and shipment, with a complete defect map for cutting and grading decisions.',
         },
@@ -137,7 +136,7 @@ export const translations = {
         ['AI-based defect classification', true, true],
         ['Real-time inline inspection', true, true],
         ['Typical hardware + software cost', 'Premium / high capex', '~50% lower'],
-        ['Install & commissioning time', 'Weeks', '< 48 hours'],
+        ['Install & commissioning', 'Weeks, rigid schedule', 'Flexible, adapts to your machine'],
         ['Retrofits onto existing lines', 'Limited', 'Yes, by design'],
         ['Cloud & on-prem deployment options', 'Enterprise-only', 'Included'],
         ['Cut optimization & yield reporting', true, true],
@@ -228,7 +227,7 @@ export const translations = {
         ],
         message: 'Tell us about your line',
         messagePlaceholder: 'Fabric type, line speed, current inspection process...',
-        submit: 'Request a Demo',
+        submit: 'Request Contact',
       },
     },
     footer: {
@@ -262,7 +261,6 @@ export const translations = {
         { href: '#/demo', label: 'Demo' },
         { href: '#contact', label: 'Contacto' },
       ],
-      cta: 'Solicitar demo',
     },
     demo: {
       eyebrow: 'Demo en vivo',
@@ -287,11 +285,11 @@ export const translations = {
       titleStart: 'Detecta cada defecto textil. ',
       titleAccent: 'Reduce los costos de inspección a la mitad.',
       lead: 'VeritX Vision utiliza visión por computadora y aprendizaje automático en tiempo real para detectar defectos en la tela sobre la línea de producción — control de calidad de nivel empresarial a una fracción del costo de los sistemas de inspección tradicionales.',
-      ctaPrimary: 'Solicitar demo',
+      ctaPrimary: 'Solicitar contacto',
       ctaSecondary: 'Ver cómo funciona',
       stats: [
         { num: '99.2%', label: 'Precisión de detección' },
-        { num: '<48h', label: 'Tiempo de instalación y configuración' },
+        { num: 'Flexible', label: 'La instalación se adapta a tu máquina' },
         { num: '~50%', label: 'Menor costo vs. sistemas tradicionales' },
       ],
       defectTags: [
@@ -307,22 +305,22 @@ export const translations = {
       sub: 'Vision A es nuestra primera unidad de inspección — diseñada para ser plug and play, para que cualquier fábrica pase de abrir la caja al control de calidad automatizado sin reingeniería de su línea de producción.',
       features: [
         {
-          icon: '⚡',
+          icon: 'bolt',
           title: 'Plug & play desde el diseño',
           body: 'Vision A llega precalibrada y con el hardware de montaje incluido. Móntala sobre tu línea, conecta corriente y red, y empieza a detectar — sin técnicos especializados ni paros de producción.',
         },
         {
-          icon: '🔗',
+          icon: 'link',
           title: 'Fácil integración',
           body: 'Diseñada para adaptarse a tus telares, líneas de acabado o marcos de inspección existentes sin modificarlos. APIs abiertas y protocolos industriales estándar la conectan a tu MES, ERP o tableros.',
         },
         {
-          icon: '🧩',
+          icon: 'sliders',
           title: 'Flexible a tu proceso',
           body: 'Funciona con distintos tipos de tela, anchos y velocidades de línea. Empieza con una unidad en inspección final o escala a cobertura total — en la nube o en sitio.',
         },
       ],
-      tags: ['Precalibrada', 'Instalación en < 48 h', 'API abierta', 'Sin modificar tu línea'],
+      tags: ['Precalibrada', 'Instalación flexible', 'API abierta', 'Sin modificar tu línea'],
     },
     howItWorks: {
       eyebrow: 'Cómo funciona',
@@ -347,15 +345,15 @@ export const translations = {
         {
           n: '04',
           title: 'Reportes y optimización de rendimiento',
-          body: 'Los datos de calidad alimentan un panel de análisis de tendencias, ayudándote a optimizar posiciones de corte, reducir desperdicio y tomar decisiones de producción basadas en datos.',
+          body: 'Los datos de calidad alimentan un panel de análisis de tendencias y se integran con tu MES y ecosistema de producción existente, ayudándote a optimizar posiciones de corte, reducir desperdicio y tomar decisiones basadas en datos.',
         },
       ],
       integration: {
         title: 'Acciones definidas por el cliente ante defectos severos',
         body: 'Vision A puede comunicarse directamente con el sistema de control de tu línea para reaccionar automáticamente cuando un defecto supera un umbral de severidad que tú definas. Tú defines las reglas y las acciones — VeritX Vision las ejecuta en tiempo real.',
         examples: [
-          { icon: '⏸', rule: 'Defecto severo detectado 5+ veces en 100 m', action: 'detener la línea' },
-          { icon: '🏷️', rule: 'Defecto severo detectado', action: 'activar la etiquetadora para marcar el defecto' },
+          { icon: 'pause', rule: 'Defecto severo detectado 5+ veces en 100 m', action: 'detener la línea' },
+          { icon: 'tag', rule: 'Defecto severo detectado', action: 'activar la etiquetadora para marcar el defecto' },
         ],
       },
     },
@@ -365,17 +363,17 @@ export const translations = {
       sub: 'Instálalo en una etapa o a lo largo de todo el flujo de producción — el sistema se adapta a tu configuración.',
       cards: [
         {
-          icon: '🧵',
+          icon: 'weave',
           title: 'Producción de tela',
           body: 'La inspección en línea durante el tejido detecta defectos en el origen — antes de que horas de producción multipliquen una sola falla.',
         },
         {
-          icon: '🎨',
+          icon: 'droplet',
           title: 'Acabado',
           body: 'Monitorea las etapas de teñido, recubrimiento y acabado para detectar variación de tono, rayas y contaminación antes de que la tela avance en el proceso.',
         },
         {
-          icon: '✅',
+          icon: 'eyeCheck',
           title: 'Inspección final',
           body: 'Inspección automatizada del rollo completo antes de empaque y envío, con un mapa completo de defectos para decisiones de corte y clasificación.',
         },
@@ -390,7 +388,7 @@ export const translations = {
         ['Clasificación de defectos con IA', true, true],
         ['Inspección en línea en tiempo real', true, true],
         ['Costo típico de hardware + software', 'Premium / alta inversión', '~50% menor'],
-        ['Tiempo de instalación y puesta en marcha', 'Semanas', '< 48 horas'],
+        ['Instalación y puesta en marcha', 'Semanas, agenda rígida', 'Flexible, se adapta a tu máquina'],
         ['Se adapta a líneas existentes', 'Limitado', 'Sí, por diseño'],
         ['Opciones de despliegue en la nube y locales', 'Solo enterprise', 'Incluidas'],
         ['Optimización de corte y reportes de rendimiento', true, true],
@@ -482,7 +480,7 @@ export const translations = {
         ],
         message: 'Cuéntanos sobre tu línea',
         messagePlaceholder: 'Tipo de tela, velocidad de línea, proceso de inspección actual...',
-        submit: 'Solicitar demo',
+        submit: 'Solicitar contacto',
       },
     },
     footer: {
