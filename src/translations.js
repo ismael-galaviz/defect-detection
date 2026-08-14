@@ -282,6 +282,8 @@ export const translations = {
       email: 'hello@veritxvision.com',
       locationLabel: 'Based in',
       location: 'Tlaxcala, Mexico — serving textile manufacturers across Mexico, Latin America, and the world',
+      whatsappLabel: 'Chat on WhatsApp',
+      whatsapp: '+52 246 241 6056',
       success: "Thanks for reaching out! We'll get back to you within one business day to schedule your demo.",
       successSchedule: "Your appointment request has been received! We'll confirm by email shortly.",
       appointment: {
@@ -293,6 +295,9 @@ export const translations = {
         selectTime: 'Select a time',
         summaryLabel: 'Selected appointment',
         required: 'Please pick a date and time for your appointment.',
+        videoTool: 'Preferred video call tool',
+        videoToolPlaceholder: 'Select a tool',
+        videoToolOptions: ['Zoom', 'Google Meet', 'Microsoft Teams', 'WhatsApp Video', 'Other'],
       },
       privacy: {
         title: 'How we use your information',
@@ -665,6 +670,8 @@ export const translations = {
       email: 'hello@veritxvision.com',
       locationLabel: 'Ubicados en',
       location: 'Tlaxcala, México — atendiendo a fabricantes textiles de México, Latinoamérica y el mundo',
+      whatsappLabel: 'Chatea por WhatsApp',
+      whatsapp: '+52 246 241 6056',
       success: '¡Gracias por contactarnos! Te responderemos en un día hábil para agendar tu demo.',
       successSchedule: '¡Tu solicitud de cita fue recibida! Te confirmaremos por correo en breve.',
       appointment: {
@@ -676,6 +683,9 @@ export const translations = {
         selectTime: 'Selecciona un horario',
         summaryLabel: 'Cita seleccionada',
         required: 'Elige una fecha y un horario para tu cita.',
+        videoTool: 'Herramienta de videollamada preferida',
+        videoToolPlaceholder: 'Selecciona una herramienta',
+        videoToolOptions: ['Zoom', 'Google Meet', 'Microsoft Teams', 'WhatsApp Video', 'Otra'],
       },
       privacy: {
         title: 'Cómo usamos tu información',

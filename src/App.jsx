@@ -469,6 +469,7 @@ function Contact() {
   const [mode, setMode] = useState('message')
   const [selectedDate, setSelectedDate] = useState(null)
   const [selectedTime, setSelectedTime] = useState(null)
+  const [videoTool, setVideoTool] = useState('')
   const [attemptedSubmit, setAttemptedSubmit] = useState(false)
   const successRef = useRef(null)
   const f = t.contact.form
@@ -495,12 +496,21 @@ function Contact() {
           <span className="eyebrow">{t.contact.eyebrow}</span>
           <h2>{t.contact.title}</h2>
           <p>{t.contact.body}</p>
-          <div className="info-row">
-            <span className="ico"><Icon name="mail" size={18} /></span>
-            <div>
-              <div className="t">{t.contact.emailLabel}</div>
-              <div className="d">{t.contact.email}</div>
+          <div className="info-row-pair">
+            <div className="info-row">
+              <span className="ico"><Icon name="mail" size={18} /></span>
+              <div>
+                <div className="t">{t.contact.emailLabel}</div>
+                <div className="d">{t.contact.email}</div>
+              </div>
             </div>
+            <a className="info-row" href="https://wa.me/526462416056" target="_blank" rel="noopener noreferrer">
+              <span className="ico"><Icon name="whatsapp" size={18} /></span>
+              <div>
+                <div className="t">{t.contact.whatsappLabel}</div>
+                <div className="d">{t.contact.whatsapp}</div>
+              </div>
+            </a>
           </div>
           <div className="info-row">
             <span className="ico"><Icon name="pin" size={18} /></span>
@@ -590,6 +600,18 @@ function Contact() {
                 {attemptedSubmit && (!selectedDate || !selectedTime) && (
                   <p className="field-error">{a.required}</p>
                 )}
+              </div>
+            )}
+
+            {mode === 'schedule' && (
+              <div className="form-row">
+                <label htmlFor="videoTool">{a.videoTool}</label>
+                <select id="videoTool" value={videoTool} onChange={(e) => setVideoTool(e.target.value)}>
+                  <option value="" disabled>{a.videoToolPlaceholder}</option>
+                  {a.videoToolOptions.map((o) => (
+                    <option key={o} value={o}>{o}</option>
+                  ))}
+                </select>
               </div>
             )}
 
