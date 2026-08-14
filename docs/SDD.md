@@ -111,7 +111,7 @@ veritx-web/
     ├── i18n.jsx                 # LanguageProvider/useLanguage — language state, not the copy itself
     ├── translations.js          # ALL user-facing copy, both languages, one big object (see §5, §9)
     ├── DemoPage.jsx              # route #/demo — interactive defect-map demo
-    ├── CalculatorPage.jsx         # route #/calculator — "coming soon" placeholder page
+    ├── CalculatorPage.jsx         # route #/calculator — interactive ROI/savings calculator (see §10.16)
     ├── AboutPage.jsx              # route #/about — "Who We Are" page
     └── index.css                 # the only stylesheet, global, ~1035 lines
 ```
@@ -224,9 +224,8 @@ language-switcher flags (see §5).
 | `cloud` | Why VeritX Vision card 4 | Cloud or on-premises |
 | `globe` | About facts | "Where we serve" |
 | `chevronDown` | Nav dropdown / mobile accordion triggers | Expand/collapse indicator (rotates 180° via `.chev.open`) |
-
-`CalculatorPage.jsx` has one inline raw `<svg>` (a simple calculator glyph) instead of using `Icon` —
-minor inconsistency, harmless, could be migrated to a new `ICON_PATHS.calculator` entry if touched again.
+| `clock` | Calculator, section 2 (labor hours) | Time/hours |
+| `gauge` | Calculator, section 3 (line speed) | Speed |
 
 **To add an icon:** add a `name: <path .../>` (or `<>...</>` fragment for multi-element icons) entry to
 `ICON_PATHS` in `icons.jsx`, keeping the `viewBox="0 0 24 24"` coordinate space consistent with the
@@ -995,6 +994,22 @@ casually reverse them without the user re-confirming — re-litigating them wast
     than picking colors by eye.
 15. **The product video belongs on the Vision A / product-description section**, not the About page —
     explicitly corrected after an initial placement in About. See §8's `VisionA()` entry.
+16. **The `#/calculator` page is a real, interactive ROI calculator**, sourced from a client-provided
+    document (`Guia_Ingeniero_Calidad_ROI.docx`, a "Quality Engineer's ROI Guide") — not a placeholder.
+    Three savings sections (defect reduction, manual-inspection labor hours, line-speed increase), each
+    with editable inputs (defaults = the guide's own worked examples), a live-computed annual-savings
+    result, a collapsible formula box, and a client-facing hint; a total card sums the three, subtracts
+    an optional recurring cost, and computes payback in months from an optional initial investment. All
+    labels/formulas/hints are bilingual (`translations.js` → `calculatorPage`); the numeric defaults and
+    the calculation functions themselves live in `CalculatorPage.jsx` (`DEFAULTS`, `CALC`), not in
+    translations, since they aren't language-dependent. **Known issue inherited from the source
+    document:** the line-speed section's worked example in the guide states an annual savings of
+    $2,400,000 MXN, but applying the guide's own stated formula to that same example's numbers
+    ((100−70) × 4,000 hrs × 0.5 units/m × $20/unit) yields $1,200,000 MXN — exactly half. The calculator
+    implements the formula literally, so it will show $1,200,000 MXN for the default inputs, not the
+    guide's $2,400,000 MXN. This was not silently "corrected" one way or the other; it's flagged in
+    `TODO.md` for the user to confirm which is right (and fix the formula, the guide's example, or add a
+    documented ×2 factor) rather than guessed at.
 
 ---
 
@@ -1017,10 +1032,8 @@ casually reverse them without the user re-confirming — re-litigating them wast
   servicio" are also plain `<span>`s — no privacy-policy or terms-of-service page exists anywhere on
   the site (the contact form's own inline privacy blurb, §10.11, is the only privacy-related content
   that actually exists).
-- **`CalculatorPage.jsx` is an explicit temporary placeholder** ("Coming Soon" / "Próximamente") with no
-  real calculation logic — just a message and a CTA back to the contact form.
-- **`CalculatorPage.jsx` has one inline raw `<svg>`** instead of using the shared `Icon` component (see
-  §6) — harmless inconsistency.
+- **The line-speed example in the source ROI guide has an arithmetic inconsistency** — see §10.16.
+  Flagged in `TODO.md` for the user to confirm which side (formula vs. example) is right.
 - **No web font is actually loaded** — `index.css` requests `'Inter'` first in the font stack, but
   nothing imports/links Inter, so every browser silently falls back to its next system font.
 - **No automated tests, no linter/formatter config.**

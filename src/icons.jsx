@@ -85,6 +85,19 @@ const ICON_PATHS = {
     </>
   ),
   chevronDown: <path d="m6 9 6 6 6-6" />,
+  clock: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3.5 2" />
+    </>
+  ),
+  gauge: (
+    <>
+      <path d="M4 15a8 8 0 1 1 16 0" />
+      <path d="M12 15 16 9" />
+      <circle cx="12" cy="15" r="1.4" />
+    </>
+  ),
 }
 
 export function Icon({ name, size = 22 }) {

@@ -8,7 +8,15 @@ the technical/design record).
 
 - [ ] Wire the contact form to an actual backend or email service (e.g. Formspree) — it currently only
       shows a local "success" message and doesn't send the data anywhere.
-- [ ] Build the real savings calculator at `#/calculator` — currently a "coming soon" placeholder page.
+- [x] ~~Build the real savings calculator at `#/calculator`~~ — done, built from
+      `Guia_Ingeniero_Calidad_ROI.docx`. See the new open item below about its source data.
+- [ ] **Confirm the line-speed example in the ROI guide.** The guide's own worked example says
+      $2,400,000 MXN/year, but its own formula applied to that example's numbers
+      ((100−70) × 4,000 hrs × 0.5 units/m × $20/unit) gives $1,200,000 MXN — exactly half. The live
+      calculator uses the formula as written, so it shows $1,200,000 MXN for the default inputs. Please
+      confirm which is correct: the formula, or the guide's example number (maybe a units-per-meter or
+      per-shift factor was meant to be doubled) — then update `CalculatorPage.jsx`'s `CALC.lineSpeed`
+      and/or the `lineSpeed` defaults in `DEFAULTS` accordingly. See SDD §10.16 for the full detail.
 - [x] ~~Link the footer's "About"/"Nosotros" label to the `#/about` page~~ — done; also removed the
       unused "Careers"/"Vacantes" footer entry.
 - [ ] Write and link a real Privacy Policy page — the footer's "Privacy Policy"/"Aviso de privacidad"

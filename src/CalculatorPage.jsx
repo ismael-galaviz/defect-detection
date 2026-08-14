@@ -1,27 +1,177 @@
+import { useMemo, useState } from 'react'
 import { useLanguage } from './i18n.jsx'
+import { Icon } from './icons.jsx'
+
+// Defaults mirror the worked examples from the source ROI guide (Guia_Ingeniero_Calidad_ROI.docx).
+const DEFAULTS = {
+  defects: { rateBefore: 1.2, rateAfter: 0.2, volume: 500000, costPerDefect: 150 },
+  laborHours: { hoursBefore: 12, hoursAfter: 2, hourlyCost: 80, shiftsPerYear: 250 },
+  lineSpeed: { speedBefore: 70, speedAfter: 100, hoursPerYear: 4000, unitsPerMeter: 0.5, marginPerUnit: 20 },
+}
+
+const CALC = {
+  defects: (v) => Math.max(0, v.rateBefore - v.rateAfter) / 100 * v.volume * v.costPerDefect,
+  laborHours: (v) => Math.max(0, v.hoursBefore - v.hoursAfter) * v.hourlyCost * v.shiftsPerYear,
+  lineSpeed: (v) => Math.max(0, v.speedAfter - v.speedBefore) * v.hoursPerYear * v.unitsPerMeter * v.marginPerUnit,
+}
+
+function formatMXN(n, lang) {
+  return new Intl.NumberFormat(lang === 'es' ? 'es-MX' : 'en-US', {
+    style: 'currency',
+    currency: 'MXN',
+    maximumFractionDigits: 0,
+  }).format(Math.round(n) || 0)
+}
+
+// Shows thousand separators while at rest; switches to raw digits while focused so typing/cursor
+// position isn't disturbed by live comma insertion.
+function CalcNumberInput({ id, value, onChange }) {
+  const { lang } = useLanguage()
+  const [focused, setFocused] = useState(false)
+
+  const display = focused
+    ? String(value)
+    : value === '' || value === null || value === undefined
+      ? ''
+      : Number(value).toLocaleString(lang === 'es' ? 'es-MX' : 'en-US', { maximumFractionDigits: 4 })
+
+  return (
+    <input
+      id={id}
+      type="text"
+      inputMode="decimal"
+      value={display}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
+      onChange={(e) => {
+        const raw = e.target.value.replace(/,/g, '')
+        if (raw === '' || /^\d*\.?\d*$/.test(raw)) onChange(raw)
+      }}
+    />
+  )
+}
+
+function CalcSection({ section, values, onFieldChange, result, resultLabel, formulaLabel }) {
+  return (
+    <div className="calc-section">
+      <div className="calc-section-header">
+        <div className="calc-section-icon"><Icon name={section.icon} /></div>
+        <div>
+          <h3>{section.title}</h3>
+          <p>{section.body}</p>
+        </div>
+      </div>
+
+      <details className="calc-formula">
+        <summary>{formulaLabel}</summary>
+        <pre>{section.formula}</pre>
+      </details>
+
+      <div className="calc-fields">
+        {section.fields.map((f) => (
+          <div className="form-row" key={f.key}>
+            <label htmlFor={`${section.id}-${f.key}`}>{f.label}</label>
+            <CalcNumberInput
+              id={`${section.id}-${f.key}`}
+              value={values[f.key]}
+              onChange={(val) => onFieldChange(f.key, val)}
+            />
+          </div>
+        ))}
+      </div>
+
+      <div className="calc-result">
+        <span>{resultLabel}</span>
+        <strong>{result}</strong>
+      </div>
+
+      <p className="calc-hint">{section.hint}</p>
+    </div>
+  )
+}
 
 export default function CalculatorPage() {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
+  const c = t.calculatorPage
+  const [values, setValues] = useState(() => JSON.parse(JSON.stringify(DEFAULTS)))
+  const [recurringCost, setRecurringCost] = useState(0)
+  const [investment, setInvestment] = useState('')
+
+  function handleFieldChange(sectionId, key, val) {
+    setValues((v) => ({ ...v, [sectionId]: { ...v[sectionId], [key]: val } }))
+  }
+
+  const results = useMemo(() => {
+    const out = {}
+    for (const s of c.sections) {
+      const safe = Object.fromEntries(
+        Object.entries(values[s.id]).map(([k, n]) => [k, Number(n) || 0])
+      )
+      out[s.id] = CALC[s.id](safe)
+    }
+    return out
+  }, [values, c.sections])
+
+  const totalAnnual = Object.values(results).reduce((a, b) => a + b, 0)
+  const netAnnual = totalAnnual - (Number(recurringCost) || 0)
+  const investmentNum = Number(investment) || 0
+  const paybackMonths = investmentNum > 0 && netAnnual > 0 ? investmentNum / (netAnnual / 12) : null
+
   return (
     <main>
       <section className="demo-hero">
         <div className="container">
-          <span className="eyebrow">{t.calculatorPage.eyebrow}</span>
-          <h1>{t.calculatorPage.title}</h1>
+          <span className="eyebrow">{c.eyebrow}</span>
+          <h1>{c.title}</h1>
+          <p className="lead">{c.intro}</p>
         </div>
       </section>
 
       <section className="demo-section">
         <div className="container">
-          <div className="placeholder-card">
-            <div className="placeholder-icon" aria-hidden="true">
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="4" y="3" width="16" height="18" rx="2" />
-                <path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M16 15h0" />
-              </svg>
+          {c.sections.map((s) => (
+            <CalcSection
+              key={s.id}
+              section={s}
+              values={values[s.id]}
+              onFieldChange={(key, val) => handleFieldChange(s.id, key, val)}
+              result={formatMXN(results[s.id], lang)}
+              resultLabel={c.resultLabel}
+              formulaLabel={c.formulaLabel}
+            />
+          ))}
+
+          <div className="calc-total">
+            <h3>{c.totalTitle}</h3>
+            <div className="calc-total-row">
+              <span>{c.totalAnnual}</span>
+              <strong>{formatMXN(totalAnnual, lang)}</strong>
             </div>
-            <p className="placeholder-body">{t.calculatorPage.body}</p>
-            <a href="#contact" className="btn btn-primary">{t.calculatorPage.cta}</a>
+            <div className="form-row">
+              <label htmlFor="recurringCost">{c.recurringCost}</label>
+              <CalcNumberInput id="recurringCost" value={recurringCost} onChange={setRecurringCost} />
+            </div>
+            <div className="calc-total-row">
+              <span>{c.netAnnual}</span>
+              <strong>{formatMXN(netAnnual, lang)}</strong>
+            </div>
+            <div className="form-row">
+              <label htmlFor="investment">{c.investment}</label>
+              <CalcNumberInput id="investment" value={investment} onChange={setInvestment} />
+            </div>
+            <div className="calc-total-row calc-payback">
+              <span>{c.payback}</span>
+              <strong>
+                {paybackMonths != null ? `${paybackMonths.toFixed(1)} ${c.months}` : c.paybackNA}
+              </strong>
+            </div>
+          </div>
+
+          <p className="calc-methodology">{c.methodologyNote}</p>
+
+          <div className="calc-cta">
+            <p>{c.ctaSub}</p>
+            <a href="#contact" className="btn btn-primary">{c.cta}</a>
           </div>
         </div>
       </section>
