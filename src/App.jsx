@@ -470,9 +470,14 @@ function Contact() {
   const [selectedDate, setSelectedDate] = useState(null)
   const [selectedTime, setSelectedTime] = useState(null)
   const [attemptedSubmit, setAttemptedSubmit] = useState(false)
+  const successRef = useRef(null)
   const f = t.contact.form
   const a = t.contact.appointment
   const stageHint = f.stageOptions.find((o) => o.label === stage)?.hint
+
+  useEffect(() => {
+    if (submitted) successRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }, [submitted])
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -507,7 +512,7 @@ function Contact() {
         </div>
 
         {submitted ? (
-          <div className="form-success">
+          <div className="form-success" ref={successRef}>
             {mode === 'schedule' ? t.contact.successSchedule : t.contact.success}
           </div>
         ) : (
