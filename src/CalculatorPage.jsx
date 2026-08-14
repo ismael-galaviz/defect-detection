@@ -94,8 +94,6 @@ export default function CalculatorPage() {
   const { t, lang } = useLanguage()
   const c = t.calculatorPage
   const [values, setValues] = useState(() => JSON.parse(JSON.stringify(DEFAULTS)))
-  const [recurringCost, setRecurringCost] = useState(0)
-  const [investment, setInvestment] = useState('')
 
   function handleFieldChange(sectionId, key, val) {
     setValues((v) => ({ ...v, [sectionId]: { ...v[sectionId], [key]: val } }))
@@ -113,9 +111,6 @@ export default function CalculatorPage() {
   }, [values, c.sections])
 
   const totalAnnual = Object.values(results).reduce((a, b) => a + b, 0)
-  const netAnnual = totalAnnual - (Number(recurringCost) || 0)
-  const investmentNum = Number(investment) || 0
-  const paybackMonths = investmentNum > 0 && netAnnual > 0 ? investmentNum / (netAnnual / 12) : null
 
   return (
     <main>
@@ -143,27 +138,9 @@ export default function CalculatorPage() {
 
           <div className="calc-total">
             <h3>{c.totalTitle}</h3>
-            <div className="calc-total-row">
+            <div className="calc-total-row calc-payback">
               <span>{c.totalAnnual}</span>
               <strong>{formatMXN(totalAnnual, lang)}</strong>
-            </div>
-            <div className="form-row">
-              <label htmlFor="recurringCost">{c.recurringCost}</label>
-              <CalcNumberInput id="recurringCost" value={recurringCost} onChange={setRecurringCost} />
-            </div>
-            <div className="calc-total-row">
-              <span>{c.netAnnual}</span>
-              <strong>{formatMXN(netAnnual, lang)}</strong>
-            </div>
-            <div className="form-row">
-              <label htmlFor="investment">{c.investment}</label>
-              <CalcNumberInput id="investment" value={investment} onChange={setInvestment} />
-            </div>
-            <div className="calc-total-row calc-payback">
-              <span>{c.payback}</span>
-              <strong>
-                {paybackMonths != null ? `${paybackMonths.toFixed(1)} ${c.months}` : c.paybackNA}
-              </strong>
             </div>
           </div>
 
