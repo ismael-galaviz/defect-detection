@@ -28,6 +28,21 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <section className="demo-section vm-section">
+        <div className="container vm-grid">
+          <div className="vm-card">
+            <div className="vf-icon"><Icon name={t.about.vision.icon} /></div>
+            <h3>{t.about.vision.title}</h3>
+            <p>{t.about.vision.body}</p>
+          </div>
+          <div className="vm-card">
+            <div className="vf-icon"><Icon name={t.about.mission.icon} /></div>
+            <h3>{t.about.mission.title}</h3>
+            <p>{t.about.mission.body}</p>
+          </div>
+        </div>
+      </section>
     </main>
   )
 }

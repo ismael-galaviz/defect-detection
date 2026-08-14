@@ -158,7 +158,6 @@ export const translations = {
           body: 'Works across fabric types, widths, and line speeds. Start with a single unit at final inspection or scale to full-line coverage — in the cloud or on-premises.',
         },
       ],
-      tags: ['Pre-calibrated', 'Flexible installation', 'Open API', 'No line modifications'],
       videoTitle: 'VeritX Vision video',
     },
     howItWorks: {
@@ -264,6 +263,16 @@ export const translations = {
         { icon: 'pin', label: 'Headquarters', value: 'Tlaxcala, Mexico' },
         { icon: 'globe', label: 'Where we serve', value: 'Mexico, Latin America, and beyond' },
       ],
+      vision: {
+        icon: 'eyeCheck',
+        title: 'Our Vision',
+        body: 'A textile industry where AI-powered quality control is standard equipment on every production line — not a luxury reserved for the largest manufacturers.',
+      },
+      mission: {
+        icon: 'target',
+        title: 'Our Mission',
+        body: 'To give textile mills of any size the tools to catch defects in real time, cut waste, and compete on quality — with hardware and software that installs in a day, not a quarter.',
+      },
     },
     contact: {
       eyebrow: 'Get In Touch',
@@ -532,7 +541,6 @@ export const translations = {
           body: 'Funciona con distintos tipos de tela, anchos y velocidades de línea. Empieza con una unidad en inspección final o escala a cobertura total — en la nube o en sitio.',
         },
       ],
-      tags: ['Precalibrada', 'Instalación flexible', 'API abierta', 'Sin modificar tu línea'],
       videoTitle: 'Video de VeritX Vision',
     },
     howItWorks: {
@@ -638,6 +646,16 @@ export const translations = {
         { icon: 'pin', label: 'Sede', value: 'Tlaxcala, México' },
         { icon: 'globe', label: 'A quién atendemos', value: 'México, Latinoamérica y el mundo' },
       ],
+      vision: {
+        icon: 'eyeCheck',
+        title: 'Nuestra Visión',
+        body: 'Una industria textil donde el control de calidad con IA sea equipo estándar en cada línea de producción — no un lujo reservado para los fabricantes más grandes.',
+      },
+      mission: {
+        icon: 'target',
+        title: 'Nuestra Misión',
+        body: 'Darle a las fábricas textiles de cualquier tamaño las herramientas para detectar defectos en tiempo real, reducir el desperdicio y competir en calidad — con hardware y software que se instala en un día, no en un trimestre.',
+      },
     },
     contact: {
       eyebrow: 'Contáctanos',

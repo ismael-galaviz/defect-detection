@@ -220,29 +220,14 @@ function VisionA() {
           </div>
         </div>
         <div className="visiona-visual">
-          <div className="device-frame">
-            <div className="device-name">VeritX <strong>Vision A</strong></div>
-            <div className="device-bar" aria-hidden="true"><i /><i /><i /></div>
-            <div className="device-beam" aria-hidden="true" />
-            <div className="device-fabric" aria-hidden="true">
-              <div className="scan-line" />
-            </div>
+          <div className="video-embed">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/djK5l04jRoM"
+              title={t.visionA.videoTitle}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
           </div>
-          <div className="visiona-tags">
-            {t.visionA.tags.map((tag) => (
-              <span key={tag}>{tag}</span>
-            ))}
-          </div>
-        </div>
-      </div>
-      <div className="container">
-        <div className="video-embed">
-          <iframe
-            src="https://www.youtube-nocookie.com/embed/djK5l04jRoM"
-            title={t.visionA.videoTitle}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          />
         </div>
       </div>
     </section>

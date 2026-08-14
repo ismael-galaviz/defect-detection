@@ -551,6 +551,25 @@ nav.nav-links > a:hover { color: var(--cyan); }
   border: 0;
 }
 
+.demo-section.vm-section { background: var(--white); }
+.vm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+.vm-card {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-100);
+  border-radius: var(--radius);
+  padding: 32px;
+}
+.vm-card h3 { font-size: 19px; color: var(--navy); margin: 18px 0 10px; }
+.vm-card p { color: var(--gray-500); font-size: 15px; line-height: 1.65; margin: 0; }
+
+@media (max-width: 900px) {
+  .vm-grid { grid-template-columns: 1fr; }
+}
+
 /* CTA / Contact */
 .contact-section {
   background: linear-gradient(135deg, var(--gray-50), var(--white));
@@ -1225,69 +1244,10 @@ footer.site-footer {
   line-height: 1.65;
 }
 
-.device-frame {
-  background: linear-gradient(160deg, var(--navy) 0%, var(--navy-light) 100%);
-  border-radius: 20px;
-  padding: 32px 36px 36px;
+.visiona-visual .video-embed {
+  margin: 0;
+  max-width: 100%;
   box-shadow: 0 24px 60px rgba(11, 31, 58, 0.3);
-}
-.device-name {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 13px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  text-align: center;
-  margin-bottom: 20px;
-}
-.device-name strong { color: var(--cyan); }
-.device-bar {
-  height: 40px;
-  background: #0d2340;
-  border: 1px solid rgba(0, 212, 255, 0.35);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 22px;
-}
-.device-bar i {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #7fe7ff, #0a8fb0);
-  box-shadow: 0 0 10px rgba(0, 212, 255, 0.7);
-}
-.device-beam {
-  width: 72%;
-  height: 64px;
-  margin: 0 auto;
-  background: linear-gradient(180deg, rgba(0, 212, 255, 0.28), rgba(0, 212, 255, 0.02));
-  clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%);
-}
-.device-fabric {
-  height: 96px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: repeating-linear-gradient(45deg, #16324f 0 2px, #12283f 2px 4px);
-  position: relative;
-  overflow: hidden;
-}
-
-.visiona-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 20px;
-}
-.visiona-tags span {
-  background: var(--gray-50);
-  border: 1px solid var(--gray-100);
-  color: var(--gray-700);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px 14px;
-  border-radius: 999px;
 }
 
 @media (max-width: 900px) {
