@@ -146,6 +146,20 @@ export default function CalculatorPage() {
 
           <p className="calc-methodology">{c.methodologyNote}</p>
 
+          <div className="calc-soft">
+            <h3>{c.softSavings.title}</h3>
+            <p>{c.softSavings.intro}</p>
+            <div className="usecases-grid why-grid">
+              {c.softSavings.items.map((item) => (
+                <div className="usecase-card" key={item.title}>
+                  <div className="usecase-icon"><Icon name={item.icon} /></div>
+                  <h4>{item.title}</h4>
+                  <p>{item.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="calc-cta">
             <p>{c.ctaSub}</p>
             <a href="#contact" className="btn btn-primary">{c.cta}</a>

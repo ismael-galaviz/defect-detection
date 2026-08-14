@@ -613,7 +613,131 @@ form.lead-form {
   font-size: 12.5px;
   line-height: 1.5;
 }
+.field-error {
+  margin: 8px 2px 0;
+  color: #dc2626;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.5;
+}
 .form-two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* Contact mode toggle */
+.mode-toggle {
+  display: flex;
+  gap: 4px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-100);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 20px;
+}
+.mode-toggle button {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 10px;
+  border-radius: 7px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.mode-toggle button.active {
+  background: var(--white);
+  color: var(--navy);
+  box-shadow: 0 1px 4px rgba(11, 31, 58, 0.12);
+}
+
+/* Appointment picker */
+.appt-timezone { margin: 0 0 10px; color: var(--gray-500); font-size: 12.5px; }
+.appt-cal {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-100);
+  border-radius: 10px;
+  padding: 14px;
+}
+.appt-cal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.appt-cal-nav span { font-size: 13.5px; font-weight: 700; color: var(--navy); text-transform: capitalize; }
+.appt-cal-nav button {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--gray-100);
+  background: var(--white);
+  color: var(--navy);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.appt-cal-nav button:disabled { opacity: 0.35; cursor: not-allowed; }
+.appt-cal-weekdays, .appt-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.appt-cal-weekdays span {
+  text-align: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  padding-bottom: 4px;
+}
+.appt-day {
+  aspect-ratio: 1;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--navy);
+  cursor: pointer;
+}
+.appt-day:hover:not(:disabled) { background: rgba(0, 212, 255, 0.14); }
+.appt-day:disabled { color: var(--gray-300); cursor: not-allowed; }
+.appt-day.today { font-weight: 800; box-shadow: inset 0 0 0 1.5px var(--cyan-dark); }
+.appt-day.selected { background: var(--cyan); color: var(--navy); font-weight: 800; }
+.appt-day.empty { visibility: hidden; cursor: default; }
+
+.appt-times { margin-top: 14px; }
+.appt-times-label { margin: 0 0 8px; font-size: 13px; font-weight: 600; color: var(--navy); }
+.appt-times-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.appt-time {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1.5px solid var(--gray-100);
+  background: var(--white);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+.appt-time:hover { border-color: var(--cyan); }
+.appt-time.selected { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+.appt-summary {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+}
 
 .privacy-details {
   margin: 4px 0 18px;
@@ -955,6 +1079,15 @@ footer.site-footer {
   line-height: 1.7;
   max-width: 780px;
   margin: 0 0 40px;
+}
+
+.calc-soft { margin-bottom: 40px; }
+.calc-soft h3 { color: var(--navy); font-size: 20px; margin-bottom: 8px; }
+.calc-soft > p {
+  color: var(--gray-500);
+  font-size: 15px;
+  max-width: 620px;
+  margin: 0 0 24px;
 }
 
 .calc-cta {

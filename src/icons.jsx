@@ -98,6 +98,15 @@ const ICON_PATHS = {
       <circle cx="12" cy="15" r="1.4" />
     </>
   ),
+  shield: <path d="M12 3.5 19 6.5v5c0 5-3 8-7 9-4-1-7-4-7-9v-5L12 3.5Z" />,
+  clipboard: (
+    <>
+      <rect x="5" y="4" width="14" height="17" rx="2" />
+      <rect x="9" y="2.5" width="6" height="3.5" rx="1" />
+      <path d="M8.5 11h7M8.5 14.5h7M8.5 18h4" />
+    </>
+  ),
+  spark: <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z" />,
 }
 
 export function Icon({ name, size = 22 }) {

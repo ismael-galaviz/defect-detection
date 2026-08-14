@@ -27,6 +27,14 @@ the technical/design record).
       links/imports it, so every browser silently falls back to a system font.
 - [ ] Confirm the YouTube video (`djK5l04jRoM`) embedded in the Vision A / product description section
       is the final one to use long-term.
+- [ ] Hook the contact form's "Schedule a meeting" mode up to a real calendar/availability system.
+      Right now `AppointmentPicker` offers a fixed list of business-hour slots (9am–5pm-ish, Mexico
+      City time) with no backend — nothing checks whether a slot is actually free, so two visitors
+      could "book" the same slot and both would just see a success message. Fine for a prototype, not
+      fine for real bookings. See SDD §10.17.
+- [ ] Decide what to do with the Demo page (`#/demo`) — it was explicitly removed from the header nav
+      (both dropdown and mobile menu) but the page/route itself is still live and reachable by direct
+      link. Either restore a nav entry for it, or remove the route/page entirely if it's not needed.
 
 ## Notes
 

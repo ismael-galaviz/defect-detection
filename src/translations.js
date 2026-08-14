@@ -10,11 +10,7 @@ export const translations = {
         { href: '#comparison', label: 'Why VeritX' },
         { href: '#specs', label: 'Specifications' },
       ],
-      toolsLabel: 'Tools',
-      toolsItems: [
-        { href: '#/demo', label: 'Demo' },
-        { href: '#/calculator', label: 'Calculator' },
-      ],
+      calculator: 'Calculator',
       aboutLabel: 'About Us',
       aboutItems: [
         { href: '#/about', label: 'Who We Are' },
@@ -75,6 +71,32 @@ export const translations = {
       totalTitle: 'Total estimated savings',
       totalAnnual: 'Total annual savings (sum of the three)',
       methodologyNote: "How to read this: add the three annual savings for your total estimate. The defect-reduction savings (point 1) is usually the easiest to calculate with data you already have from your quality reports; points 2 and 3 strengthen the case but depend on your own line's operational decisions.",
+      softSavings: {
+        title: 'Beyond the numbers: soft savings',
+        intro: "These benefits are harder to put a dollar figure on, but they matter just as much when building your case.",
+        items: [
+          {
+            icon: 'shield',
+            title: 'Stronger customer trust',
+            body: 'Fewer defective shipments reaching customers protects your reputation and reduces the risk of losing accounts over quality issues.',
+          },
+          {
+            icon: 'clipboard',
+            title: 'Easier audits & certifications',
+            body: 'Consistent, documented inspection data makes ISO audits and customer quality certifications faster to pass.',
+          },
+          {
+            icon: 'spark',
+            title: 'Better employee experience',
+            body: 'Frees inspectors from repetitive, fatiguing visual checks so they can focus on higher-value work.',
+          },
+          {
+            icon: 'activity',
+            title: 'Data-driven decisions',
+            body: 'Real-time defect data replaces guesswork, helping you spot trends and act before small issues become big ones.',
+          },
+        ],
+      },
       ctaSub: 'Want a version customized with your own numbers, backed by our team?',
       cta: 'Request Contact',
     },
@@ -252,6 +274,17 @@ export const translations = {
       locationLabel: 'Based in',
       location: 'Tlaxcala, Mexico — serving textile manufacturers across Mexico, Latin America, and the world',
       success: "Thanks for reaching out! We'll get back to you within one business day to schedule your demo.",
+      successSchedule: "Your appointment request has been received! We'll confirm by email shortly.",
+      appointment: {
+        modeMessage: 'Send a message',
+        modeSchedule: 'Schedule a meeting',
+        timezoneNote: 'All times shown are Mexico City time (CDMX).',
+        currentTime: 'Current time in Mexico City',
+        selectDate: 'Select a date',
+        selectTime: 'Select a time',
+        summaryLabel: 'Selected appointment',
+        required: 'Please pick a date and time for your appointment.',
+      },
       privacy: {
         title: 'How we use your information',
         summary: 'VeritX Vision collects the information you submit here only to respond to your request and schedule a demo.',
@@ -351,11 +384,7 @@ export const translations = {
         { href: '#comparison', label: 'Por qué VeritX' },
         { href: '#specs', label: 'Especificaciones' },
       ],
-      toolsLabel: 'Herramientas',
-      toolsItems: [
-        { href: '#/demo', label: 'Demo' },
-        { href: '#/calculator', label: 'Calculadora' },
-      ],
+      calculator: 'Calculadora',
       aboutLabel: 'Nosotros',
       aboutItems: [
         { href: '#/about', label: 'Quiénes somos' },
@@ -416,6 +445,32 @@ export const translations = {
       totalTitle: 'Ahorro total estimado',
       totalAnnual: 'Ahorro total anual (suma de los tres)',
       methodologyNote: 'Cómo interpretarlo: suma los tres ahorros anuales para obtener tu total estimado. El ahorro por reducción de defectos (punto 1) suele ser el más fácil de calcular con datos que ya tienes de tus reportes de calidad; los puntos 2 y 3 refuerzan el caso pero dependen de decisiones operativas de tu línea.',
+      softSavings: {
+        title: 'Más allá de los números: beneficios adicionales',
+        intro: 'Estos beneficios son más difíciles de traducir en un número, pero pesan igual de fuerte al armar tu caso de negocio.',
+        items: [
+          {
+            icon: 'shield',
+            title: 'Mayor confianza del cliente',
+            body: 'Menos envíos defectuosos que llegan al cliente protege tu reputación y reduce el riesgo de perder cuentas por temas de calidad.',
+          },
+          {
+            icon: 'clipboard',
+            title: 'Auditorías y certificaciones más simples',
+            body: 'Datos de inspección consistentes y documentados agilizan las auditorías ISO y las certificaciones de calidad con tus clientes.',
+          },
+          {
+            icon: 'spark',
+            title: 'Mejor experiencia para tu equipo',
+            body: 'Libera a los inspectores de revisiones visuales repetitivas y agotadoras para que se enfoquen en tareas de mayor valor.',
+          },
+          {
+            icon: 'activity',
+            title: 'Decisiones basadas en datos',
+            body: 'Los datos de defectos en tiempo real reemplazan las conjeturas, ayudándote a detectar tendencias y actuar antes de que un problema pequeño crezca.',
+          },
+        ],
+      },
       ctaSub: '¿Quieres una versión personalizada con tus propios números, respaldada por nuestro equipo?',
       cta: 'Solicitar contacto',
     },
@@ -593,6 +648,17 @@ export const translations = {
       locationLabel: 'Ubicados en',
       location: 'Tlaxcala, México — atendiendo a fabricantes textiles de México, Latinoamérica y el mundo',
       success: '¡Gracias por contactarnos! Te responderemos en un día hábil para agendar tu demo.',
+      successSchedule: '¡Tu solicitud de cita fue recibida! Te confirmaremos por correo en breve.',
+      appointment: {
+        modeMessage: 'Enviar un mensaje',
+        modeSchedule: 'Agendar una cita',
+        timezoneNote: 'Todos los horarios se muestran en hora de Ciudad de México (CDMX).',
+        currentTime: 'Hora actual en Ciudad de México',
+        selectDate: 'Selecciona una fecha',
+        selectTime: 'Selecciona un horario',
+        summaryLabel: 'Cita seleccionada',
+        required: 'Elige una fecha y un horario para tu cita.',
+      },
       privacy: {
         title: 'Cómo usamos tu información',
         summary: 'VeritX Vision recopila la información que nos envíes en este formulario únicamente para responder tu solicitud y agendar una demo.',

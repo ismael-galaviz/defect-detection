@@ -226,6 +226,9 @@ language-switcher flags (see §5).
 | `chevronDown` | Nav dropdown / mobile accordion triggers | Expand/collapse indicator (rotates 180° via `.chev.open`) |
 | `clock` | Calculator, section 2 (labor hours) | Time/hours |
 | `gauge` | Calculator, section 3 (line speed) | Speed |
+| `shield` | Calculator, soft savings | Customer trust/reputation |
+| `clipboard` | Calculator, soft savings | Audits/certifications |
+| `spark` | Calculator, soft savings | Employee experience |
 
 **To add an icon:** add a `name: <path .../>` (or `<>...</>` fragment for multi-element icons) entry to
 `ICON_PATHS` in `icons.jsx`, keeping the `viewBox="0 0 24 24"` coordinate space consistent with the
@@ -298,17 +301,21 @@ In file order:
 - **`MobileAccordion({ label, items, onNavigate })`** — the mobile-hamburger-menu equivalent of
   `NavDropdown`; manages its own `open` state locally (each mobile menu section is independent, unlike
   desktop where only one dropdown can be open at a time).
-- **`Header()`** — sticky header. Desktop nav is **Home** (plain link) + three `NavDropdown`s:
-  **Product** (`t.nav.productItems`), **Tools** (`t.nav.toolsItems`), **About Us** (`t.nav.aboutItems`).
-  Only one dropdown can be open at a time (`openDropdown` state: `null | 'product' | 'tools' | 'about'`).
-  Dropdowns open **on click, not hover** (explicit choice — more accessible, consistent with mobile).
-  Closed by: clicking its own trigger again, clicking any item inside it, clicking anywhere outside the
-  nav (`mousedown` listener on `document`, checked against a `navRef`), or pressing `Escape`. The
-  mobile hamburger (`mobile-toggle` button, ☰/✕) toggles a separate `<nav className="mobile-menu">`
-  that mirrors the same three groups as `MobileAccordion`s plus the Home link. **There is no CTA button
-  in the header** — it was deliberately removed once the header got crowded with the language switcher
-  and three dropdowns; the primary CTA only lives in the hero, the contact section, and page-specific
-  CTAs (Calculator's placeholder card).
+- **`Header()`** — sticky header. Desktop nav, left to right: **Home** (plain link, `href="#"`) →
+  **Product** (`NavDropdown`, `t.nav.productItems`) → **Calculator** (plain link, `href="#/calculator"`,
+  `t.nav.calculator`) → **About Us** (`NavDropdown`, `t.nav.aboutItems`). Only one dropdown can be open
+  at a time (`openDropdown` state: `null | 'product' | 'about'`). Dropdowns open **on click, not hover**
+  (explicit choice — more accessible, consistent with mobile). Closed by: clicking its own trigger again,
+  clicking any item inside it, clicking anywhere outside the nav (`mousedown` listener on `document`,
+  checked against a `navRef`), or pressing `Escape`. The mobile hamburger (`mobile-toggle` button, ☰/✕)
+  toggles a separate `<nav className="mobile-menu">` that mirrors the same structure — Home link,
+  Product `MobileAccordion`, Calculator link, About Us `MobileAccordion`. **There is no CTA button in the
+  header** — deliberately removed once the header got crowded; the primary CTA lives in the hero, the
+  contact section, and page-specific CTAs. **There used to be a third "Tools" dropdown** grouping Demo +
+  Calculator together — Demo was explicitly removed from the nav (the `#/demo` route/page itself still
+  exists and works, it's just unlinked — see §11), leaving Tools with only one item, so it was collapsed
+  into the plain Calculator link described above rather than keeping a single-item dropdown. `DemoPage`
+  is still imported and routed in `Site()`; only the nav link was removed.
 - **`Hero()`** — headline, lead paragraph, two CTAs (`#contact`, `#how-it-works`), three stat chips
   (`t.hero.stats`), and a decorative "scan frame" visual with two floating defect-tag labels
   (`t.hero.defectTags`) and an animated scan line (`@keyframes scan`, pure CSS).
@@ -336,8 +343,13 @@ In file order:
   Do not reintroduce a competitor/legacy-systems comparison here.
 - **`Specs()`** (`id="specs"`) — dark navy section, 4 stat cards (`t.specs.cards`).
 - **`Contact()`** (`id="contact"`) — two-column: left is contact info (`.contact-info`, with `mail`/`pin`
-  icon rows); right is the lead-gen form. See §9.6 and §10 for the form's exact fields, ordering, and
-  behavior — it's the most complex component in the file.
+  icon rows); right is the lead-gen form. The form opens with a `.mode-toggle` (segmented control,
+  `mode` state: `'message' | 'schedule'`). In `'schedule'` mode, an `<AppointmentPicker/>` renders
+  between the stage select and the message textarea — see §10.17 for its behavior. See §9.6 and §10 for
+  the form's exact fields, ordering, and behavior — it's the most complex component in the file.
+- **`AppointmentPicker`** (defined just above `Contact()`) — a hand-built month-view calendar (no date
+  library) plus a fixed set of business-hour time slots, all declared and labeled in **Mexico City time
+  (CDMX)** regardless of the visitor's own timezone. See §10.17.
 - **`MadeInMexicoBadge()`** — small decorative footer badge, pure CSS Mexican-flag color bar, no
   translated text (the "HECHO EN MÉXICO" label is hardcoded, not through `t`, since it's a fixed
   Spanish-language brand mark regardless of site language — this was an explicit request, not an
@@ -370,11 +382,7 @@ export const translations = {
         { href: '#comparison', label: 'Why VeritX' },
         { href: '#specs', label: 'Specifications' },
       ],
-      toolsLabel: 'Tools',
-      toolsItems: [
-        { href: '#/demo', label: 'Demo' },
-        { href: '#/calculator', label: 'Calculator' },
-      ],
+      calculator: 'Calculator',
       aboutLabel: 'About Us',
       aboutItems: [
         { href: '#/about', label: 'Who We Are' },
@@ -382,9 +390,86 @@ export const translations = {
       ],
     },
     calculatorPage: {
-      eyebrow: 'Coming Soon',
+      eyebrow: 'ROI Tool',
       title: 'Savings calculator',
-      body: "We're building a calculator to estimate your potential savings and ROI with VeritX Vision based on your line speed, current inspection costs, and defect rate. In the meantime, request contact and we'll walk you through the numbers for your line.",
+      intro: 'See how much VeritX Vision could save on your line. These are the three sources of measurable savings quality engineers use to justify the investment — adjust the numbers below for your own line; the defaults are illustrative examples.',
+      resultLabel: 'Annual savings',
+      formulaLabel: 'View formula',
+      sections: [
+        {
+          id: 'defects',
+          icon: 'eyeCheck',
+          title: '1. Reducing undetected defects',
+          body: 'The biggest savings, and the easiest to defend to finance. Today some defects pass manual or sampled inspection and reach the customer, or trigger downstream rework. A vision system inspects 100% of pieces consistently, without fatigue or shift-to-shift variability.',
+          formula: 'Annual savings =\n  (Defect rate BEFORE − Defect rate AFTER)\n  × Annual production volume\n  × Cost per defect\n\nCost per defect =\n  Rework/scrap cost + Warranty/return cost\n  + (optional) Reputational cost / customer penalties',
+          fields: [
+            { key: 'rateBefore', label: 'Current defect rate (%)' },
+            { key: 'rateAfter', label: 'Expected defect rate with the system (%)' },
+            { key: 'volume', label: 'Annual production volume (m² produced)' },
+            { key: 'costPerDefect', label: 'Cost per defect (MXN)' },
+          ],
+          hint: 'For an accurate estimate, use your current defect rate (from your quality reports), the expected rate with the system (pilot data or vendor reference), and the real cost of each defect — not just material, but rework labor, return logistics, and contractual penalties if any.',
+        },
+        {
+          id: 'laborHours',
+          icon: 'clock',
+          title: '2. Reducing manual-inspection labor hours',
+          body: 'If inspection today depends on people visually reviewing parts, the system can free that time for higher-value tasks, reduce shifts dedicated only to inspection, or remove bottlenecks caused by inspector fatigue.',
+          formula: 'Annual savings =\n  (Inspection labor hours BEFORE − Labor hours AFTER)\n  × Cost per hour\n  × Operating shifts per year',
+          fields: [
+            { key: 'hoursBefore', label: 'Inspection hours before (per shift, all inspectors)' },
+            { key: 'hoursAfter', label: 'Inspection hours after (per shift, all inspectors)' },
+            { key: 'hourlyCost', label: 'Cost per hour (MXN)' },
+            { key: 'shiftsPerYear', label: 'Operating shifts/days per year' },
+          ],
+          hint: 'Important: this savings rarely means layoffs. It usually means reassigning your staff to higher-value tasks (maintenance, continuous improvement) or avoiding new inspector hires as your production grows.',
+        },
+        {
+          id: 'lineSpeed',
+          icon: 'gauge',
+          title: '3. Increasing line speed',
+          body: 'Manual inspection is often the bottleneck limiting how fast the line can run. A vision system inspects in real time at process speed, allowing you to increase line speed without sacrificing quality.',
+          formula: 'Annual savings =\n  (New line speed − Current speed)\n  × Operating hours per year\n  × Contribution margin per unit produced',
+          fields: [
+            { key: 'speedBefore', label: 'Current line speed (m/min)' },
+            { key: 'speedAfter', label: 'New line speed (m/min)' },
+            { key: 'hoursPerYear', label: 'Operating hours per year' },
+            { key: 'unitsPerMeter', label: 'Units produced per meter' },
+            { key: 'marginPerUnit', label: 'Contribution margin per unit (MXN)' },
+          ],
+          hint: 'This savings only applies if your business can sell the extra capacity (enough demand) or if it avoids investing in a second line — worth confirming with your own team before treating it as guaranteed. (This calculator converts speed to units using your units-per-meter factor, then applies your margin per unit.)',
+        },
+      ],
+      totalTitle: 'Total estimated savings',
+      totalAnnual: 'Total annual savings (sum of the three)',
+      methodologyNote: "How to read this: add the three annual savings for your total estimate. The defect-reduction savings (point 1) is usually the easiest to calculate with data you already have from your quality reports; points 2 and 3 strengthen the case but depend on your own line's operational decisions.",
+      softSavings: {
+        title: 'Beyond the numbers: soft savings',
+        intro: "These benefits are harder to put a dollar figure on, but they matter just as much when building your case.",
+        items: [
+          {
+            icon: 'shield',
+            title: 'Stronger customer trust',
+            body: 'Fewer defective shipments reaching customers protects your reputation and reduces the risk of losing accounts over quality issues.',
+          },
+          {
+            icon: 'clipboard',
+            title: 'Easier audits & certifications',
+            body: 'Consistent, documented inspection data makes ISO audits and customer quality certifications faster to pass.',
+          },
+          {
+            icon: 'spark',
+            title: 'Better employee experience',
+            body: 'Frees inspectors from repetitive, fatiguing visual checks so they can focus on higher-value work.',
+          },
+          {
+            icon: 'activity',
+            title: 'Data-driven decisions',
+            body: 'Real-time defect data replaces guesswork, helping you spot trends and act before small issues become big ones.',
+          },
+        ],
+      },
+      ctaSub: 'Want a version customized with your own numbers, backed by our team?',
       cta: 'Request Contact',
     },
     demo: {
@@ -561,6 +646,17 @@ export const translations = {
       locationLabel: 'Based in',
       location: 'Tlaxcala, Mexico — serving textile manufacturers across Mexico, Latin America, and the world',
       success: "Thanks for reaching out! We'll get back to you within one business day to schedule your demo.",
+      successSchedule: "Your appointment request has been received! We'll confirm by email shortly.",
+      appointment: {
+        modeMessage: 'Send a message',
+        modeSchedule: 'Schedule a meeting',
+        timezoneNote: 'All times shown are Mexico City time (CDMX).',
+        currentTime: 'Current time in Mexico City',
+        selectDate: 'Select a date',
+        selectTime: 'Select a time',
+        summaryLabel: 'Selected appointment',
+        required: 'Please pick a date and time for your appointment.',
+      },
       privacy: {
         title: 'How we use your information',
         summary: 'VeritX Vision collects the information you submit here only to respond to your request and schedule a demo.',
@@ -660,11 +756,7 @@ export const translations = {
         { href: '#comparison', label: 'Por qué VeritX' },
         { href: '#specs', label: 'Especificaciones' },
       ],
-      toolsLabel: 'Herramientas',
-      toolsItems: [
-        { href: '#/demo', label: 'Demo' },
-        { href: '#/calculator', label: 'Calculadora' },
-      ],
+      calculator: 'Calculadora',
       aboutLabel: 'Nosotros',
       aboutItems: [
         { href: '#/about', label: 'Quiénes somos' },
@@ -672,9 +764,86 @@ export const translations = {
       ],
     },
     calculatorPage: {
-      eyebrow: 'Próximamente',
+      eyebrow: 'Herramienta ROI',
       title: 'Calculadora de ahorro',
-      body: 'Estamos construyendo una calculadora para estimar tu ahorro potencial y retorno de inversión con VeritX Vision, según la velocidad de tu línea, tus costos de inspección actuales y tu tasa de defectos. Mientras tanto, solicita contacto y te ayudamos a revisar los números para tu línea.',
+      intro: 'Descubre cuánto podría ahorrar VeritX Vision en tu línea. Estas son las tres fuentes de ahorro medible que los ingenieros de calidad usan para justificar la inversión — ajusta los números con los datos de tu línea; los valores por defecto son ejemplos ilustrativos.',
+      resultLabel: 'Ahorro anual',
+      formulaLabel: 'Ver fórmula',
+      sections: [
+        {
+          id: 'defects',
+          icon: 'eyeCheck',
+          title: '1. Reducción de defectos no detectados',
+          body: 'Es el ahorro más grande y el más fácil de defender ante finanzas. Hoy, algunos defectos pasan la inspección (manual o por muestreo) y llegan al cliente o generan retrabajo aguas abajo. Un sistema de visión inspecciona el 100% de las piezas de forma consistente, sin fatiga ni variabilidad entre turnos.',
+          formula: 'Ahorro anual =\n  (Tasa de defectos ANTES − Tasa de defectos DESPUÉS)\n  × Volumen de producción anual\n  × Costo unitario por defecto\n\nCosto unitario por defecto =\n  Costo de retrabajo/scrap + Costo de garantías/devoluciones\n  + (opcional) Costo reputacional / penalizaciones del cliente',
+          fields: [
+            { key: 'rateBefore', label: 'Tasa de defectos actual (%)' },
+            { key: 'rateAfter', label: 'Tasa de defectos esperada con el sistema (%)' },
+            { key: 'volume', label: 'Volumen de producción anual (m² producidos)' },
+            { key: 'costPerDefect', label: 'Costo por defecto (MXN)' },
+          ],
+          hint: 'Para un estimado preciso, usa tu tasa de defectos actual (de tus reportes de calidad), la tasa esperada con el sistema (con base en una prueba piloto o referencia del proveedor), y el costo real de cada defecto — no solo el material, también la mano de obra de retrabajo, la logística de devoluciones y, si aplica, penalizaciones contractuales.',
+        },
+        {
+          id: 'laborHours',
+          icon: 'clock',
+          title: '2. Reducción de horas-hombre en inspección manual',
+          body: 'Si hoy la inspección depende de personas revisando piezas visualmente, el sistema puede liberar ese tiempo para tareas de mayor valor, reducir turnos dedicados solo a inspección, o eliminar cuellos de botella causados por fatiga del inspector.',
+          formula: 'Ahorro anual =\n  (Horas-hombre de inspección ANTES − Horas-hombre DESPUÉS)\n  × Costo por hora\n  × Turnos operativos al año',
+          fields: [
+            { key: 'hoursBefore', label: 'Horas-persona de inspección antes (por turno, todos los inspectores)' },
+            { key: 'hoursAfter', label: 'Horas-persona de inspección después (por turno, todos los inspectores)' },
+            { key: 'hourlyCost', label: 'Costo por hora (MXN)' },
+            { key: 'shiftsPerYear', label: 'Turnos/días operativos al año' },
+          ],
+          hint: 'Nota importante: este ahorro rara vez significa despidos. Generalmente se traduce en reasignar a tu personal a tareas de mayor valor (mantenimiento, mejora continua) o evitar contratar inspectores adicionales conforme crece tu producción.',
+        },
+        {
+          id: 'lineSpeed',
+          icon: 'gauge',
+          title: '3. Aumento de velocidad de línea',
+          body: 'La inspección manual suele ser el cuello de botella que limita qué tan rápido puede correr la línea. Un sistema de visión inspecciona en tiempo real a la velocidad del proceso, lo que permite subir la velocidad de línea sin sacrificar calidad.',
+          formula: 'Ahorro anual =\n  (Nueva velocidad de línea − Velocidad actual)\n  × Horas de operación al año\n  × Margen de contribución por unidad producida',
+          fields: [
+            { key: 'speedBefore', label: 'Velocidad actual de línea (m/min)' },
+            { key: 'speedAfter', label: 'Nueva velocidad de línea (m/min)' },
+            { key: 'hoursPerYear', label: 'Horas de operación al año' },
+            { key: 'unitsPerMeter', label: 'Unidades producidas por metro' },
+            { key: 'marginPerUnit', label: 'Margen de contribución por unidad (MXN)' },
+          ],
+          hint: 'Este ahorro solo aplica si tu negocio puede vender esa capacidad extra (demanda suficiente) o si evita invertir en una segunda línea — vale la pena confirmarlo con tu propio equipo antes de darlo por hecho. (Esta calculadora convierte la velocidad a unidades usando tu factor de unidades por metro, y luego aplica tu margen por unidad.)',
+        },
+      ],
+      totalTitle: 'Ahorro total estimado',
+      totalAnnual: 'Ahorro total anual (suma de los tres)',
+      methodologyNote: 'Cómo interpretarlo: suma los tres ahorros anuales para obtener tu total estimado. El ahorro por reducción de defectos (punto 1) suele ser el más fácil de calcular con datos que ya tienes de tus reportes de calidad; los puntos 2 y 3 refuerzan el caso pero dependen de decisiones operativas de tu línea.',
+      softSavings: {
+        title: 'Más allá de los números: beneficios adicionales',
+        intro: 'Estos beneficios son más difíciles de traducir en un número, pero pesan igual de fuerte al armar tu caso de negocio.',
+        items: [
+          {
+            icon: 'shield',
+            title: 'Mayor confianza del cliente',
+            body: 'Menos envíos defectuosos que llegan al cliente protege tu reputación y reduce el riesgo de perder cuentas por temas de calidad.',
+          },
+          {
+            icon: 'clipboard',
+            title: 'Auditorías y certificaciones más simples',
+            body: 'Datos de inspección consistentes y documentados agilizan las auditorías ISO y las certificaciones de calidad con tus clientes.',
+          },
+          {
+            icon: 'spark',
+            title: 'Mejor experiencia para tu equipo',
+            body: 'Libera a los inspectores de revisiones visuales repetitivas y agotadoras para que se enfoquen en tareas de mayor valor.',
+          },
+          {
+            icon: 'activity',
+            title: 'Decisiones basadas en datos',
+            body: 'Los datos de defectos en tiempo real reemplazan las conjeturas, ayudándote a detectar tendencias y actuar antes de que un problema pequeño crezca.',
+          },
+        ],
+      },
+      ctaSub: '¿Quieres una versión personalizada con tus propios números, respaldada por nuestro equipo?',
       cta: 'Solicitar contacto',
     },
     demo: {
@@ -851,6 +1020,17 @@ export const translations = {
       locationLabel: 'Ubicados en',
       location: 'Tlaxcala, México — atendiendo a fabricantes textiles de México, Latinoamérica y el mundo',
       success: '¡Gracias por contactarnos! Te responderemos en un día hábil para agendar tu demo.',
+      successSchedule: '¡Tu solicitud de cita fue recibida! Te confirmaremos por correo en breve.',
+      appointment: {
+        modeMessage: 'Enviar un mensaje',
+        modeSchedule: 'Agendar una cita',
+        timezoneNote: 'Todos los horarios se muestran en hora de Ciudad de México (CDMX).',
+        currentTime: 'Hora actual en Ciudad de México',
+        selectDate: 'Selecciona una fecha',
+        selectTime: 'Selecciona un horario',
+        summaryLabel: 'Cita seleccionada',
+        required: 'Elige una fecha y un horario para tu cita.',
+      },
       privacy: {
         title: 'Cómo usamos tu información',
         summary: 'VeritX Vision recopila la información que nos envíes en este formulario únicamente para responder tu solicitud y agendar una demo.',
@@ -965,9 +1145,11 @@ casually reverse them without the user re-confirming — re-litigating them wast
    the world**; contact email **hello@veritxvision.com**. A "Hecho en México" footer badge with a small
    Mexican-flag-colored bar is present regardless of site language (hardcoded Spanish text — this is a
    fixed brand mark, not meant to translate to "Made in Mexico" in the English version).
-7. **Demo and Calculator are grouped together** under one "Tools"/"Herramientas" nav dropdown, separate
-   from "Product" (informational marketing sections) and "About Us"/"Nosotros" (Who We Are + Contact).
-   This grouping was explicit — don't split them back into loose top-level nav links.
+7. **Superseded:** Demo and Calculator were briefly grouped under one "Tools"/"Herramientas" nav
+   dropdown. **Demo was later explicitly removed from the nav entirely** (the page/route still exists,
+   just unlinked), which left Tools with a single item, so it was collapsed into a direct "Calculator"
+   top-level link instead of a single-item dropdown. Current nav: Home (link) → Product (dropdown) →
+   Calculator (link) → About Us (dropdown). See §8's `Header()` entry.
 8. **Contact form field order:** Name + Company (2-col row) → Work email + Country (2-col row) → Stage
    select (full width, with a dynamic hint) → Message (textarea) → Privacy policy `<details>` →
    required consent checkbox → Submit button.
@@ -998,18 +1180,48 @@ casually reverse them without the user re-confirming — re-litigating them wast
     document (`Guia_Ingeniero_Calidad_ROI.docx`, a "Quality Engineer's ROI Guide") — not a placeholder.
     Three savings sections (defect reduction, manual-inspection labor hours, line-speed increase), each
     with editable inputs (defaults = the guide's own worked examples), a live-computed annual-savings
-    result, a collapsible formula box, and a client-facing hint; a total card sums the three, subtracts
-    an optional recurring cost, and computes payback in months from an optional initial investment. All
-    labels/formulas/hints are bilingual (`translations.js` → `calculatorPage`); the numeric defaults and
-    the calculation functions themselves live in `CalculatorPage.jsx` (`DEFAULTS`, `CALC`), not in
-    translations, since they aren't language-dependent. **Known issue inherited from the source
-    document:** the line-speed section's worked example in the guide states an annual savings of
-    $2,400,000 MXN, but applying the guide's own stated formula to that same example's numbers
+    result, a collapsible formula box, and a hint; a total card sums the three. **Deliberately simplified
+    after the first version**: an initial-investment/payback-period feature and a recurring-annual-cost
+    input existed briefly and were removed by request — the total card is now just the sum of the three
+    annual savings, nothing else. The "annual production volume" field reads in **square meters produced
+    (m²)**, not generic "pieces", to match the textile/fabric context. All labels/formulas/hints are
+    bilingual (`translations.js` → `calculatorPage`); the numeric defaults and the calculation functions
+    themselves live in `CalculatorPage.jsx` (`DEFAULTS`, `CALC`), not in translations, since they aren't
+    language-dependent. Numeric inputs (`CalcNumberInput`) show thousand separators at rest and switch to
+    raw digits while focused, so live comma-insertion doesn't disrupt typing/cursor position. **The
+    section hints and the methodology note were rewritten once already** — the source guide phrases them
+    for an internal salesperson ("qué datos pedirle al cliente", "cómo presentarlo ante el cliente"), but
+    the actual reader is the website visitor filling out the calculator themselves, who *is* that client.
+    All four were reframed to speak directly to the visitor ("usa tu tasa de defectos...", "con tu propio
+    equipo..."). If more copy is ported from the source document later, apply the same reframing — don't
+    carry over salesperson-perspective phrasing verbatim. **Known issue inherited from the source
+    document, not fixed:** the line-speed section's worked example in the guide states an annual savings
+    of $2,400,000 MXN, but applying the guide's own stated formula to that same example's numbers
     ((100−70) × 4,000 hrs × 0.5 units/m × $20/unit) yields $1,200,000 MXN — exactly half. The calculator
-    implements the formula literally, so it will show $1,200,000 MXN for the default inputs, not the
-    guide's $2,400,000 MXN. This was not silently "corrected" one way or the other; it's flagged in
-    `TODO.md` for the user to confirm which is right (and fix the formula, the guide's example, or add a
-    documented ×2 factor) rather than guessed at.
+    implements the formula literally, so it shows $1,200,000 MXN for the default inputs, not the guide's
+    $2,400,000 MXN. Flagged in `TODO.md` for the user to confirm which is right.
+17. **Contact form has a "Schedule a meeting" mode** (`mode-toggle`, `mode` state), alongside the default
+    "Send a message" mode. In schedule mode, `AppointmentPicker` (a hand-built month calendar, no date
+    library) shows a fixed set of business-hour time slots — `09:00, 10:00, 11:00, 12:00, 13:00, 16:00,
+    17:00` — explicitly declared and labeled as **Mexico City time (CDMX)**, per an explicit "debe estar
+    en horario méxico" requirement. These are illustrative fixed slots, not pulled from a real calendar
+    or availability system — there is no backend, same limitation as the rest of the contact form (§11).
+    Weekends and past dates are disabled in the calendar; the "previous month" nav button is disabled
+    once viewing the current month (can't book in the past). Submission in schedule mode is blocked
+    client-side (`field-error`, translated) until both a date and a time are picked; on success it shows
+    `t.contact.successSchedule` instead of the generic `t.contact.success`. The current Mexico City clock
+    time is shown for context via `Intl.DateTimeFormat(..., { timeZone: 'America/Mexico_City' })` — the
+    one place real timezone conversion is used; the slot list itself is just fixed local-time strings,
+    not converted from/to the visitor's own timezone.
+18. **The calculator has a "soft savings" section** (`t.calculatorPage.softSavings`), below the total
+    card, before the closing CTA — four qualitative benefit cards (customer trust, easier audits/
+    certifications, employee experience, data-driven decisions) with no dollar figure, unlike the three
+    formula-driven sections above them. **Not sourced from the ROI guide docx** (that document only
+    covered the three quantifiable savings) — authored to round out the business case with the kind of
+    benefits that are hard to put a number on but still matter. Reuses the existing `.usecases-grid
+    why-grid` / `.usecase-card` / `.usecase-icon` visual pattern (§7) rather than inventing new card
+    styling — icons: `shield`, `clipboard`, `spark`, `activity` (the last one reused from the "Why VeritX
+    Vision" section).
 
 ---
 
@@ -1019,11 +1231,14 @@ casually reverse them without the user re-confirming — re-litigating them wast
 > list** — check it for the current state and any notes the user has added since this was last synced,
 > and update both when you close an item out (see §13).
 
-- **The contact form does not submit anywhere.** `Contact()`'s `handleSubmit` just calls
-  `e.preventDefault()` and flips local `submitted` state to show a static success message
-  (`t.contact.success`). There is no backend, no email service (e.g. Formspree), no API call. If the
-  user asks "why didn't I get an email", this is why — it's cosmetic/prototype-only, flagged
-  previously, not yet wired up.
+- **The contact form does not submit anywhere — including appointment requests.** `Contact()`'s
+  `handleSubmit` just calls `e.preventDefault()` and flips local `submitted` state to show a static
+  success message (`t.contact.success` or, in schedule mode, `t.contact.successSchedule`). There is no
+  backend, no email service (e.g. Formspree), no API call, and **no real calendar/availability system**
+  behind the appointment picker — its time slots are a fixed illustrative list (§10.17), not checked
+  against anyone's actual schedule, so double-booking isn't prevented. If the user asks "why didn't I
+  get an email" or "why did it let two people pick the same slot", this is why — it's
+  cosmetic/prototype-only, flagged previously, not yet wired up.
 - **Footer "Company" column** now has exactly two real links: "About"/"Nosotros" (`href="#/about"`,
   wired to the real About page) and "Contact"/"Contacto" (`href="#contact"`). "Careers"/"Vacantes" was
   removed entirely (was a non-functional placeholder with no page behind it) — do not re-add a Careers
@@ -1047,8 +1262,9 @@ casually reverse them without the user re-confirming — re-litigating them wast
 - **Add a new home-page section:** write a new function component in `App.jsx` (steal the shape of an
   existing one, e.g. `UseCases()`), add a matching content object to `translations.js` (both
   languages), add its `<Whatever/>` to the `route === 'home'` block in `Site()`, and — if it should be
-  reachable from the nav — add an entry to the right `nav.*Items` array (`productItems` for marketing
-  content, `toolsItems` for interactive tools, `aboutItems` for company-facing pages) in both languages.
+  reachable from the nav — add an entry to `nav.productItems` (marketing content) or `nav.aboutItems`
+  (company-facing pages) in both languages, or add a new plain top-level link in `Header()` (see the
+  `nav.calculator` link for the pattern) if it doesn't belong in either dropdown.
 - **Add a brand-new page (own hash route):** create `src/WhateverPage.jsx` following the
   `AboutPage.jsx`/`CalculatorPage.jsx` pattern (`demo-hero` + `demo-section`), add a route branch in
   `useRoute()` and `Site()` (see §4), and add its translations under a new top-level key in both

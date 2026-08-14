@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { LanguageProvider, useLanguage } from './i18n.jsx'
 import { Icon } from './icons.jsx'
 import DemoPage from './DemoPage.jsx'
@@ -123,13 +123,7 @@ function Header() {
             onToggle={() => toggleDropdown('product')}
             onNavigate={() => setOpenDropdown(null)}
           />
-          <NavDropdown
-            label={t.nav.toolsLabel}
-            items={t.nav.toolsItems}
-            isOpen={openDropdown === 'tools'}
-            onToggle={() => toggleDropdown('tools')}
-            onNavigate={() => setOpenDropdown(null)}
-          />
+          <a href="#/calculator">{t.nav.calculator}</a>
           <NavDropdown
             label={t.nav.aboutLabel}
             items={t.nav.aboutItems}
@@ -155,7 +149,7 @@ function Header() {
         <nav className="mobile-menu">
           <a href="#" onClick={() => setMenuOpen(false)}>{t.nav.home}</a>
           <MobileAccordion label={t.nav.product} items={t.nav.productItems} onNavigate={() => setMenuOpen(false)} />
-          <MobileAccordion label={t.nav.toolsLabel} items={t.nav.toolsItems} onNavigate={() => setMenuOpen(false)} />
+          <a href="#/calculator" onClick={() => setMenuOpen(false)}>{t.nav.calculator}</a>
           <MobileAccordion label={t.nav.aboutLabel} items={t.nav.aboutItems} onNavigate={() => setMenuOpen(false)} />
         </nav>
       )}
@@ -362,15 +356,145 @@ function Specs() {
   )
 }
 
+const MEXICO_TZ = 'America/Mexico_City'
+const APPT_TIME_SLOTS = ['09:00', '10:00', '11:00', '12:00', '13:00', '16:00', '17:00']
+
+function isSameDay(a, b) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
+}
+function isWeekend(d) {
+  const day = d.getDay()
+  return day === 0 || day === 6
+}
+function isPastDay(d, today) {
+  const dd = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+  const tt = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  return dd < tt
+}
+function formatSlotTime(hhmm, lang) {
+  const [h, m] = hhmm.split(':').map(Number)
+  const d = new Date(2000, 0, 1, h, m)
+  return d.toLocaleTimeString(lang === 'es' ? 'es-MX' : 'en-US', { hour: 'numeric', minute: '2-digit' })
+}
+
+function AppointmentPicker({ a, lang, selectedDate, selectedTime, onSelectDate, onSelectTime }) {
+  const today = useMemo(() => new Date(), [])
+  const [viewMonth, setViewMonth] = useState(() => new Date(today.getFullYear(), today.getMonth(), 1))
+
+  const currentMexicoTime = useMemo(() => (
+    new Intl.DateTimeFormat(lang === 'es' ? 'es-MX' : 'en-US', {
+      timeZone: MEXICO_TZ,
+      hour: 'numeric',
+      minute: '2-digit',
+    }).format(new Date())
+  ), [lang])
+
+  const weekdayLabels = useMemo(() => (
+    Array.from({ length: 7 }, (_, i) => (
+      new Intl.DateTimeFormat(lang === 'es' ? 'es-MX' : 'en-US', { weekday: 'short' })
+        .format(new Date(2024, 0, 1 + i))
+    ))
+  ), [lang])
+
+  const monthLabel = new Intl.DateTimeFormat(lang === 'es' ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' })
+    .format(viewMonth)
+  const isCurrentMonth = viewMonth.getFullYear() === today.getFullYear() && viewMonth.getMonth() === today.getMonth()
+
+  const firstWeekday = (viewMonth.getDay() + 6) % 7
+  const totalDays = new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 0).getDate()
+  const cells = []
+  for (let i = 0; i < firstWeekday; i++) cells.push(null)
+  for (let d = 1; d <= totalDays; d++) cells.push(new Date(viewMonth.getFullYear(), viewMonth.getMonth(), d))
+  while (cells.length % 7 !== 0) cells.push(null)
+
+  return (
+    <div className="appt-picker">
+      <p className="appt-timezone">{a.timezoneNote} · {a.currentTime}: {currentMexicoTime}</p>
+
+      <div className="appt-cal">
+        <div className="appt-cal-nav">
+          <button
+            type="button"
+            disabled={isCurrentMonth}
+            onClick={() => setViewMonth((m) => new Date(m.getFullYear(), m.getMonth() - 1, 1))}
+            aria-label="Previous month"
+          >‹</button>
+          <span>{monthLabel}</span>
+          <button
+            type="button"
+            onClick={() => setViewMonth((m) => new Date(m.getFullYear(), m.getMonth() + 1, 1))}
+            aria-label="Next month"
+          >›</button>
+        </div>
+        <div className="appt-cal-weekdays">
+          {weekdayLabels.map((w, i) => <span key={i}>{w}</span>)}
+        </div>
+        <div className="appt-cal-grid">
+          {cells.map((d, i) => {
+            if (!d) return <span key={i} className="appt-day empty" aria-hidden="true" />
+            const disabled = isWeekend(d) || isPastDay(d, today)
+            const selected = selectedDate && isSameDay(d, selectedDate)
+            const isToday = isSameDay(d, today)
+            return (
+              <button
+                type="button"
+                key={i}
+                className={`appt-day${selected ? ' selected' : ''}${isToday ? ' today' : ''}`}
+                disabled={disabled}
+                onClick={() => onSelectDate(d)}
+              >
+                {d.getDate()}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {selectedDate && (
+        <div className="appt-times">
+          <p className="appt-times-label">{a.selectTime}</p>
+          <div className="appt-times-grid">
+            {APPT_TIME_SLOTS.map((slot) => (
+              <button
+                type="button"
+                key={slot}
+                className={`appt-time${selectedTime === slot ? ' selected' : ''}`}
+                onClick={() => onSelectTime(slot)}
+              >
+                {formatSlotTime(slot, lang)}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {selectedDate && selectedTime && (
+        <p className="appt-summary">
+          {a.summaryLabel}: {new Intl.DateTimeFormat(lang === 'es' ? 'es-MX' : 'en-US', { weekday: 'long', day: 'numeric', month: 'long' }).format(selectedDate)}, {formatSlotTime(selectedTime, lang)} (CDMX)
+        </p>
+      )}
+    </div>
+  )
+}
+
 function Contact() {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
   const [submitted, setSubmitted] = useState(false)
   const [stage, setStage] = useState('')
+  const [mode, setMode] = useState('message')
+  const [selectedDate, setSelectedDate] = useState(null)
+  const [selectedTime, setSelectedTime] = useState(null)
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false)
   const f = t.contact.form
+  const a = t.contact.appointment
   const stageHint = f.stageOptions.find((o) => o.label === stage)?.hint
 
   function handleSubmit(e) {
     e.preventDefault()
+    if (mode === 'schedule' && (!selectedDate || !selectedTime)) {
+      setAttemptedSubmit(true)
+      return
+    }
     setSubmitted(true)
   }
 
@@ -398,9 +522,28 @@ function Contact() {
         </div>
 
         {submitted ? (
-          <div className="form-success">{t.contact.success}</div>
+          <div className="form-success">
+            {mode === 'schedule' ? t.contact.successSchedule : t.contact.success}
+          </div>
         ) : (
           <form className="lead-form" onSubmit={handleSubmit}>
+            <div className="mode-toggle" role="group">
+              <button
+                type="button"
+                className={mode === 'message' ? 'active' : ''}
+                onClick={() => setMode('message')}
+              >
+                {a.modeMessage}
+              </button>
+              <button
+                type="button"
+                className={mode === 'schedule' ? 'active' : ''}
+                onClick={() => setMode('schedule')}
+              >
+                {a.modeSchedule}
+              </button>
+            </div>
+
             <div className="form-two">
               <div className="form-row">
                 <label htmlFor="name">{f.name}</label>
@@ -442,6 +585,24 @@ function Contact() {
               </select>
               {stageHint && <p className="field-hint">{stageHint}</p>}
             </div>
+
+            {mode === 'schedule' && (
+              <div className="form-row">
+                <label>{a.selectDate}</label>
+                <AppointmentPicker
+                  a={a}
+                  lang={lang}
+                  selectedDate={selectedDate}
+                  selectedTime={selectedTime}
+                  onSelectDate={(d) => { setSelectedDate(d); setSelectedTime(null) }}
+                  onSelectTime={setSelectedTime}
+                />
+                {attemptedSubmit && (!selectedDate || !selectedTime) && (
+                  <p className="field-error">{a.required}</p>
+                )}
+              </div>
+            )}
+
             <div className="form-row">
               <label htmlFor="message">{f.message}</label>
               <textarea id="message" rows="4" placeholder={f.messagePlaceholder} />
