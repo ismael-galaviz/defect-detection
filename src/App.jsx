@@ -1,9 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { LanguageProvider, useLanguage } from './i18n.jsx'
 import { Icon } from './icons.jsx'
+import { useAuthSession, logout } from './auth.js'
 import DemoPage from './DemoPage.jsx'
 import CalculatorPage from './CalculatorPage.jsx'
 import AboutPage from './AboutPage.jsx'
+import LoginPage from './LoginPage.jsx'
+import RegisterPage from './RegisterPage.jsx'
+import VerifyEmailPage from './VerifyEmailPage.jsx'
+import ForgotPasswordPage from './ForgotPasswordPage.jsx'
+import RecoverUsernamePage from './RecoverUsernamePage.jsx'
+import VisionHomePage from './VisionHomePage.jsx'
+
+const SATELLITE_ROUTES = [
+  'demo', 'calculator', 'about',
+  'login', 'register', 'verify-email', 'forgot-password', 'recover-username', 'vision-home',
+]
 
 function useRoute() {
   const [hash, setHash] = useState(window.location.hash)
@@ -15,6 +27,12 @@ function useRoute() {
   if (hash.startsWith('#/demo')) return 'demo'
   if (hash.startsWith('#/calculator')) return 'calculator'
   if (hash.startsWith('#/about')) return 'about'
+  if (hash.startsWith('#/login')) return 'login'
+  if (hash.startsWith('#/register')) return 'register'
+  if (hash.startsWith('#/verify-email')) return 'verify-email'
+  if (hash.startsWith('#/forgot-password')) return 'forgot-password'
+  if (hash.startsWith('#/recover-username')) return 'recover-username'
+  if (hash.startsWith('#/vision-home')) return 'vision-home'
   return 'home'
 }
 
@@ -83,14 +101,19 @@ function MobileAccordion({ label, items, onNavigate }) {
 
 function Header() {
   const { t } = useLanguage()
+  const session = useAuthSession()
   const [menuOpen, setMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState(null)
   const navRef = useRef(null)
+  const accountRef = useRef(null)
+  const accountHref = session ? '#/vision-home' : '#/login'
+  const accountLabel = session ? t.auth.navAccount : t.auth.navLogin
 
   useEffect(() => {
     if (!openDropdown) return
     function onDocClick(e) {
-      if (navRef.current && !navRef.current.contains(e.target)) setOpenDropdown(null)
+      const activeRef = openDropdown === 'account' ? accountRef : navRef
+      if (activeRef.current && !activeRef.current.contains(e.target)) setOpenDropdown(null)
     }
     function onKey(e) {
       if (e.key === 'Escape') setOpenDropdown(null)
@@ -105,6 +128,12 @@ function Header() {
 
   function toggleDropdown(name) {
     setOpenDropdown((cur) => (cur === name ? null : name))
+  }
+
+  function handleLogout() {
+    logout()
+    setOpenDropdown(null)
+    window.location.hash = '#/login'
   }
 
   return (
@@ -134,6 +163,31 @@ function Header() {
         </nav>
         <div className="nav-cta">
           <LangSwitch />
+          {session ? (
+            <div className="account-menu" ref={accountRef}>
+              <button
+                type="button"
+                className="nav-account-link"
+                aria-haspopup="true"
+                aria-expanded={openDropdown === 'account'}
+                aria-label={accountLabel}
+                title={accountLabel}
+                onClick={() => toggleDropdown('account')}
+              >
+                <Icon name="user" size={18} />
+              </button>
+              {openDropdown === 'account' && (
+                <div className="nav-dropdown-panel account-menu-panel">
+                  <a href="#/vision-home" onClick={() => setOpenDropdown(null)}>{t.auth.navAccount}</a>
+                  <button type="button" onClick={handleLogout}>{t.auth.visionHome.logout}</button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <a href={accountHref} className="nav-account-link" aria-label={accountLabel} title={accountLabel}>
+              <Icon name="user" size={18} />
+            </a>
+          )}
           <button
             type="button"
             className="mobile-toggle"
@@ -151,6 +205,19 @@ function Header() {
           <MobileAccordion label={t.nav.product} items={t.nav.productItems} onNavigate={() => setMenuOpen(false)} />
           <a href="#/calculator" onClick={() => setMenuOpen(false)}>{t.nav.calculator}</a>
           <MobileAccordion label={t.nav.aboutLabel} items={t.nav.aboutItems} onNavigate={() => setMenuOpen(false)} />
+          <a href={accountHref} onClick={() => setMenuOpen(false)}>{accountLabel}</a>
+          {session && (
+            <a
+              href="#/login"
+              onClick={(e) => {
+                e.preventDefault()
+                setMenuOpen(false)
+                handleLogout()
+              }}
+            >
+              {t.auth.visionHome.logout}
+            </a>
+          )}
         </nav>
       )}
     </header>
@@ -670,6 +737,11 @@ function Footer() {
               VeritX Vision
             </a>
             <p>{t.footer.tagline}</p>
+            <div className="footer-social">
+              <span className="footer-social-icon" title="LinkedIn" aria-label="LinkedIn">
+                <Icon name="linkedin" size={18} />
+              </span>
+            </div>
             <MadeInMexicoBadge />
           </div>
           <div className="footer-cols">
@@ -693,7 +765,6 @@ function Footer() {
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} VeritX Vision. {t.footer.rights}</span>
-          <span>{t.footer.prototype}</span>
         </div>
       </div>
     </footer>
@@ -704,7 +775,7 @@ function Site() {
   const route = useRoute()
 
   useEffect(() => {
-    if (route === 'demo' || route === 'calculator' || route === 'about') {
+    if (SATELLITE_ROUTES.includes(route)) {
       window.scrollTo(0, 0)
     } else {
       const hash = window.location.hash
@@ -720,6 +791,12 @@ function Site() {
       {route === 'demo' && <DemoPage />}
       {route === 'calculator' && <CalculatorPage />}
       {route === 'about' && <AboutPage />}
+      {route === 'login' && <LoginPage />}
+      {route === 'register' && <RegisterPage />}
+      {route === 'verify-email' && <VerifyEmailPage />}
+      {route === 'forgot-password' && <ForgotPasswordPage />}
+      {route === 'recover-username' && <RecoverUsernamePage />}
+      {route === 'vision-home' && <VisionHomePage />}
       {route === 'home' && (
         <>
           <Hero />

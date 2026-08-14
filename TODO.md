@@ -35,6 +35,25 @@ the technical/design record).
 - [ ] Decide what to do with the Demo page (`#/demo`) — it was explicitly removed from the header nav
       (both dropdown and mobile menu) but the page/route itself is still live and reachable by direct
       link. Either restore a nav entry for it, or remove the route/page entirely if it's not needed.
+- [x] ~~Add a Login/Register/Password-recovery/Vision-Home customer portal~~ — done, but **entirely
+      client-only** (no backend exists or is planned yet). See SDD §14, especially §14.8's "what's real
+      vs. simulated" table, before treating any of it as production security.
+- [ ] **Give the customer portal a real backend** when/if this becomes a real product feature: an API +
+      database (replacing the `localStorage` "auth service" in `auth.js`), a real email service for
+      verification/reset links (replacing the on-page "here's your link" dev panels), server-side
+      bcrypt/Argon2 password hashing, server-enforced rate limiting, HttpOnly/Secure session cookies, and
+      an audit log. This is a much bigger project than the frontend work already done — flag it as such
+      rather than trying to bolt real security onto the current simulation. See SDD §14.8.
+- [ ] Add the real company LinkedIn URL to the footer's LinkedIn icon — it currently renders as a
+      non-clickable placeholder (no `href`) because no URL was provided. See SDD §10.26/§11.
+- [ ] Add a file-attachment field to the Vision Home "request technical support" ticket form — skipped
+      for now since there's nowhere for an upload to go without a backend. See SDD §14.6.
+- [ ] Confirm/record the live Vercel URL for the site (repo was connected to Vercel this round) and add
+      it to SDD §1 once known.
+- [ ] Confirm the numbers in the "send me these results" calculator panel are what should actually go
+      out — it currently just shows a local "we'll email you" success message with no real email sent
+      (same no-backend pattern as the contact form). Revisit once/if the contact form gets a real backend
+      (first TODO item above) — wiring both at the same time makes sense.
 
 ## Notes
 

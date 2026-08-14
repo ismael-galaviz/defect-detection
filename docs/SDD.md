@@ -5,7 +5,7 @@ design decisions, and constraints — so a future session can make changes witho
 source file or re-deriving decisions that were already made and settled. If this file and the actual
 code ever disagree, **the code is the source of truth**; update this file to match it.
 
-Last verified against the live source on: 2026-08-13.
+Last verified against the live source on: 2026-08-14.
 
 ---
 
@@ -13,15 +13,21 @@ Last verified against the live source on: 2026-08-13.
 
 A bilingual (Spanish/English) marketing website for **VeritX Vision**, a fictional/prototype product
 by a company headquartered in Tlaxcala, Mexico, building an AI-powered fabric-defect-inspection system
-("Vision A") for textile manufacturers. It is a single-page marketing site plus three small satellite
-pages (Demo, Calculator placeholder, About), all client-side routed.
+("Vision A") for textile manufacturers. It is a single-page marketing site plus several satellite pages
+(Demo, Calculator, About) **and a client-only-simulated customer portal** (Login, Register, email
+verification, password/username recovery, and a "Vision Home" account dashboard — see §14), all
+client-side routed.
 
-- **Live site:** https://ismael-galaviz.github.io/defect-detection/
+- **Live site (GitHub Pages):** https://ismael-galaviz.github.io/defect-detection/
+- **Live site (Vercel):** the repo is also connected to Vercel directly — URL not recorded here yet
+  (fill in once known; it'll be a `*.vercel.app` subdomain unless a custom domain is attached).
 - **GitHub repo:** https://github.com/ismael-galaviz/defect-detection (branch `main`)
 - **Git root:** this directory (`02_Website_Code/frontend/veritx-web`) — the repo does **not** include
   the rest of the `Defect Detection` project tree (images, project code, diagrams, etc. are siblings,
   outside git).
-- **Hosting:** GitHub Pages, deployed via GitHub Actions on every push to `main`/`master`.
+- **Hosting:** two independent targets build from the same `main` branch — GitHub Pages (via GitHub
+  Actions, §2) and Vercel (via Vercel's own git integration, §2). See §2's "Vite config" note for how a
+  single `vite.config.js` serves both without per-target manual steps.
 
 ---
 
@@ -64,20 +70,41 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/defect-detection/',
+  base: process.env.VERCEL ? '/' : '/defect-detection/',
 })
 ```
 
-`base` **must** match the GitHub Pages repo name. If the repo is ever renamed or moved to a custom
-domain, update this and re-deploy.
+**Two deploy targets, one config.** GitHub Pages serves this repo as a *project site* under
+`/defect-detection/`, so every asset URL needs that path prefix baked in at build time. Vercel serves it
+at the domain root (its own subdomain, or a custom domain later), where that same prefix would 404 every
+JS/CSS asset. Vercel automatically sets the `VERCEL` env var during its builds (no manual config needed
+on Vercel's side for this), so `base` branches on it: `'/'` under Vercel, `'/defect-detection/'`
+everywhere else (including local `npm run build`, which is why a plain local build still matches what
+GitHub Pages expects). If the GitHub Pages repo is ever renamed, or Pages moves to a custom domain,
+update the non-Vercel branch of this ternary and re-deploy.
 
-### Deploy (`.github/workflows/deploy.yml`)
+### Deploy — GitHub Pages (`.github/workflows/deploy.yml`)
 
 Triggers on push to `main`/`master` or manual dispatch. Steps: checkout → Node 20 → `npm ci` →
 `npm run build` → upload `./dist` as a Pages artifact → deploy. Uses `actions/upload-pages-artifact@v3`
 and `actions/deploy-pages@v4`. (CI currently warns that Node 20 is deprecated on the runner image and
 is being forced onto Node 24 — cosmetic, not currently broken; bump `node-version` to `24` if it starts
 to matter.)
+
+### Deploy — Vercel
+
+The repo has also been connected to Vercel directly (its own git integration, not a GitHub Actions
+step) — it rebuilds and redeploys on every push the same way GitHub Pages does, independently. **No
+`vercel.json` exists and none is needed**: Vercel auto-detects this as a Vite project (framework preset
+"Vite") from `package.json`/`vite.config.js` at the repo root and defaults to `npm run build` +
+`dist` as the output directory, which already match. Routing needs no rewrite rules either, since every
+route in this app is a `#/...` hash fragment (§4) — the browser never asks the server for
+`/login` or `/vision-home` as a path, only ever for `/`, so there's nothing for Vercel to redirect.
+**The one thing that had to change for Vercel to work at all** was `base` in `vite.config.js` (above) —
+without the `VERCEL`-conditional, the site would build with GitHub Pages' `/defect-detection/` prefix
+baked in and every asset would 404 on Vercel's root-served domain. If Vercel's dashboard ever shows a
+"Root Directory" setting, it should stay blank/unset — `package.json` already sits at the git root
+(§1's "Git root" note), so there's no nested-folder monorepo indirection for Vercel to account for.
 
 ### `.gitignore`
 
@@ -105,43 +132,71 @@ veritx-web/
 ├── docs/
 │   └── SDD.md                 # this file
 └── src/
-    ├── main.jsx                # ReactDOM root, imports index.css, mounts <App/>
+    ├── main.jsx                # ReactDOM root (wrapped in React.StrictMode), imports index.css, mounts <App/>
     ├── App.jsx                 # routing hook, ALL page-1 components (Header..Footer), <Site/>, <App/>
     ├── icons.jsx                # shared <Icon name size/> component + ICON_PATHS map (SVG paths)
     ├── i18n.jsx                 # LanguageProvider/useLanguage — language state, not the copy itself
     ├── translations.js          # ALL user-facing copy, both languages, one big object (see §5, §9)
+    ├── auth.js                   # client-only simulated auth "backend" — see §14
     ├── DemoPage.jsx              # route #/demo — interactive defect-map demo
     ├── CalculatorPage.jsx         # route #/calculator — interactive ROI/savings calculator (see §10.16)
-    ├── AboutPage.jsx              # route #/about — "Who We Are" page
-    └── index.css                 # the only stylesheet, global, ~1035 lines
+    ├── AboutPage.jsx              # route #/about — "Who We Are" page (incl. the Mexico locator map)
+    ├── MexicoMap.jsx               # <MexicoMap/> component used by AboutPage — see §14.7
+    ├── mexicoMapData.js            # generated SVG path data consumed by MexicoMap.jsx — see §14.7
+    ├── LoginPage.jsx                # route #/login — see §14
+    ├── RegisterPage.jsx              # route #/register — see §14
+    ├── VerifyEmailPage.jsx            # route #/verify-email — see §14
+    ├── ForgotPasswordPage.jsx          # routes #/forgot-password (+ ?token=) — see §14
+    ├── RecoverUsernamePage.jsx          # route #/recover-username — see §14
+    ├── VisionHomePage.jsx                # route #/vision-home — protected account dashboard, see §14
+    └── index.css                 # the only stylesheet, global, ~1450+ lines
 ```
 
 There is no `components/` subfolder — every home-page section component (`Header`, `Hero`, `VisionA`,
 `HowItWorks`, `UseCases`, `Comparison`, `Specs`, `Contact`, `Footer`, plus small helpers `LangSwitch`,
 `NavDropdown`, `MobileAccordion`, `MadeInMexicoBadge`) lives directly in `App.jsx` as sibling function
 components, in the order they render. `Site()` is the component that assembles them per route; `App()`
-just wraps `Site` in `LanguageProvider`.
+just wraps `Site` in `LanguageProvider`. The customer-portal pages (§14) each get their own file,
+following the same one-file-per-satellite-page convention as `DemoPage.jsx`/`CalculatorPage.jsx`/`AboutPage.jsx`.
 
 ---
 
 ## 4. Routing
 
 No router library. `useRoute()` (top of `App.jsx`) reads `window.location.hash`, listens for
-`hashchange`, and maps it to one of four route names:
+`hashchange`, and maps it to one of these route names:
 
 | hash prefix | route |
 |---|---|
 | `#/demo` | `demo` → renders `<DemoPage/>` |
 | `#/calculator` | `calculator` → renders `<CalculatorPage/>` |
 | `#/about` | `about` → renders `<AboutPage/>` |
+| `#/login` | `login` → renders `<LoginPage/>` |
+| `#/register` | `register` → renders `<RegisterPage/>` |
+| `#/verify-email` (+ `?token=`) | `verify-email` → renders `<VerifyEmailPage/>` |
+| `#/forgot-password` (+ optional `?token=`) | `forgot-password` → renders `<ForgotPasswordPage/>` (request view if no token, reset view if a token is present) |
+| `#/recover-username` | `recover-username` → renders `<RecoverUsernamePage/>` |
+| `#/vision-home` | `vision-home` → renders `<VisionHomePage/>` (redirects to `#/login` client-side if there's no session — see §14) |
 | anything else (incl. plain `#section-id` anchors) | `home` → renders the full home-page section stack |
+
+All nine non-`home` route names are collected in the `SATELLITE_ROUTES` array (top of `App.jsx`, right
+above `useRoute()`) so the scroll-to-top effect below and any future "is this a satellite page" check
+stay in sync with one list instead of a repeated `route === 'x' || route === 'y' || ...` chain.
 
 `<Header/>` and `<Footer/>` always render regardless of route.
 
 On route change, `Site()`'s `useEffect`:
-- scrolls to top (`window.scrollTo(0,0)`) for `demo`/`calculator`/`about`,
+- scrolls to top (`window.scrollTo(0,0)`) for any route in `SATELLITE_ROUTES`,
 - otherwise (route `home`), if the current hash is a plain anchor (doesn't start with `#/`), scrolls
   that element into view via `document.getElementById(hash.slice(1))?.scrollIntoView()`.
+
+**Query strings on hash routes:** `#/verify-email?token=...` and `#/forgot-password?token=...` carry a
+token as a query string appended directly to the hash fragment (not a "real" URL query string, since
+everything after `#` is opaque to the browser/server — this is a static site with no server-side
+routing anyway). Each page reads it with a small `getTokenFromHash()` helper:
+`new URLSearchParams(window.location.hash.split('?')[1] || '').get('token')`. `useRoute()`'s
+`hash.startsWith('#/forgot-password')` check matches both the bare and `?token=`-suffixed forms since
+the query string comes right after the route segment.
 
 This means an in-page anchor like `#contact` works both when already on `home` (native browser anchor
 scroll, assisted by `html { scroll-behavior: smooth }` in CSS) **and** when clicked from a satellite
@@ -224,11 +279,19 @@ language-switcher flags (see §5).
 | `cloud` | Why VeritX Vision card 4 | Cloud or on-premises |
 | `globe` | About facts | "Where we serve" |
 | `chevronDown` | Nav dropdown / mobile accordion triggers | Expand/collapse indicator (rotates 180° via `.chev.open`) |
-| `clock` | Calculator, section 2 (labor hours) | Time/hours |
+| `clock` | Calculator, section 2 (labor hours); also reused for Vision Home's "next payment" and "schedule a meeting" cards | Time/hours |
 | `gauge` | Calculator, section 3 (line speed) | Speed |
 | `shield` | Calculator, soft savings | Customer trust/reputation |
-| `clipboard` | Calculator, soft savings | Audits/certifications |
+| `clipboard` | Calculator, soft savings; also reused for Vision Home's "active subscriptions" card | Audits/certifications |
 | `spark` | Calculator, soft savings | Employee experience |
+| `whatsapp` | Contact info row | WhatsApp chat link (`wa.me/526462416056`) |
+| `eye` / `eyeOff` | Login/Register/Reset-password forms | Show/hide password toggle (swapped by `showPassword` state) |
+| `user` | Header account link/dropdown trigger | Login/My Account entry point |
+| `flask` | Every auth page's "demo mode" panel (dummy-login banner, verification/reset dev-links, recover-username dev-panel) | Signals "this is simulated, not a real backend action" |
+| `linkedin` | Footer, brand column | Social link icon (placeholder — see §11) |
+
+`user`, `flask`, `eye`/`eyeOff`, and `linkedin` were added for the customer-portal work (§14); `whatsapp`
+was added when a WhatsApp contact row was requested alongside the existing email row in `Contact()`.
 
 **To add an icon:** add a `name: <path .../>` (or `<>...</>` fragment for multi-element icons) entry to
 `ICON_PATHS` in `icons.jsx`, keeping the `viewBox="0 0 24 24"` coordinate space consistent with the
@@ -302,31 +365,49 @@ In file order:
   `NavDropdown`; manages its own `open` state locally (each mobile menu section is independent, unlike
   desktop where only one dropdown can be open at a time).
 - **`Header()`** — sticky header. Desktop nav, left to right: **Home** (plain link, `href="#"`) →
-  **Product** (`NavDropdown`, `t.nav.productItems`) → **Calculator** (plain link, `href="#/calculator"`,
-  `t.nav.calculator`) → **About Us** (`NavDropdown`, `t.nav.aboutItems`). Only one dropdown can be open
-  at a time (`openDropdown` state: `null | 'product' | 'about'`). Dropdowns open **on click, not hover**
-  (explicit choice — more accessible, consistent with mobile). Closed by: clicking its own trigger again,
-  clicking any item inside it, clicking anywhere outside the nav (`mousedown` listener on `document`,
-  checked against a `navRef`), or pressing `Escape`. The mobile hamburger (`mobile-toggle` button, ☰/✕)
-  toggles a separate `<nav className="mobile-menu">` that mirrors the same structure — Home link,
-  Product `MobileAccordion`, Calculator link, About Us `MobileAccordion`. **There is no CTA button in the
-  header** — deliberately removed once the header got crowded; the primary CTA lives in the hero, the
-  contact section, and page-specific CTAs. **There used to be a third "Tools" dropdown** grouping Demo +
-  Calculator together — Demo was explicitly removed from the nav (the `#/demo` route/page itself still
-  exists and works, it's just unlinked — see §11), leaving Tools with only one item, so it was collapsed
-  into the plain Calculator link described above rather than keeping a single-item dropdown. `DemoPage`
-  is still imported and routed in `Site()`; only the nav link was removed.
+  **Product** (`NavDropdown`, `t.nav.productItems`) → **Calculate Savings** (plain link,
+  `href="#/calculator"`, `t.nav.calculator` — renamed from "Calculator"/"Calculadora" to "Calculate
+  Savings"/"Calcular ahorros") → **About Us** (`NavDropdown`, `t.nav.aboutItems`). Only one dropdown can
+  be open at a time (`openDropdown` state: `null | 'product' | 'about' | 'account'` — see the account
+  dropdown below). Dropdowns open **on click, not hover** (explicit choice — more accessible, consistent
+  with mobile). Closed by: clicking its own trigger again, clicking any item inside it, clicking
+  anywhere outside the dropdown's own container, or pressing `Escape`. Outside-click detection uses
+  **two refs**, not one: `navRef` (wraps `nav.nav-links`, for `product`/`about`) and `accountRef` (wraps
+  the account-menu `<div>`, for `account`) — the shared `mousedown` handler picks
+  `openDropdown === 'account' ? accountRef : navRef` so each dropdown only reacts to clicks outside its
+  own DOM subtree (a single shared ref would either fail to close the account menu when clicking a nav
+  link, or vice versa). The mobile hamburger (`mobile-toggle` button, ☰/✕) toggles a separate
+  `<nav className="mobile-menu">` that mirrors the same structure — Home link, Product
+  `MobileAccordion`, Calculate Savings link, About Us `MobileAccordion`, plus the account link/logout
+  row (see below). **There is no CTA button in the header** — deliberately removed once the header got
+  crowded; the primary CTA lives in the hero, the contact section, and page-specific CTAs. **There used
+  to be a third "Tools" dropdown** grouping Demo + Calculator together — Demo was explicitly removed
+  from the nav (the `#/demo` route/page itself still exists and works, it's just unlinked — see §11),
+  leaving Tools with only one item, so it was collapsed into the plain Calculate-Savings link described
+  above rather than keeping a single-item dropdown. `DemoPage` is still imported and routed in `Site()`;
+  only the nav link was removed. **Account link** (`nav-cta`, after `LangSwitch`): see the icon-only
+  dropdown described in §6's icon table and §14.2 — this replaced an earlier icon+text-label version.
 - **`Hero()`** — headline, lead paragraph, two CTAs (`#contact`, `#how-it-works`), three stat chips
   (`t.hero.stats`), and a decorative "scan frame" visual with two floating defect-tag labels
-  (`t.hero.defectTags`) and an animated scan line (`@keyframes scan`, pure CSS).
+  (`t.hero.defectTags`) and an animated scan line (`@keyframes scan`, pure CSS). **The middle stat was
+  changed from an abstract `'Flexible'` / "Install adapts to your machine" to a concrete number**:
+  `'100%'` / "Of rolls inspected — not sampled" — requested as a "more tangible fact a business owner
+  would find attractive" than a non-numeric value; the wording reuses the existing "inspects 100% of
+  pieces consistently" claim already established in the ROI calculator copy (§10.16), not a new,
+  unvalidated claim.
 - **`VisionA()`** (`id="vision-a"`) — product intro section, right after Hero. Left: eyebrow/title/sub +
-  3 feature rows (icon + title + body, from `t.visionA.features`). Right: a decorative CSS-only "device"
-  illustration (`.device-frame`, no real image asset) plus a row of small pill tags
-  (`t.visionA.tags`). Below the two-column grid, full width: a responsive 16:9 YouTube embed
-  (`.video-embed`, privacy-enhanced `youtube-nocookie.com` domain, video id `djK5l04jRoM`, accessible
-  `title` from `t.visionA.videoTitle`). **The product video lives here (product description section),
-  not on the About page** — it was initially added to About and explicitly moved to Vision A; if a
-  second video is ever needed for About, that'd be a new addition, not "restoring" anything.
+  3 feature rows (icon + title + body, from `t.visionA.features`). Right: **the visual column now holds
+  only the 16:9 YouTube embed** (`.video-embed`, privacy-enhanced `youtube-nocookie.com` domain, video
+  id `djK5l04jRoM`, accessible `title` from `t.visionA.videoTitle`) — no other content below it.
+  **Superseded:** this column used to show a decorative CSS-only "device" mockup (`.device-frame`, pure
+  CSS, no real image/animation asset) with a row of small pill tags (`t.visionA.tags`) *underneath* a
+  separate full-width video embed. Both were explicitly removed in two steps — first the device mockup
+  was replaced by moving the video into that spot, then the pill tags below it were removed outright —
+  leaving just the single video. `t.visionA.tags` and the `.device-frame`/`.device-name`/`.device-bar`/
+  `.device-beam`/`.device-fabric`/`.visiona-tags` CSS were deleted along with them; don't resurrect
+  either without a fresh request. **The product video lives here (product description section), not on
+  the About page** — it was initially added to About and explicitly moved to Vision A; if a second video
+  is ever needed for About, that'd be a new addition, not "restoring" anything.
 - **`HowItWorks()`** (`id="how-it-works"`) — 4-step numbered pipeline grid (`t.howItWorks.steps`,
   `.step-card`), plus one extra full-width dark **"integration card"** below the grid
   (`t.howItWorks.integration`) explaining that Vision A can trigger **client-defined actions** on
@@ -342,11 +423,22 @@ In file order:
   table into standalone value-prop cards, per an explicit "don't compare to the competition" request.**
   Do not reintroduce a competitor/legacy-systems comparison here.
 - **`Specs()`** (`id="specs"`) — dark navy section, 4 stat cards (`t.specs.cards`).
-- **`Contact()`** (`id="contact"`) — two-column: left is contact info (`.contact-info`, with `mail`/`pin`
-  icon rows); right is the lead-gen form. The form opens with a `.mode-toggle` (segmented control,
-  `mode` state: `'message' | 'schedule'`). In `'schedule'` mode, an `<AppointmentPicker/>` renders
-  between the stage select and the message textarea — see §10.17 for its behavior. See §9.6 and §10 for
-  the form's exact fields, ordering, and behavior — it's the most complex component in the file.
+- **`Contact()`** (`id="contact"`) — two-column: left is contact info (`.contact-info`); right is the
+  lead-gen form. **Left column layout:** an `.info-row-pair` puts "Email us" (`mail` icon) and "Chat on
+  WhatsApp" (`whatsapp` icon, `href="https://wa.me/526462416056"`, opens in a new tab) side by side,
+  with "Based in" (`pin` icon) as a full-width row below — the WhatsApp row was requested to sit next to
+  the email row specifically, not stacked under it. `.info-row` (and its `a.info-row` link variant) is
+  shared with `AboutPage`'s facts list. The form opens with a `.mode-toggle` (segmented control, `mode`
+  state: `'message' | 'schedule'`). In `'schedule'` mode, an `<AppointmentPicker/>` renders between the
+  stage select and the message textarea, and — schedule mode or not — a video-tool `<select>`
+  (`a.videoTool`/`videoToolOptions`: Zoom, Google Meet, Microsoft Teams, WhatsApp Video, Other) renders
+  right after the picker so the visitor can say how they'd like to take the call — see §10.17 for its
+  behavior. **On submit, the success message is scrolled into view** (`successRef` +
+  `scrollIntoView({behavior:'smooth', block:'center'})` in a `useEffect` keyed on `submitted`) — before
+  this fix, submitting collapsed the tall schedule-mode form (with the date/time picker) down to a short
+  success banner while the scroll position stayed put, leaving the visitor looking at the footer instead
+  of the confirmation. See §9.6 and §10 for the form's exact fields, ordering, and behavior — it's the
+  most complex component in the file.
 - **`AppointmentPicker`** (defined just above `Contact()`) — a hand-built month-view calendar (no date
   library) plus a fixed set of business-hour time slots, all declared and labeled in **Mexico City time
   (CDMX)** regardless of the visitor's own timezone. See §10.17.
@@ -354,10 +446,15 @@ In file order:
   translated text (the "HECHO EN MÉXICO" label is hardcoded, not through `t`, since it's a fixed
   Spanish-language brand mark regardless of site language — this was an explicit request, not an
   oversight).
-- **`Footer()`** — brand block (logo, tagline, the Mexico badge) + 3 link columns (`Product`, `Company`,
-  `Legal`) + bottom bar (copyright, "prototype" disclaimer). The `Company` column is `About` (→
-  `#/about`) and `Contact` (→ `#contact`) — both real links; there is no `Careers` entry. **The `Legal`
-  column is still not real links** — see §11.
+- **`Footer()`** — brand block (logo, tagline, a `.footer-social` row, the Mexico badge) + 3 link
+  columns (`Product`, `Company`, `Legal`) + bottom bar (copyright only — see below). `.footer-social`
+  currently holds one icon-only entry, LinkedIn (`Icon name="linkedin"`), rendered as a non-interactive
+  `<span>` (no `href`) rather than a real `<a>` link — **there is no real company LinkedIn URL yet**;
+  wire it up as a proper link once one exists (don't guess/fabricate a URL — see §11). The `Company`
+  column is `About` (→ `#/about`) and `Contact` (→ `#contact`) — both real links; there is no `Careers`
+  entry. **The `Legal` column is still not real links** — see §11. **Superseded:** the bottom bar used
+  to include a second line, "Prototype product — specifications subject to change." — removed by
+  request; `t.footer.prototype` no longer exists in either language, don't re-add it without being asked.
 - **`Site()`** — route-to-component mapping, see §4.
 - **`App()`** — default export, wraps `<Site/>` in `<LanguageProvider>`.
 
@@ -365,9 +462,20 @@ In file order:
 
 ## 9. Content — full copy (both languages)
 
-This is the **entire, current, verbatim contents of `src/translations.js`**, reproduced in full per the
-request that this SDD be self-contained (you should not need to open `translations.js` to know the
-exact copy — but if this ever drifts from the real file, trust the real file and refresh this section).
+⚠️ **This section is now known-stale for parts of the file and is kept for the original marketing
+copy only.** It was originally a full verbatim reproduction of `translations.js`, but the file has
+since grown a large `auth` namespace (login/register/recovery/Vision Home copy — see §14.1) that is
+**deliberately not reproduced here** (it would roughly double this document's length for content that's
+easy to read directly in the source file), plus a number of smaller edits to the marketing copy below
+that were **not** re-synced into this quoted block afterward: the hero's middle stat (§10.23), the
+footer's removed "prototype" line (§8's `Footer()` entry), Vision A's removed device-mockup tags
+(§8's `VisionA()` entry), the About page's added Vision/Mission section and WhatsApp contact row
+(§10.25, §8's `Contact()` entry), the nav's "Calculator" → "Calculate Savings" rename (§10.22), and the
+calculator's currency selector / send-results panel / relocated methodology note (§10.19–21). **For any
+of those areas, or anything under `auth`, read `src/translations.js` directly — it is unambiguously the
+source of truth.** The reproduction below is otherwise accurate for the rest of the site's copy as of
+2026-08-13 (before this round of changes); trust the real file over this block for literally anything
+that seems to disagree with it, per the standing rule at the top of this document.
 
 ```js
 export const translations = {
@@ -1222,6 +1330,55 @@ casually reverse them without the user re-confirming — re-litigating them wast
     why-grid` / `.usecase-card` / `.usecase-icon` visual pattern (§7) rather than inventing new card
     styling — icons: `shield`, `clipboard`, `spark`, `activity` (the last one reused from the "Why VeritX
     Vision" section).
+19. **The calculator has a currency selector** (`.calc-currency`, above the three formula sections) —
+    `t.calculatorPage.currencyOptions` follows the **same grouping convention as the contact form's
+    country select** (§10.9): Mexico standalone first, then a "Latin America" `<optgroup>` (ARS, BOB,
+    BRL, CLP, COP, CRC, DOP, GTQ, HNL, NIO, PYG, PEN, UYU, VES), then an "Other currencies" `<optgroup>`
+    (USD, EUR) — keep new currencies in that same three-tier order, don't just alphabetize or append.
+    **The calculator does not convert between currencies** — selecting a currency only changes the label
+    suffix on the three monetary fields (`MONEY_FIELD_KEYS` in `CalculatorPage.jsx`: `costPerDefect`,
+    `hourlyCost`, `marginPerUnit`) and the `Intl.NumberFormat` currency code used to render every result;
+    the numbers the visitor types are trusted to already be in the selected currency. `formatCurrency(n,
+    lang, currency)` replaced the old currency-hardcoded `formatMXN`.
+20. **The calculator has a "send me these results" panel** (`.calc-send`, directly below the total
+    card), collecting name + email and, on submit, just flips local `sent` state to show a thank-you
+    message — **same no-backend pattern as the contact form** (§11), not a real email dispatch. An
+    earlier version tried to route around the missing backend with a `mailto:` link (opening the
+    visitor's own mail client with a pre-filled draft) — **explicitly replaced** after feedback that the
+    flow should read as "you ask us, we handle sending it" (matching the Contact form's own framing),
+    not "here's a drafted email, you send it yourself." Don't reintroduce the `mailto:` approach without
+    a fresh request.
+21. **The "How to read this" methodology note** (`t.calculatorPage.methodologyNote`) **lives inside the
+    total-savings card** (`.calc-total`), directly under the total row — not as a standalone paragraph
+    between the total card and the "send results" panel, which is where it originally sat. Styled via
+    `.calc-total .calc-methodology` (translucent white text, no `max-width` cap) since it now sits on the
+    total card's dark navy background instead of the page's light background.
+22. **The nav/page label changed from "Calculator"/"Calculadora" to "Calculate Savings"/"Calcular
+    ahorros"** (`t.nav.calculator`) — the page's own `<h1>` (`t.calculatorPage.title`, "Savings
+    calculator"/"Calculadora de ahorro") was left as-is; only the short nav-entry name changed.
+23. **The hero's middle stat chip is `'100%'` / "Of rolls inspected — not sampled"**, not the earlier
+    `'Flexible'` / "Install adapts to your machine" — see §8's `Hero()` entry. Don't revert to a
+    non-numeric stat there without a fresh request; the other two stats (`99.2%`, `~50%`) are unchanged.
+24. **The About page includes a Mexico locator map** (`<MexicoMap/>`, inside `.about-facts`, below the
+    HQ/coverage facts) highlighting Tlaxcala with its three true bordering states labeled (Puebla,
+    Hidalgo, México/State of Mexico — verified by nearest-point distance against real boundary data, not
+    guessed) and every other state rendered unlabeled for context. **Deliberately only the three
+    neighbors are labeled, and Tlaxcala itself is not** — it's identified instead by fill color (solid
+    cyan) plus a pulsing marker dot, with a small caption ("● Tlaxcala") below the map, per an explicit
+    "highlight Tlaxcala, only label the neighboring states" request. See §14.7 for the data/build
+    pipeline (this isn't hand-drawn — regenerate, don't hand-edit the path data if it ever needs to
+    change).
+25. **The About page has a "Vision" and "Mission" section** (`.vm-section`, its own `<section>` right
+    after the intro/facts grid) — two cards (`vm-grid`/`vm-card`, reusing the `vf-icon` circular-icon
+    pattern) under `t.about.vision` / `t.about.mission` (`icon`, `title`, `body`). Background is
+    `var(--white)` via `.demo-section.vm-section` (needs both classes for specificity — see the CSS
+    comment) so it visually separates from the gray-50 intro section above it.
+26. **The Contact section's WhatsApp number and the footer's target LinkedIn URL are both currently
+    unverified/placeholder-status from the codebase's point of view** — WhatsApp (`+52 246 241 6056`) was
+    given directly by the user and is wired as a real `wa.me` link; LinkedIn has **no URL at all** yet
+    (rendered as a non-linked icon — see §8's `Footer()` entry and §11). If asked to "add more social
+    links" or "fix the WhatsApp number," check with the user for the real destination first — don't
+    invent one.
 
 ---
 
@@ -1252,6 +1409,15 @@ casually reverse them without the user re-confirming — re-litigating them wast
 - **No web font is actually loaded** — `index.css` requests `'Inter'` first in the font stack, but
   nothing imports/links Inter, so every browser silently falls back to its next system font.
 - **No automated tests, no linter/formatter config.**
+- **The footer's LinkedIn icon has no real URL** — rendered as a non-interactive `<span>`, not an
+  `<a>`, specifically because no company LinkedIn page was provided (see §10.26). Wire it up as a real
+  link (and probably add `target="_blank" rel="noopener noreferrer"`, matching the WhatsApp link
+  pattern) as soon as the user gives you the actual URL — don't fabricate one.
+- **The entire customer portal (§14) is a client-only simulation, not a real backend.** This is the
+  single biggest gap added this round — see §14.8 for the full breakdown (no real server, no real email
+  delivery, SHA-256-in-JS instead of bcrypt/Argon2, client-side-only and trivially bypassable rate
+  limiting, no audit log, no HttpOnly/Secure/SameSite session cookies since there's no server to set
+  them). Read §14.8 before telling a user any part of the auth flow is "production-ready."
 
 ---
 
@@ -1272,8 +1438,11 @@ casually reverse them without the user re-confirming — re-litigating them wast
 - **Add/replace an icon:** add an entry to `ICON_PATHS` in `icons.jsx` (see §6), reference it by name
   from wherever needs it.
 - **Add a language:** see the end of §5.
-- **Deploy:** just `git push` to `main` — the Actions workflow builds and publishes automatically.
-  No manual deploy step exists or is needed.
+- **Add a new customer-portal screen:** see §14.9.
+- **Regenerate the Mexico map:** see §14.7.
+- **Deploy:** just `git push` to `main`. Two targets build from the same push now — the GitHub Actions
+  workflow (GitHub Pages) and Vercel's own git integration (no Action needed for that one, Vercel builds
+  on push itself). See §2 for how `vite.config.js` tells the two builds apart.
 
 ---
 
@@ -1291,3 +1460,264 @@ written and will drift.
   now, add it there instead of just mentioning it in chat.
 - If closing out or adding an item there makes §11 of this SDD stale or inaccurate, update §11 to match
   in the same change — don't let the two documents disagree about what's outstanding.
+
+---
+
+## 14. Customer Portal (Login / Register / Recovery / Vision Home)
+
+### 14.1 What this is and why it's built the way it is
+
+A full login → register → verify-email → forgot-password/recover-username → account-dashboard flow,
+added from a detailed client-supplied spec (security-conscious: generic non-enumerating error messages,
+rate limiting, token expiry, hashed passwords, HttpOnly/Secure session cookies, audit logs — the kind of
+spec you'd hand a team with a real backend). **This site has no backend and never has** (§2: static
+Vite build, deployed to GitHub Pages/Vercel, no server runtime at all) — so rather than silently
+dropping the request or blocking on "you need a backend first," the whole thing was built as a
+**client-only simulation**: a `localStorage`-backed "auth service" (`auth.js`) standing in for a real
+API, following the exact same precedent already established by the contact form and appointment picker
+(§11) — fully clickable, end-to-end testable, honest in the UI and in this document about what's real
+and what isn't. **Read §14.8 before presenting any part of this as production-ready to a user** — it is
+not, by design, and several of the spec's actual security requirements (bcrypt/Argon2, server-side rate
+limiting, audit logs, HttpOnly cookies) are architecturally impossible without a real backend.
+
+Routes: see the table in §4. Files: see §3 (`auth.js`, `LoginPage.jsx`, `RegisterPage.jsx`,
+`VerifyEmailPage.jsx`, `ForgotPasswordPage.jsx`, `RecoverUsernamePage.jsx`, `VisionHomePage.jsx`,
+`MexicoMap.jsx`, `mexicoMapData.js`). Translations: one top-level `auth` key in `translations.js` (both
+languages) — `navLogin`, `navAccount`, `dummy`, `login`, `register`, `verifyEmail`, `forgotPassword`,
+`resetPassword`, `recoverUsername`, `visionHome`. **Not reproduced verbatim in §9** (unlike the rest of
+the site's copy) — it's large and would bloat this document without much benefit; read `translations.js`
+directly for exact strings, and treat this section as the shape/behavior reference instead.
+
+Shared visual pattern: every portal page uses the same `demo-hero` + `demo-section` shell as the other
+satellite pages (§7), with form content centered in a new `.auth-shell`/`.auth-card` wrapper
+(`.auth-card` just adds the `.lead-form` white-card look to a narrower, centered column). Password
+fields use a shared `.password-field`/`.password-toggle` pattern (`eye`/`eyeOff` icons, §6). Demo-mode
+disclosures use a shared `.dummy-panel` component style (amber, `flask` icon) across the dummy-login
+banner, the register/forgot-password "here's your verification/reset link" boxes, and the
+recover-username "here's your username" box.
+
+### 14.2 `auth.js` — the simulated backend
+
+Everything is `localStorage`-backed, under `veritx-auth-*` keys:
+
+| key | shape | purpose |
+|---|---|---|
+| `veritx-auth-users` | `[{ firstName, lastName, email, username, passwordHash, verified, createdAt, account }]` | the "user table". `account` is `null` for every freshly registered user (§14.6's empty state) or a `{status, subscriptions, payments}` object. |
+| `veritx-auth-session` | `{ username, isDummy, loginAt } \| null` | the "session" — just a localStorage value, not a cookie (see §14.8). |
+| `veritx-auth-verify-tokens` | `[{ token, username, expiresAt }]` | 24h TTL. **Not deleted on successful verification** (see the StrictMode note below) — only pruned by expiry. |
+| `veritx-auth-reset-tokens` | `[{ token, username, expiresAt }]` | 30min TTL. Deleted on successful use (one-shot, unlike verify tokens — see below for why the two behave differently). |
+| `veritx-auth-attempts` | `{ [identifier]: { count, lockedUntil } }` | per-identifier failed-login counter for the rate-limit simulation. |
+
+Passwords are hashed with `crypto.subtle.digest('SHA-256', ...)` before being stored — **not a
+substitute for server-side bcrypt/Argon2** (no salt rounds, no memory-hardness; this is purely "don't
+keep raw plaintext sitting in localStorage," not real credential security) — see §14.8.
+
+**Dummy test login** (`test` / `vision`, per the original spec's "modo de prueba"): checked directly
+inside `login()`, gated behind `export const IS_DUMMY_LOGIN_ENABLED = import.meta.env.DEV`. This is a
+**real, load-bearing gate, not just a UI banner** — Vite replaces `import.meta.env.DEV` with the literal
+`false` at build time for a production build (`npm run build`, which is what both GitHub Pages and
+Vercel run — §2), so the entire dummy-login code path is dead code and unreachable on the live sites,
+satisfying the spec's "must be fully disabled in production" requirement for real, not just cosmetically
+via a banner. It only actually works under `npm run dev`. A logged-in dummy session resolves (in
+`getCurrentUser()`) to a fixed in-memory `DEMO_ACCOUNT` (2 active subscriptions, 2 upcoming payments) so
+the "account assigned" state of Vision Home (§14.6) has something to render in dev without needing to
+register a real user first.
+
+**Rate limiting** (`login()`): after `MAX_ATTEMPTS = 5` failed attempts for the same identifier
+(email/username, lowercased), a 60s lockout is recorded in `veritx-auth-attempts` and further attempts
+return `{ok:false, error:'locked'}` until it expires. **This is client-side only and trivially
+bypassable** (clear `localStorage`, or just call `auth.js`'s exports directly from the console) — it
+exists to make the UI demonstrate the *behavior* the spec asked for, not to actually rate-limit anyone.
+Real rate limiting needs a backend. Flagged again in §14.8/§11.
+
+**Cross-component reactivity — `useAuthSession()`:** components (`Header()`, `VisionHomePage`) need to
+re-render when login/logout happens *in the same tab*, which a plain `localStorage` read on mount can't
+do (the browser's own `storage` event only fires in *other* tabs). `auth.js` keeps a small in-module
+`Set` of listener callbacks; `login()`/`logout()` call an internal `notifyAuthChange()` after writing to
+`veritx-auth-session`, and `useAuthSession()` (a hook, also exported from `auth.js`) subscribes to that
+set plus the cross-tab `storage` event, returning the current session and forcing a re-render on either
+signal. If you add a new place that needs to know "is someone logged in," use this hook — don't read
+`getSession()` once and cache it in local state, it'll go stale the moment the user logs in/out
+elsewhere on the page.
+
+**A real bug found and fixed during this build, worth knowing about if you touch `verifyEmailToken` or
+`ResetPasswordView` again:** `src/main.jsx` wraps the app in `React.StrictMode`, which **double-invokes
+effects in development** as a side-effect-detection aid (not present in production builds). Two spots
+in this codebase are/were sensitive to that:
+- `verifyEmailToken(token)` used to delete the token from `veritx-auth-verify-tokens` on success. Under
+  StrictMode, `VerifyEmailPage`'s mount effect ran twice: the first call verified and deleted the token;
+  the second call, immediately after, found no token and returned `'invalid'` — overwriting the
+  already-correct "success" UI state with an error, in dev only. **Fixed by making the function
+  idempotent instead of one-shot**: it now checks `if (!user.verified)` before flipping the flag and
+  never deletes the token (only expiry prunes it) — verifying an already-verified account is a no-op
+  success, not an error. This is also just more *correct* behavior on its own merits (a user re-clicking
+  an old confirmation email link, or a mail client prefetching the link, shouldn't see "invalid link"
+  for a token that already worked), not only a StrictMode workaround.
+- `ForgotPasswordPage`'s `ResetPasswordView` computed `const check = validateResetToken(token)` directly
+  in the render body. `resetPassword()` *does* delete the reset token on success (intentionally — unlike
+  verify tokens, a password-reset link should be genuinely one-shot). After a successful submit,
+  `setDone(true)` triggers a re-render, which re-ran `validateResetToken` against the now-deleted token
+  and got `invalid` — and since the component checked `!check.ok` before checking `done`, it showed
+  "this link is invalid or expired" instead of "password updated," even though the password change had
+  already succeeded. **Fixed by freezing `check` at mount** via `useState(() => validateResetToken(token))`
+  instead of recomputing it every render. General lesson for this codebase: **never call a
+  token-consuming `auth.js` function directly in a render body or in an effect without a stable
+  freeze/guard** — validity checks that have side effects (or that check state a submit handler is about
+  to mutate) need to be computed once, not on every re-render.
+
+### 14.3 Login (`LoginPage.jsx`)
+
+Fields: identifier (email or username) + password (with show/hide toggle). `IS_DUMMY_LOGIN_ENABLED`
+gates a `.dummy-panel` above the form with a "fill in test credentials" button (sets the fields to
+`test`/`vision` — doesn't auto-submit). Errors are looked up from `t.auth.login.errors` by the error
+code `login()` returns (`invalid_credentials`, `unverified`, `locked`) — generic on purpose, per the
+non-enumeration requirement in the original spec (never says which of email/username/password was
+wrong). Success navigates to `#/vision-home` via `window.location.hash = ...`.
+
+### 14.4 Register (`RegisterPage.jsx`) + email verification (`VerifyEmailPage.jsx`)
+
+Fields: first name, last name, email, username, password, confirm password. Client-side validation
+(`isValidEmail`, `isValidUsername`, `isPasswordCommon`, password length ≥ 12, confirm-match) runs
+before calling `registerUser()`. **Email uniqueness is enumeration-safe** (a duplicate email still
+returns `{ok:true}` with no verification token, so the UI can't distinguish "sent" from "already
+registered" — matching the spec's "don't reveal if an email exists" requirement); **username
+uniqueness is not** (`{ok:false, error:'username_taken'}`, shown inline) — this asymmetry is
+intentional and mirrors the source spec, which treats username availability as normal expected UX (like
+any signup form) but treats email existence as sensitive.
+
+On success, the page shows a "check your email" screen with `t.auth.register.successBody`, and —
+**because there is no real email service** — a `.dummy-panel` showing the actual
+`#/verify-email?token=...` link directly in the page (always shown when a token exists, not gated to
+`IS_DUMMY_LOGIN_ENABLED`, since without it there's no way to complete the flow in this demo at all — the
+gate only controls the fixed `test`/`vision` shortcut credentials, not the general "no backend" reality
+of the rest of the portal). `VerifyEmailPage` reads the token from the hash query string, calls
+`verifyEmailToken()` (idempotent — §14.2), and shows success/error accordingly.
+
+### 14.5 Forgot password / recover username (`ForgotPasswordPage.jsx`, `RecoverUsernamePage.jsx`)
+
+`ForgotPasswordPage` is **one component covering two views**, switched on whether `?token=` is present
+in the hash: no token → `RequestView` (identifier input, generic "if registered..." message + dev-panel
+reset link on submit); token present → `ResetPasswordView` (new password + confirm, blocked client-side
+below 12 chars / a common password / mismatch, then `resetPassword()` — which also calls `logout()`
+internally so any existing session is invalidated after a password change, and clears that identifier's
+rate-limit counter). `RecoverUsernamePage` is the simpler one-view equivalent for "I forgot my
+username" — email in, generic message + dev-panel showing the actual username out. Both request views
+return the same generic copy regardless of whether the identifier actually matched a user, per the
+non-enumeration requirement (§14.2/§14.4).
+
+**Scroll-into-view on every state transition:** all four success/result screens across these two files
+(register's "check your email," the two forgot-password result states, recover-username's result) use
+the same `resultRef`/`doneRef` + `useEffect(() => ref.current?.scrollIntoView({behavior:'smooth',
+block:'center'}), [state])` pattern already established for the contact form (§8's `Contact()` entry).
+Reason: these pages are short, but submitting can still shrink the visible content (a filled form
+collapsing to a couple of lines of success text) enough that, on a scrolled-down viewport, the result
+would otherwise render below the fold with the footer covering it — flagged explicitly during testing
+("cada vez que un formulario se completa, el footer le quita el espacio... haz scroll automático").
+Apply the same pattern to any new form/result transition added to these pages.
+
+### 14.6 Vision Home (`VisionHomePage.jsx`) — the account dashboard
+
+**Route guard:** not a real protected route (there's no server to enforce that) — a `useEffect` checks
+`useAuthSession()` on render and redirects to `#/login` if there's no session; the component returns
+`null` until a session exists, so there's no flash of dashboard content before the redirect fires.
+
+**Breadcrumb, not an eyebrow pill:** unlike every other satellite page (which use the `.eyebrow` pill in
+the dark `demo-hero` banner — §7), Vision Home uses a `.breadcrumb` ("Home / Vision Home") **inside the
+light `demo-section` content area**, above the dummy-panel/cards — not in the dark hero. This was an
+explicit two-step change: first the eyebrow pill was replaced with a breadcrumb, then the breadcrumb
+was moved out of the hero into the content section. If Vision Home ever needs breadcrumbs again
+elsewhere, follow this placement (content section, not hero) rather than the eyebrow-pill convention
+used everywhere else.
+
+**Two account states**, driven by `getCurrentUser().account`:
+- **No account** (`account === null` — the state every freshly registered real user starts in):
+  `.vh-empty-state` card, "You don't have an account assigned yet," with two CTAs that both link to
+  `#contact` (the *marketing* Contact section, on the `home` route) rather than opening any dashboard-
+  local form — reuses the site's one real lead-capture surface instead of duplicating it.
+- **Account assigned** (dummy test login always has one — `DEMO_ACCOUNT`, §14.2): a `.vh-grid` of three
+  cards — Active Subscriptions (list + count), Next Payment Date (soonest of `account.payments`, with a
+  "view all" toggle), Amount to Pay (next payment's amount, with a "view billing detail" toggle listing
+  subscription names). All dates/currency formatted via `Intl.DateTimeFormat`/`Intl.NumberFormat` for
+  the current `lang`.
+
+**Support + appointment cards** (below the state-dependent block above, shown regardless of account
+state): "Technical support" opens an inline `SupportTicketForm` (subject, description, priority select —
+**no file-attachment field**, since there's nowhere for an upload to go without a backend; flagged in
+§11/TODO) that on submit just flips local `sent` state, same no-backend pattern as everything else here.
+"Schedule a meeting" is a **plain link to `#contact`**, not a duplicated appointment widget — the
+marketing Contact section already has a full working `AppointmentPicker` (§10.17); this CTA deliberately
+reuses it instead of re-implementing a second calendar component inline. Don't build a second
+`AppointmentPicker` for Vision Home without a specific reason to diverge from the existing one.
+
+**Logout lives in the header's account dropdown, not on this page.** An earlier version had a standalone
+"Log out" button in Vision Home's own header row — **explicitly moved** into the `Header()` account
+dropdown (§8's `Header()` entry) after feedback that it belonged in a menu behind the account icon, not
+as a page-level button. The status badge ("Active"/"Trial"/"Pending assignment," `t.auth.visionHome.status`)
+that used to sit next to that button was also removed outright (not relocated) in the same pass — the
+`status`/`status-active`/`status-trial`/`status-pending` CSS and the badge markup are gone; the
+translation keys under `t.auth.visionHome.status` are still defined (reused by the subscription-list
+pills, `.vh-pill`) but nothing currently renders a page-level account-status badge. Don't re-add one
+without checking whether that omission was intentional (it was) or just re-add it as a
+`.vh-pill`-style badge if asked.
+
+### 14.7 Mexico locator map (`MexicoMap.jsx` / `mexicoMapData.js`)
+
+Used by `AboutPage.jsx` (§10.24), not part of the auth system itself, but built in the same session and
+documented here since it's a generated-data component like nothing else in this codebase.
+
+**Data provenance:** `mexicoMapData.js` was generated once from a public-domain Mexico state-boundary
+GeoJSON (`angelnmara/geojson`, file `mexicoHigh.json` — a small, precise, MIT-ish-licensed dataset
+commonly used in D3 Mexico-choropleth tutorials; fetched directly, not eyeballed/hand-drawn) via a
+one-off Node script (not checked into the repo — this was a scratch/throwaway build step, not a
+reusable tool). The script: (1) projects lon/lat to a 760×481 SVG viewbox using a simple
+equirectangular projection with longitude scaled by `cos(meanLatitude)` to reduce east-west distortion
+at Mexico's latitude; (2) simplifies every ring with a from-scratch Douglas-Peucker implementation
+(ε≈0.7px in projected space) to cut a ~185KB raw GeoJSON down to ~30KB of SVG path data — still enough
+detail to read as "Mexico," light enough to inline; (3) computes each state's area-weighted centroid
+(shoelace formula) on its largest ring, for icon/label placement; (4) **verifies Tlaxcala's true
+neighbors by nearest-point distance** between polygons rather than guessing from memory — confirmed
+Puebla, Hidalgo, and México (State of Mexico) all touch Tlaxcala (distance 0) and Veracruz/CDMX/Morelos
+don't (0.24–0.34° away), which is what's reflected in the "only label the neighbors" behavior (§10.24).
+
+**Label placement:** neighbor labels use **manually nudged offsets** (`LABEL_OFFSET` in
+`MexicoMap.jsx`), not the raw computed centroids — Puebla's area-weighted centroid lands almost on top
+of Tlaxcala's tiny shape (Puebla wraps around most of it), so the raw centroid would put "Puebla" text
+directly over the highlighted state. The nudges push each label into open space inside that state's own
+territory instead. If the map is ever regenerated from source data, **re-check these offsets** — a
+different simplification epsilon or projection could shift centroids enough to need new nudge values.
+
+**To regenerate:** re-fetch `mexicoHigh.json` (or an updated equivalent), re-run the same
+projection/simplification/centroid steps described above (rewrite the one-off script — it wasn't
+retained), re-verify neighbor adjacency by distance rather than assuming it hasn't changed, and
+re-tune `LABEL_OFFSET`. **Never hand-edit coordinates in `mexicoMapData.js` directly** — the `d` path
+strings are generated, not authored; treat the file as a build artifact.
+
+### 14.8 What's real vs. simulated — read before calling any of this "done"
+
+| Spec requirement | Status here |
+|---|---|
+| Dummy/test login disabled in production | ✅ Real — `import.meta.env.DEV` gate, dead-code-eliminated in prod builds (§14.2) |
+| Generic, non-enumerating error messages | ✅ Real UX behavior (client-side), though there's no server to enforce it against a determined attacker |
+| Password length / common-password checks | ✅ Real client-side checks (`isPasswordCommon` is a small hardcoded list, not a real breach-database lookup like HaveIBeenPwned) |
+| Passwords hashed, not stored in plaintext | ⚠️ Partial — SHA-256 via Web Crypto, client-side. **Not** bcrypt/Argon2 with per-user salt and tunable work factor; a real backend is required for that |
+| Email verification / password reset via token | ⚠️ Partial — real token generation (`crypto.getRandomValues`), real expiry, real one-shot consumption for reset tokens. **No real email is ever sent** — the token/link is shown directly in the UI in a labeled "demo mode" panel |
+| Rate limiting on failed logins | ⚠️ Partial — real UI/UX behavior, but enforced in `localStorage`, so trivially bypassed by clearing storage or calling `auth.js` directly. Real rate limiting needs a backend |
+| Session cookies with `Secure`/`HttpOnly`/`SameSite`, session-ID regeneration on login | ❌ Not applicable/implemented — there is no server to set cookies. "Session" is a `localStorage` value read by client JS, which is a fundamentally weaker model (readable/writable by any script on the page) than an HttpOnly cookie |
+| Audit logs (registration, login attempts, password/recovery events) | ❌ Not implemented — nothing is logged anywhere durable; `localStorage` state changes aren't an audit trail |
+| HTTPS everywhere | ✅ Real, but incidental — GitHub Pages and Vercel both serve over HTTPS by default, not something this app configures itself |
+
+If a user asks to "make the login real" or "add a real backend," that's a substantially different,
+much larger project (an actual API + database + email service + hosting for that service) — not a
+tweak to the existing files. Flag that scope difference explicitly rather than trying to bolt real
+security onto the `localStorage` simulation.
+
+### 14.9 Recipe: add a new customer-portal screen
+
+Follow the existing five pages as the template. Create `src/WhateverPortalPage.jsx` using the
+`demo-hero` + `demo-section` + `.auth-shell`/`.auth-card` shell (§14.1); add any new `auth.js` functions
+needed (keep the "generic message regardless of whether the identifier matched" pattern for anything
+recovery-related, and remember the StrictMode-idempotency lesson in §14.2 if the new screen consumes a
+token on mount); add a route branch in `useRoute()`/`Site()` and to the `SATELLITE_ROUTES` array (§4);
+add translations under `t.auth.whatever` in both languages (don't reproduce them in §9 — see §14.1); and
+if the new screen has a "did this action succeed" transition that can shrink the page's content, add the
+`resultRef`/`scrollIntoView` pattern from §14.5.

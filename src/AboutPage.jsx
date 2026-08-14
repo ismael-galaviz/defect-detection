@@ -1,5 +1,6 @@
 import { useLanguage } from './i18n.jsx'
 import { Icon } from './icons.jsx'
+import MexicoMap from './MexicoMap.jsx'
 
 export default function AboutPage() {
   const { t } = useLanguage()
@@ -25,6 +26,13 @@ export default function AboutPage() {
                 </div>
               </div>
             ))}
+            <div className="about-map">
+              <MexicoMap />
+              <div className="about-map-caption">
+                <span className="about-map-dot" aria-hidden="true" />
+                Tlaxcala
+              </div>
+            </div>
           </div>
         </div>
       </section>

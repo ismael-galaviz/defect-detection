@@ -15,10 +15,12 @@ const CALC = {
   lineSpeed: (v) => Math.max(0, v.speedAfter - v.speedBefore) * v.hoursPerYear * v.unitsPerMeter * v.marginPerUnit,
 }
 
-function formatMXN(n, lang) {
+const MONEY_FIELD_KEYS = new Set(['costPerDefect', 'hourlyCost', 'marginPerUnit'])
+
+function formatCurrency(n, lang, currency) {
   return new Intl.NumberFormat(lang === 'es' ? 'es-MX' : 'en-US', {
     style: 'currency',
-    currency: 'MXN',
+    currency,
     maximumFractionDigits: 0,
   }).format(Math.round(n) || 0)
 }
@@ -51,7 +53,7 @@ function CalcNumberInput({ id, value, onChange }) {
   )
 }
 
-function CalcSection({ section, values, onFieldChange, result, resultLabel, formulaLabel }) {
+function CalcSection({ section, values, onFieldChange, result, resultLabel, formulaLabel, currency }) {
   return (
     <div className="calc-section">
       <div className="calc-section-header">
@@ -70,7 +72,9 @@ function CalcSection({ section, values, onFieldChange, result, resultLabel, form
       <div className="calc-fields">
         {section.fields.map((f) => (
           <div className="form-row" key={f.key}>
-            <label htmlFor={`${section.id}-${f.key}`}>{f.label}</label>
+            <label htmlFor={`${section.id}-${f.key}`}>
+              {f.label}{MONEY_FIELD_KEYS.has(f.key) ? ` (${currency})` : ''}
+            </label>
             <CalcNumberInput
               id={`${section.id}-${f.key}`}
               value={values[f.key]}
@@ -94,6 +98,10 @@ export default function CalculatorPage() {
   const { t, lang } = useLanguage()
   const c = t.calculatorPage
   const [values, setValues] = useState(() => JSON.parse(JSON.stringify(DEFAULTS)))
+  const [currency, setCurrency] = useState('MXN')
+  const [sendName, setSendName] = useState('')
+  const [sendEmail, setSendEmail] = useState('')
+  const [sent, setSent] = useState(false)
 
   function handleFieldChange(sectionId, key, val) {
     setValues((v) => ({ ...v, [sectionId]: { ...v[sectionId], [key]: val } }))
@@ -112,6 +120,11 @@ export default function CalculatorPage() {
 
   const totalAnnual = Object.values(results).reduce((a, b) => a + b, 0)
 
+  function handleSendResults(e) {
+    e.preventDefault()
+    setSent(true)
+  }
+
   return (
     <main>
       <section className="demo-hero">
@@ -124,15 +137,34 @@ export default function CalculatorPage() {
 
       <section className="demo-section">
         <div className="container">
+          <div className="calc-currency">
+            <div className="form-row">
+              <label htmlFor="calc-currency">{c.currencyLabel}</label>
+              <select id="calc-currency" value={currency} onChange={(e) => setCurrency(e.target.value)}>
+                {c.currencyOptions.map((g) => (
+                  g.group ? (
+                    <optgroup key={g.group} label={g.group}>
+                      {g.options.map((o) => <option key={o.code} value={o.code}>{o.label}</option>)}
+                    </optgroup>
+                  ) : (
+                    g.options.map((o) => <option key={o.code} value={o.code}>{o.label}</option>)
+                  )
+                ))}
+              </select>
+            </div>
+            <p className="field-hint">{c.currencyHint}</p>
+          </div>
+
           {c.sections.map((s) => (
             <CalcSection
               key={s.id}
               section={s}
               values={values[s.id]}
               onFieldChange={(key, val) => handleFieldChange(s.id, key, val)}
-              result={formatMXN(results[s.id], lang)}
+              result={formatCurrency(results[s.id], lang, currency)}
               resultLabel={c.resultLabel}
               formulaLabel={c.formulaLabel}
+              currency={currency}
             />
           ))}
 
@@ -140,11 +172,38 @@ export default function CalculatorPage() {
             <h3>{c.totalTitle}</h3>
             <div className="calc-total-row calc-payback">
               <span>{c.totalAnnual}</span>
-              <strong>{formatMXN(totalAnnual, lang)}</strong>
+              <strong>{formatCurrency(totalAnnual, lang, currency)}</strong>
             </div>
+            <p className="calc-methodology">{c.methodologyNote}</p>
           </div>
 
-          <p className="calc-methodology">{c.methodologyNote}</p>
+          <div className="calc-send">
+            <h3>{c.sendResults.title}</h3>
+            <p>{c.sendResults.body}</p>
+            {sent ? (
+              <p className="field-hint">{c.sendResults.success}</p>
+            ) : (
+              <form className="calc-send-form" onSubmit={handleSendResults}>
+                <input
+                  type="text"
+                  value={sendName}
+                  onChange={(e) => setSendName(e.target.value)}
+                  placeholder={c.sendResults.namePlaceholder}
+                  aria-label={c.sendResults.name}
+                  required
+                />
+                <input
+                  type="email"
+                  value={sendEmail}
+                  onChange={(e) => setSendEmail(e.target.value)}
+                  placeholder={c.sendResults.emailPlaceholder}
+                  aria-label={c.sendResults.email}
+                  required
+                />
+                <button type="submit" className="btn btn-outline">{c.sendResults.submit}</button>
+              </form>
+            )}
+          </div>
 
           <div className="calc-soft">
             <h3>{c.softSavings.title}</h3>
