@@ -39,3 +39,5 @@ the technical/design record).
 ## Notes
 
 _(space for your own annotations)_
+
+revisar "responsiveness" ya que en un iphone 17 pro la pagina se ve cortada. 
