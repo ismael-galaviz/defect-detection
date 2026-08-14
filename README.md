@@ -45,6 +45,14 @@ Steps:
 
 If you rename the repo, update `base` in `vite.config.js` to match (`/new-repo-name/`), otherwise assets will 404.
 
+## Git remote
+
+The `.git` repo lives in this folder (`frontend/veritx-web`), **not** at the top of `02_Website_Code` or `Defect Detection` — running `git` commands from those parent folders will fail with "not a git repository". `cd` into `frontend/veritx-web` first.
+
+- Remote: `origin` → `https://github.com/ismael-galaviz/defect-detection.git`
+- Default branch: `main`, pushed to directly (no PR workflow in use currently)
+- Pushing to `main` triggers the GitHub Pages deploy workflow above
+
 ## Notes
 
 Content is placeholder pending real product photography, demo footage, and validated performance specs. Update the `SPECS`, `COMPARE_ROWS`, and hero copy in `App.jsx` once real data is available.
