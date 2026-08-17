@@ -2,20 +2,28 @@ import { useMemo, useState } from 'react'
 import { useLanguage, localeFor } from './i18n.jsx'
 import { Icon } from './icons.jsx'
 
-// Defaults mirror the worked examples from the source ROI guide (Guia_Ingeniero_Calidad_ROI.docx).
+// Defaults mirror the worked examples from the source ROI guide (Guia_Ingeniero_Calidad_ROI.docx),
+// except lineSpeed — see the note on CALC.lineSpeed below for why that one was redesigned.
 const DEFAULTS = {
   defects: { rateBefore: 1.2, rateAfter: 0.2, volume: 500000, costPerDefect: 150 },
   laborHours: { hoursBefore: 12, hoursAfter: 2, hourlyCost: 80, shiftsPerYear: 250 },
-  lineSpeed: { speedBefore: 70, speedAfter: 100, hoursPerYear: 4000, unitsPerMeter: 0.5, marginPerUnit: 20 },
+  lineSpeed: { speedBefore: 70, speedAfter: 100, hoursPerYear: 4000, marginPerMeter: 0.5 },
 }
 
 const CALC = {
   defects: (v) => Math.max(0, v.rateBefore - v.rateAfter) / 100 * v.volume * v.costPerDefect,
   laborHours: (v) => Math.max(0, v.hoursBefore - v.hoursAfter) * v.hourlyCost * v.shiftsPerYear,
-  lineSpeed: (v) => Math.max(0, v.speedAfter - v.speedBefore) * v.hoursPerYear * v.unitsPerMeter * v.marginPerUnit,
+  // Speed is m/min, so extra meters/year needs a min→hour conversion (×60) before it can be
+  // multiplied by hours/year — the original formula (ported from the source guide) skipped that
+  // conversion, which is a real unit-consistency bug, not just a mismatch with the guide's example
+  // number. Also collapses "units produced per meter" × "margin per unit" into a single
+  // "margin per meter produced" input: one fewer error-prone hop, and it matches the m²-based
+  // framing already used in the defect-reduction section instead of introducing an unrelated
+  // "unit" concept.
+  lineSpeed: (v) => Math.max(0, v.speedAfter - v.speedBefore) * 60 * v.hoursPerYear * v.marginPerMeter,
 }
 
-const MONEY_FIELD_KEYS = new Set(['costPerDefect', 'hourlyCost', 'marginPerUnit'])
+const MONEY_FIELD_KEYS = new Set(['costPerDefect', 'hourlyCost', 'marginPerMeter'])
 
 function formatCurrency(n, lang, currency) {
   return new Intl.NumberFormat(localeFor(lang), {

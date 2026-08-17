@@ -537,15 +537,14 @@ export const translations = {
           icon: 'gauge',
           title: '3. Increasing line speed',
           body: 'Manual inspection is often the bottleneck limiting how fast the line can run. A vision system inspects in real time at process speed, allowing you to increase line speed without sacrificing quality.',
-          formula: 'Annual savings =\n  (New line speed − Current speed)\n  × Operating hours per year\n  × Contribution margin per unit produced',
+          formula: 'Annual savings =\n  (New line speed − Current speed) [m/min]\n  × 60 min/hour\n  × Operating hours per year\n  × Contribution margin per meter produced',
           fields: [
             { key: 'speedBefore', label: 'Current line speed (m/min)' },
             { key: 'speedAfter', label: 'New line speed (m/min)' },
             { key: 'hoursPerYear', label: 'Operating hours per year' },
-            { key: 'unitsPerMeter', label: 'Units produced per meter' },
-            { key: 'marginPerUnit', label: 'Contribution margin per unit (MXN)' },
+            { key: 'marginPerMeter', label: 'Contribution margin per meter produced (MXN)' },
           ],
-          hint: 'This savings only applies if your business can sell the extra capacity (enough demand) or if it avoids investing in a second line — worth confirming with your own team before treating it as guaranteed. (This calculator converts speed to units using your units-per-meter factor, then applies your margin per unit.)',
+          hint: "This savings only applies if your business can sell the extra capacity (enough demand) or if it avoids investing in a second line — worth confirming with your own team before treating it as guaranteed. The speed difference is per minute, so the calculator converts it to a yearly total (×60 minutes/hour × your operating hours) before applying your margin per meter.",
         },
       ],
       totalTitle: 'Total estimated savings',
@@ -911,15 +910,14 @@ export const translations = {
           icon: 'gauge',
           title: '3. Aumento de velocidad de línea',
           body: 'La inspección manual suele ser el cuello de botella que limita qué tan rápido puede correr la línea. Un sistema de visión inspecciona en tiempo real a la velocidad del proceso, lo que permite subir la velocidad de línea sin sacrificar calidad.',
-          formula: 'Ahorro anual =\n  (Nueva velocidad de línea − Velocidad actual)\n  × Horas de operación al año\n  × Margen de contribución por unidad producida',
+          formula: 'Ahorro anual =\n  (Nueva velocidad de línea − Velocidad actual) [m/min]\n  × 60 min/hora\n  × Horas de operación al año\n  × Margen de contribución por metro producido',
           fields: [
             { key: 'speedBefore', label: 'Velocidad actual de línea (m/min)' },
             { key: 'speedAfter', label: 'Nueva velocidad de línea (m/min)' },
             { key: 'hoursPerYear', label: 'Horas de operación al año' },
-            { key: 'unitsPerMeter', label: 'Unidades producidas por metro' },
-            { key: 'marginPerUnit', label: 'Margen de contribución por unidad (MXN)' },
+            { key: 'marginPerMeter', label: 'Margen de contribución por metro producido (MXN)' },
           ],
-          hint: 'Este ahorro solo aplica si tu negocio puede vender esa capacidad extra (demanda suficiente) o si evita invertir en una segunda línea — vale la pena confirmarlo con tu propio equipo antes de darlo por hecho. (Esta calculadora convierte la velocidad a unidades usando tu factor de unidades por metro, y luego aplica tu margen por unidad.)',
+          hint: 'Este ahorro solo aplica si tu negocio puede vender esa capacidad extra (demanda suficiente) o si evita invertir en una segunda línea — vale la pena confirmarlo con tu propio equipo antes de darlo por hecho. La diferencia de velocidad está en metros por minuto, así que la calculadora la convierte a un total anual (×60 minutos/hora × tus horas de operación) antes de aplicar tu margen por metro.',
         },
       ],
       totalTitle: 'Ahorro total estimado',
@@ -1302,12 +1300,17 @@ casually reverse them without the user re-confirming — re-litigating them wast
     the actual reader is the website visitor filling out the calculator themselves, who *is* that client.
     All four were reframed to speak directly to the visitor ("usa tu tasa de defectos...", "con tu propio
     equipo..."). If more copy is ported from the source document later, apply the same reframing — don't
-    carry over salesperson-perspective phrasing verbatim. **Known issue inherited from the source
-    document, not fixed:** the line-speed section's worked example in the guide states an annual savings
-    of $2,400,000 MXN, but applying the guide's own stated formula to that same example's numbers
-    ((100−70) × 4,000 hrs × 0.5 units/m × $20/unit) yields $1,200,000 MXN — exactly half. The calculator
-    implements the formula literally, so it shows $1,200,000 MXN for the default inputs, not the guide's
-    $2,400,000 MXN. Flagged in `TODO.md` for the user to confirm which is right.
+    carry over salesperson-perspective phrasing verbatim. **Line-speed formula was corrected and
+    simplified (resolves the earlier flagged discrepancy):** the original formula, ported from the
+    source guide, multiplied a speed difference in m/min directly by hours/year with no min→hour
+    conversion — a genuine unit-consistency bug (this is what produced the guide-vs-calculator mismatch
+    flagged previously, not just a copy-over error). Fixed to `(speedAfter − speedBefore) × 60 ×
+    hoursPerYear × marginPerMeter`. Also dropped the `unitsPerMeter` × `marginPerUnit` two-step in favor
+    of a single `marginPerMeter` field (contribution margin per linear meter of fabric produced) —
+    removes an extra error-prone hop and matches the m²-based framing already used in the
+    defect-reduction section instead of introducing an unrelated "unit" concept. New default
+    (`marginPerMeter: 0.5`) gives $3,600,000 MXN for that section with the same speed/hours defaults as
+    before, and $4,550,000 MXN total. Formula/fields/hint copy updated in all three languages.
 17. **Contact form has a "Schedule a meeting" mode** (`mode-toggle`, `mode` state), alongside the default
     "Send a message" mode. In schedule mode, `AppointmentPicker` (a hand-built month calendar, no date
     library) shows a fixed set of business-hour time slots — `09:00, 10:00, 11:00, 12:00, 13:00, 16:00,
@@ -1337,7 +1340,7 @@ casually reverse them without the user re-confirming — re-litigating them wast
     (USD, EUR) — keep new currencies in that same three-tier order, don't just alphabetize or append.
     **The calculator does not convert between currencies** — selecting a currency only changes the label
     suffix on the three monetary fields (`MONEY_FIELD_KEYS` in `CalculatorPage.jsx`: `costPerDefect`,
-    `hourlyCost`, `marginPerUnit`) and the `Intl.NumberFormat` currency code used to render every result;
+    `hourlyCost`, `marginPerMeter`) and the `Intl.NumberFormat` currency code used to render every result;
     the numbers the visitor types are trusted to already be in the selected currency. `formatCurrency(n,
     lang, currency)` replaced the old currency-hardcoded `formatMXN`.
 20. **The calculator has a "send me these results" panel** (`.calc-send`, directly below the total
@@ -1404,8 +1407,6 @@ casually reverse them without the user re-confirming — re-litigating them wast
   servicio" are also plain `<span>`s — no privacy-policy or terms-of-service page exists anywhere on
   the site (the contact form's own inline privacy blurb, §10.11, is the only privacy-related content
   that actually exists).
-- **The line-speed example in the source ROI guide has an arithmetic inconsistency** — see §10.16.
-  Flagged in `TODO.md` for the user to confirm which side (formula vs. example) is right.
 - **No web font is actually loaded** — `index.css` requests `'Inter'` first in the font stack, but
   nothing imports/links Inter, so every browser silently falls back to its next system font.
 - **No automated tests, no linter/formatter config.**

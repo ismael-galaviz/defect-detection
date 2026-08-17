@@ -10,13 +10,17 @@ the technical/design record).
       shows a local "success" message and doesn't send the data anywhere.
 - [x] ~~Build the real savings calculator at `#/calculator`~~ — done, built from
       `Guia_Ingeniero_Calidad_ROI.docx`. See the new open item below about its source data.
-- [ ] **Confirm the line-speed example in the ROI guide.** The guide's own worked example says
-      $2,400,000 MXN/year, but its own formula applied to that example's numbers
-      ((100−70) × 4,000 hrs × 0.5 units/m × $20/unit) gives $1,200,000 MXN — exactly half. The live
-      calculator uses the formula as written, so it shows $1,200,000 MXN for the default inputs. Please
-      confirm which is correct: the formula, or the guide's example number (maybe a units-per-meter or
-      per-shift factor was meant to be doubled) — then update `CalculatorPage.jsx`'s `CALC.lineSpeed`
-      and/or the `lineSpeed` defaults in `DEFAULTS` accordingly. See SDD §10.16 for the full detail.
+- [x] ~~Confirm the line-speed example in the ROI guide.~~ — done. Root cause was a real bug, not just
+      a mismatch with the guide: the old formula multiplied a speed difference in **m/min** directly by
+      **hours/year**, skipping the ×60 min→hour conversion — a genuine unit-consistency error, independent
+      of whichever number the source guide printed. Fixed in `CalculatorPage.jsx`'s `CALC.lineSpeed`, and
+      simplified the model at the same time: dropped the `unitsPerMeter` × `marginPerUnit` two-step (an
+      extra error-prone hop, and an unrelated "unit" concept) in favor of a single `marginPerMeter`
+      field — margin per linear meter of fabric produced, consistent with the m²-based framing already
+      used in the defect-reduction section. New formula: `(speedAfter − speedBefore) × 60 × hoursPerYear
+      × marginPerMeter`. Defaults updated (`marginPerMeter: 0.5`), giving $3,600,000 MXN for that section
+      and $4,550,000 MXN total with the other two sections' defaults unchanged. Fields/formula/hint copy
+      updated in all three languages (`translations.js`). See SDD §10.16.
 - [x] ~~Link the footer's "About"/"Nosotros" label to the `#/about` page~~ — done; also removed the
       unused "Careers"/"Vacantes" footer entry.
 - [ ] Write and link a real Privacy Policy page — the footer's "Privacy Policy"/"Aviso de privacidad"
