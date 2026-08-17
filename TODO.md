@@ -23,9 +23,11 @@ the technical/design record).
       updated in all three languages (`translations.js`). See SDD §10.16.
 - [x] ~~Link the footer's "About"/"Nosotros" label to the `#/about` page~~ — done; also removed the
       unused "Careers"/"Vacantes" footer entry.
-- [ ] Write and link a real Privacy Policy page — the footer's "Privacy Policy"/"Aviso de privacidad"
-      link is currently a non-functional placeholder. (There's a short inline privacy blurb in the
-      contact form's consent checkbox, but no standalone policy page.)
+- [x] ~~Write and link a real Privacy Policy page~~ — done. New `#/privacy` route (`PrivacyPolicyPage.jsx`),
+      content in `translations.js` → `privacyPage` (all three languages), footer link now points to it
+      instead of being a plain `<span>`. Covers what's actually collected today (contact form, account
+      registration, support tickets, language preference in `localStorage`), no tracking cookies/analytics,
+      the `youtube-nocookie.com` embed, and the WhatsApp link being governed by its own policy.
 - [ ] Write and link a real Terms of Service page — same situation as the privacy policy above.
 - [ ] Load the Inter font — `index.css` requests it first in the font stack, but nothing actually
       links/imports it, so every browser silently falls back to a system font.

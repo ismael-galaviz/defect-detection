@@ -11,9 +11,10 @@ import VerifyEmailPage from './VerifyEmailPage.jsx'
 import ForgotPasswordPage from './ForgotPasswordPage.jsx'
 import RecoverUsernamePage from './RecoverUsernamePage.jsx'
 import VisionHomePage from './VisionHomePage.jsx'
+import PrivacyPolicyPage from './PrivacyPolicyPage.jsx'
 
 const SATELLITE_ROUTES = [
-  'demo', 'calculator', 'about',
+  'demo', 'calculator', 'about', 'privacy',
   'login', 'register', 'verify-email', 'forgot-password', 'recover-username', 'vision-home',
 ]
 
@@ -27,6 +28,7 @@ function useRoute() {
   if (hash.startsWith('#/demo')) return 'demo'
   if (hash.startsWith('#/calculator')) return 'calculator'
   if (hash.startsWith('#/about')) return 'about'
+  if (hash.startsWith('#/privacy')) return 'privacy'
   if (hash.startsWith('#/login')) return 'login'
   if (hash.startsWith('#/register')) return 'register'
   if (hash.startsWith('#/verify-email')) return 'verify-email'
@@ -759,7 +761,7 @@ function Footer() {
             </div>
             <div className="footer-col">
               <h5>{t.footer.legal}</h5>
-              <span>{t.footer.privacy}</span>
+              <a href="#/privacy">{t.footer.privacy}</a>
               <span>{t.footer.terms}</span>
             </div>
           </div>
@@ -792,6 +794,7 @@ function Site() {
       {route === 'demo' && <DemoPage />}
       {route === 'calculator' && <CalculatorPage />}
       {route === 'about' && <AboutPage />}
+      {route === 'privacy' && <PrivacyPolicyPage />}
       {route === 'login' && <LoginPage />}
       {route === 'register' && <RegisterPage />}
       {route === 'verify-email' && <VerifyEmailPage />}

@@ -314,6 +314,68 @@ export const translations = {
         body: 'To give textile mills of any size the tools to catch defects in real time, cut waste, and compete on quality — with hardware and software that installs in a day, not a quarter.',
       },
     },
+    privacyPage: {
+      eyebrow: 'Legal',
+      title: 'Privacy Policy',
+      updated: 'Last updated: August 2026',
+      intro: 'At VeritX Vision we take the privacy of your data seriously. This notice explains what information we collect through this site, how we use it, and what rights you have over it.',
+      sections: [
+        {
+          heading: 'Who we are',
+          body: 'VeritX Vision is a company based in Tlaxcala, Mexico, focused on AI-powered textile inspection. If you have questions about this notice or your data, you can write to us at hello@veritxvision.com.',
+        },
+        {
+          heading: 'Information we collect',
+          items: [
+            'Contact form and demo scheduling: name, company, work email, country, production stage, and the message you share with us.',
+            "Customer account (if you register on the portal): name, email, username, and a password stored encrypted — never in plain text.",
+            'Technical support requests: the subject, description, and priority you provide.',
+            "Language preference: we store the language you choose (Spanish, English, or French) only in your browser, so you don't have to pick it again on your next visit.",
+          ],
+        },
+        {
+          heading: 'How we use your information',
+          items: [
+            'To respond to your contact request and schedule a demo.',
+            'To give you access to your account and subscription information, if you register.',
+            'To follow up on your technical support requests.',
+            'To improve VeritX Vision and better understand the needs of textile manufacturers like you.',
+          ],
+        },
+        {
+          heading: 'Who we share your information with',
+          body: 'We never sell or share your information with third parties for marketing purposes. We only share it with service providers we need to operate this site (for example, hosting and email), and only to the extent necessary to provide the service.',
+        },
+        {
+          heading: 'Cookies and local storage',
+          body: "We do not use tracking cookies or third-party analytics tools. The only piece of data we store in your browser is your language preference. The Vision A video is shown using YouTube's privacy-enhanced mode (youtube-nocookie.com), which doesn't set tracking cookies until you choose to play it.",
+        },
+        {
+          heading: 'Links to third-party services',
+          body: "The WhatsApp button takes you to WhatsApp, owned by Meta, whose use is governed by WhatsApp's own privacy policy — not this notice.",
+        },
+        {
+          heading: 'How long we keep your data',
+          body: 'We keep your information only as long as needed to handle your request, or while your account remains active. You can ask us to delete your data at any time, as explained below.',
+        },
+        {
+          heading: 'Your rights',
+          body: 'You can request access to, correction of, or deletion of your personal data at any time by writing to hello@veritxvision.com. We will respond to your request within a reasonable time.',
+        },
+        {
+          heading: "Children's privacy",
+          body: 'This site is aimed at professionals in the textile industry and is not designed for minors. We do not knowingly collect information from anyone under 18.',
+        },
+        {
+          heading: 'Changes to this notice',
+          body: 'We may update this privacy notice from time to time. If we make significant changes, we will update the date at the top of this page.',
+        },
+        {
+          heading: 'Contact',
+          body: 'If you have questions about this privacy notice or how we handle your data, write to us at hello@veritxvision.com.',
+        },
+      ],
+    },
     contact: {
       eyebrow: 'Get In Touch',
       title: 'Ready to see VeritX Vision on your line?',
@@ -900,6 +962,68 @@ export const translations = {
         title: 'Nuestra Misión',
         body: 'Darle a las fábricas textiles de cualquier tamaño las herramientas para detectar defectos en tiempo real, reducir el desperdicio y competir en calidad — con hardware y software que se instala en un día, no en un trimestre.',
       },
+    },
+    privacyPage: {
+      eyebrow: 'Legal',
+      title: 'Aviso de privacidad',
+      updated: 'Última actualización: agosto de 2026',
+      intro: 'En VeritX Vision nos tomamos en serio la privacidad de tus datos. Este aviso explica qué información recopilamos a través de este sitio, cómo la usamos y qué derechos tienes sobre ella.',
+      sections: [
+        {
+          heading: 'Quiénes somos',
+          body: 'VeritX Vision es una empresa con sede en Tlaxcala, México, dedicada a la inspección textil con inteligencia artificial. Si tienes dudas sobre este aviso o sobre tus datos, puedes escribirnos a hello@veritxvision.com.',
+        },
+        {
+          heading: 'Información que recopilamos',
+          items: [
+            'Formulario de contacto y agenda de demo: nombre, empresa, correo de trabajo, país, etapa de producción y el mensaje que nos compartas.',
+            'Cuenta de cliente (si te registras en el portal): nombre, correo electrónico, nombre de usuario y una contraseña almacenada de forma cifrada — nunca en texto plano.',
+            'Solicitudes de soporte técnico: asunto, descripción del problema y prioridad que nos indiques.',
+            'Preferencia de idioma: guardamos el idioma que eliges (español, inglés o francés) únicamente en tu navegador, para que no tengas que volver a elegirlo en tu próxima visita.',
+          ],
+        },
+        {
+          heading: 'Cómo usamos tu información',
+          items: [
+            'Para responder tu solicitud de contacto y agendar una demostración.',
+            'Para darte acceso a tu cuenta y a la información de tu suscripción, si te registras.',
+            'Para dar seguimiento a tus solicitudes de soporte técnico.',
+            'Para mejorar VeritX Vision y entender mejor las necesidades de fabricantes textiles como tú.',
+          ],
+        },
+        {
+          heading: 'Con quién compartimos tu información',
+          body: 'No vendemos ni compartimos tu información con terceros con fines de marketing. Solo la compartimos con proveedores de servicios que necesitamos para operar este sitio (por ejemplo, hosting y correo), y únicamente en la medida necesaria para prestarte el servicio.',
+        },
+        {
+          heading: 'Cookies y almacenamiento local',
+          body: 'No usamos cookies de rastreo ni herramientas de analítica de terceros. El único dato que guardamos en tu navegador es tu preferencia de idioma. El video de Vision A se muestra mediante el modo de privacidad mejorada de YouTube (youtube-nocookie.com), que no coloca cookies de seguimiento hasta que decides reproducirlo.',
+        },
+        {
+          heading: 'Enlaces a servicios de terceros',
+          body: 'El botón de WhatsApp te lleva a la aplicación de WhatsApp, propiedad de Meta, cuyo uso se rige por la política de privacidad de WhatsApp — no por este aviso.',
+        },
+        {
+          heading: 'Cuánto tiempo conservamos tus datos',
+          body: 'Conservamos tu información solo el tiempo necesario para atender tu solicitud o mientras tu cuenta permanezca activa. Puedes pedirnos que eliminemos tus datos en cualquier momento, como se explica abajo.',
+        },
+        {
+          heading: 'Tus derechos',
+          body: 'Puedes solicitar acceso, corrección o eliminación de tus datos personales en cualquier momento escribiendo a hello@veritxvision.com. Responderemos tu solicitud dentro de un plazo razonable.',
+        },
+        {
+          heading: 'Privacidad de menores',
+          body: 'Este sitio está dirigido a profesionales de la industria textil y no está diseñado para menores de edad. No recopilamos intencionalmente información de menores de 18 años.',
+        },
+        {
+          heading: 'Cambios a este aviso',
+          body: 'Podemos actualizar este aviso de privacidad de vez en cuando. Si hacemos cambios importantes, actualizaremos la fecha al inicio de esta página.',
+        },
+        {
+          heading: 'Contacto',
+          body: 'Si tienes preguntas sobre este aviso de privacidad o sobre cómo manejamos tus datos, escríbenos a hello@veritxvision.com.',
+        },
+      ],
     },
     contact: {
       eyebrow: 'Contáctanos',

@@ -141,6 +141,7 @@ veritx-web/
     ├── DemoPage.jsx              # route #/demo — interactive defect-map demo
     ├── CalculatorPage.jsx         # route #/calculator — interactive ROI/savings calculator (see §10.16)
     ├── AboutPage.jsx              # route #/about — "Who We Are" page (incl. the Mexico locator map)
+    ├── PrivacyPolicyPage.jsx       # route #/privacy — Privacy Policy page, content in translations.js → privacyPage
     ├── MexicoMap.jsx               # <MexicoMap/> component used by AboutPage — see §14.7
     ├── mexicoMapData.js            # generated SVG path data consumed by MexicoMap.jsx — see §14.7
     ├── LoginPage.jsx                # route #/login — see §14
@@ -171,6 +172,7 @@ No router library. `useRoute()` (top of `App.jsx`) reads `window.location.hash`,
 | `#/demo` | `demo` → renders `<DemoPage/>` |
 | `#/calculator` | `calculator` → renders `<CalculatorPage/>` |
 | `#/about` | `about` → renders `<AboutPage/>` |
+| `#/privacy` | `privacy` → renders `<PrivacyPolicyPage/>` |
 | `#/login` | `login` → renders `<LoginPage/>` |
 | `#/register` | `register` → renders `<RegisterPage/>` |
 | `#/verify-email` (+ `?token=`) | `verify-email` → renders `<VerifyEmailPage/>` |
@@ -179,7 +181,7 @@ No router library. `useRoute()` (top of `App.jsx`) reads `window.location.hash`,
 | `#/vision-home` | `vision-home` → renders `<VisionHomePage/>` (redirects to `#/login` client-side if there's no session — see §14) |
 | anything else (incl. plain `#section-id` anchors) | `home` → renders the full home-page section stack |
 
-All nine non-`home` route names are collected in the `SATELLITE_ROUTES` array (top of `App.jsx`, right
+All ten non-`home` route names are collected in the `SATELLITE_ROUTES` array (top of `App.jsx`, right
 above `useRoute()`) so the scroll-to-top effect below and any future "is this a satellite page" check
 stay in sync with one list instead of a repeated `route === 'x' || route === 'y' || ...` chain.
 
@@ -1403,10 +1405,13 @@ casually reverse them without the user re-confirming — re-litigating them wast
   wired to the real About page) and "Contact"/"Contacto" (`href="#contact"`). "Careers"/"Vacantes" was
   removed entirely (was a non-functional placeholder with no page behind it) — do not re-add a Careers
   link without a real destination for it.
-- **Footer "Legal" column:** "Privacy Policy"/"Aviso de privacidad" and "Terms of Service"/"Términos de
-  servicio" are also plain `<span>`s — no privacy-policy or terms-of-service page exists anywhere on
-  the site (the contact form's own inline privacy blurb, §10.11, is the only privacy-related content
-  that actually exists).
+- **Footer "Legal" column:** "Privacy Policy"/"Aviso de privacidad" is now a real link
+  (`href="#/privacy"`) to `PrivacyPolicyPage.jsx` — content in `translations.js` → `privacyPage`
+  (all three languages), covering what data the site actually collects (contact form, account
+  registration, support tickets, the language preference kept in `localStorage`), that there's no
+  tracking/analytics, the `youtube-nocookie.com` embed, and the WhatsApp link being governed by its
+  own policy. **"Terms of Service"/"Términos de servicio" is still a plain `<span>`** — no
+  terms-of-service page exists yet (separate TODO item, not done in this pass).
 - **No web font is actually loaded** — `index.css` requests `'Inter'` first in the font stack, but
   nothing imports/links Inter, so every browser silently falls back to its next system font.
 - **No automated tests, no linter/formatter config.**
