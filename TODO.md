@@ -55,8 +55,12 @@ the technical/design record).
       (same no-backend pattern as the contact form). Revisit once/if the contact form gets a real backend
       (first TODO item above) — wiring both at the same time makes sense.
 
+- [x] ~~Revisar "responsiveness" ya que en un iPhone se veía cortada~~ — done. Root cause: `.specs-grid`
+      used `1fr` columns (= `minmax(auto, 1fr)`), which can't shrink below the content's min width;
+      unbreakable strings like "120m/min" forced the grid (and the whole page) wider than the viewport,
+      so iOS Safari zoomed the page out to compensate. Fixed by using `minmax(0, 1fr)` columns and
+      `overflow-wrap: break-word` on `.spec-card .val` in `index.css`.
+
 ## Notes
 
 _(space for your own annotations)_
-
-revisar "responsiveness" ya que en un iphone 17 pro la pagina se ve cortada. 
