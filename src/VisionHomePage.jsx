@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useLanguage } from './i18n.jsx'
+import { useLanguage, localeFor } from './i18n.jsx'
 import { Icon } from './icons.jsx'
 import { useAuthSession, getCurrentUser, IS_DUMMY_LOGIN_ENABLED } from './auth.js'
 
 function formatDate(iso, lang) {
-  return new Intl.DateTimeFormat(lang === 'es' ? 'es-MX' : 'en-US', {
+  return new Intl.DateTimeFormat(localeFor(lang), {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -12,7 +12,7 @@ function formatDate(iso, lang) {
 }
 
 function formatCurrency(amount, currency, lang) {
-  return new Intl.NumberFormat(lang === 'es' ? 'es-MX' : 'en-US', { style: 'currency', currency }).format(amount)
+  return new Intl.NumberFormat(localeFor(lang), { style: 'currency', currency }).format(amount)
 }
 
 function SupportTicketForm({ s }) {

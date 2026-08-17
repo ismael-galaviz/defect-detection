@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { LanguageProvider, useLanguage } from './i18n.jsx'
+import { LanguageProvider, useLanguage, localeFor } from './i18n.jsx'
 import { Icon } from './icons.jsx'
 import { useAuthSession, logout } from './auth.js'
 import DemoPage from './DemoPage.jsx'
@@ -47,6 +47,7 @@ function LangSwitch() {
     >
       <option value="es">🇲🇽 ES</option>
       <option value="en">🇺🇸 EN</option>
+      <option value="fr">🇫🇷 FR</option>
     </select>
   )
 }
@@ -426,7 +427,7 @@ function isPastDay(d, today) {
 function formatSlotTime(hhmm, lang) {
   const [h, m] = hhmm.split(':').map(Number)
   const d = new Date(2000, 0, 1, h, m)
-  return d.toLocaleTimeString(lang === 'es' ? 'es-MX' : 'en-US', { hour: 'numeric', minute: '2-digit' })
+  return d.toLocaleTimeString(localeFor(lang), { hour: 'numeric', minute: '2-digit' })
 }
 
 function AppointmentPicker({ a, lang, selectedDate, selectedTime, onSelectDate, onSelectTime }) {
@@ -434,7 +435,7 @@ function AppointmentPicker({ a, lang, selectedDate, selectedTime, onSelectDate, 
   const [viewMonth, setViewMonth] = useState(() => new Date(today.getFullYear(), today.getMonth(), 1))
 
   const currentMexicoTime = useMemo(() => (
-    new Intl.DateTimeFormat(lang === 'es' ? 'es-MX' : 'en-US', {
+    new Intl.DateTimeFormat(localeFor(lang), {
       timeZone: MEXICO_TZ,
       hour: 'numeric',
       minute: '2-digit',
@@ -443,12 +444,12 @@ function AppointmentPicker({ a, lang, selectedDate, selectedTime, onSelectDate, 
 
   const weekdayLabels = useMemo(() => (
     Array.from({ length: 7 }, (_, i) => (
-      new Intl.DateTimeFormat(lang === 'es' ? 'es-MX' : 'en-US', { weekday: 'short' })
+      new Intl.DateTimeFormat(localeFor(lang), { weekday: 'short' })
         .format(new Date(2024, 0, 1 + i))
     ))
   ), [lang])
 
-  const monthLabel = new Intl.DateTimeFormat(lang === 'es' ? 'es-MX' : 'en-US', { month: 'long', year: 'numeric' })
+  const monthLabel = new Intl.DateTimeFormat(localeFor(lang), { month: 'long', year: 'numeric' })
     .format(viewMonth)
   const isCurrentMonth = viewMonth.getFullYear() === today.getFullYear() && viewMonth.getMonth() === today.getMonth()
 
@@ -522,7 +523,7 @@ function AppointmentPicker({ a, lang, selectedDate, selectedTime, onSelectDate, 
 
       {selectedDate && selectedTime && (
         <p className="appt-summary">
-          {a.summaryLabel}: {new Intl.DateTimeFormat(lang === 'es' ? 'es-MX' : 'en-US', { weekday: 'long', day: 'numeric', month: 'long' }).format(selectedDate)}, {formatSlotTime(selectedTime, lang)} (CDMX)
+          {a.summaryLabel}: {new Intl.DateTimeFormat(localeFor(lang), { weekday: 'long', day: 'numeric', month: 'long' }).format(selectedDate)}, {formatSlotTime(selectedTime, lang)} (CDMX)
         </p>
       )}
     </div>

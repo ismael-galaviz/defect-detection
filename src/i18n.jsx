@@ -5,8 +5,14 @@ const LanguageContext = createContext(null)
 
 function detectLanguage() {
   const saved = localStorage.getItem('veritx-lang')
-  if (saved === 'en' || saved === 'es') return saved
+  if (saved === 'en' || saved === 'es' || saved === 'fr') return saved
   return 'es'
+}
+
+const LOCALES = { es: 'es-MX', en: 'en-US', fr: 'fr-FR' }
+
+export function localeFor(lang) {
+  return LOCALES[lang] || 'en-US'
 }
 
 export function LanguageProvider({ children }) {

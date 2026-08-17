@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { useLanguage } from './i18n.jsx'
+import { useLanguage, localeFor } from './i18n.jsx'
 import { Icon } from './icons.jsx'
 
 // Defaults mirror the worked examples from the source ROI guide (Guia_Ingeniero_Calidad_ROI.docx).
@@ -18,7 +18,7 @@ const CALC = {
 const MONEY_FIELD_KEYS = new Set(['costPerDefect', 'hourlyCost', 'marginPerUnit'])
 
 function formatCurrency(n, lang, currency) {
-  return new Intl.NumberFormat(lang === 'es' ? 'es-MX' : 'en-US', {
+  return new Intl.NumberFormat(localeFor(lang), {
     style: 'currency',
     currency,
     maximumFractionDigits: 0,
@@ -35,7 +35,7 @@ function CalcNumberInput({ id, value, onChange }) {
     ? String(value)
     : value === '' || value === null || value === undefined
       ? ''
-      : Number(value).toLocaleString(lang === 'es' ? 'es-MX' : 'en-US', { maximumFractionDigits: 4 })
+      : Number(value).toLocaleString(localeFor(lang), { maximumFractionDigits: 4 })
 
   return (
     <input
